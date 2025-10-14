@@ -21,20 +21,19 @@
   </style>
 </head>
 <body>
+  <noscript>هذه الصفحة تحتاج تفعيل JavaScript.</noscript>
   <div id="root"></div>
 
-  <!-- React 18 + ReactDOM UMD -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <!-- Babel Standalone for JSX in browser -->
+  <!-- React 18 UMD (إصدار الإنتاج) -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel Standalone: لبناء JSX داخل المتصفح -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <script type="text/babel">
-    const { useEffect, useMemo, useRef, useState } = React;
+  <!-- ملاحظة هامة: يجب data-presets="react" حتى يعمل JSX -->
+  <script type="text/babel" data-presets="react">
+    const { useEffect, useRef, useState } = React;
 
-    // ============================
-    // Assets
-    // ============================
     const ASSETS = {
       logos: {
         vision2030: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Vision_2030_Logo.svg/512px-Vision_2030_Logo.svg.png",
@@ -42,9 +41,7 @@
         nomu: "https://raw.githubusercontent.com/hasseef/assets/main/nomu-logo.svg",
       },
       hero: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1750&auto=format&fit=crop",
-      placeholders: {
-        sponsor: "https://dummyimage.com/240x100/eeeeee/222222.png&text=Sponsor+Logo",
-      },
+      placeholders: { sponsor: "https://dummyimage.com/240x100/eeeeee/222222.png&text=Sponsor+Logo" },
     };
 
     const cn = (...arr) => arr.filter(Boolean).join(" ");
@@ -75,13 +72,7 @@
     };
 
     const NavLink = ({ to, children }) => (
-      <a
-        href={to}
-        className={cn(
-          "px-3 py-2 text-sm font-medium hover:opacity-80 transition-opacity",
-          window.location.hash === to ? "underline underline-offset-4" : ""
-        )}
-      >
+      <a href={to} className={cn("px-3 py-2 text-sm font-medium hover:opacity-80 transition-opacity", window.location.hash === to ? "underline underline-offset-4" : "")}>
         {children}
       </a>
     );
@@ -124,9 +115,7 @@
                 <NavLink to="#/contact">تواصل</NavLink>
               </nav>
               <button onClick={toggle} className="md:hidden inline-flex items-center justify-center p-2 rounded-lg border border-slate-300 hover:bg-slate-50" aria-label="Toggle menu">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                  <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
               </button>
             </div>
             {open && (
@@ -147,20 +136,12 @@
       const { ref, visible } = useReveal();
       return (
         <section id="home" ref={ref} className="relative overflow-hidden">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url(${ASSETS.hero})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }} aria-hidden />
+          <div className="absolute inset-0" style={{ backgroundImage: `url(${ASSETS.hero})`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden />
           <div className="absolute inset-0 bg-slate-900/60" aria-hidden />
           <div className="relative max-w-7xl mx-auto px-3 sm:px-4 py-24 sm:py-28 md:py-36">
             <div className={cn("max-w-2xl text-white transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
-                منصة <span className="text-emerald-300">نمو NOMU</span> — تمكين الحلول وربط القطاعات لتحقيق رؤية 2030
-              </h1>
-              <p className="mt-4 text-slate-100/90 text-base sm:text-lg">
-                نموذج تشغيلي متكامل يربط الأفراد والقطاع الخاص والجامعات والجهات غير الربحية والجهات الحكومية ضمن منظومة رقمية شفافة.
-              </p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">منصة <span className="text-emerald-300">نمو NOMU</span> — تمكين الحلول وربط القطاعات لتحقيق رؤية 2030</h1>
+              <p className="mt-4 text-slate-100/90 text-base sm:text-lg">نموذج تشغيلي متكامل يربط الأفراد والقطاع الخاص والجامعات والجهات غير الربحية والجهات الحكومية ضمن منظومة رقمية شفافة.</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <a href="#/features" className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100">استعراض المزايا</a>
                 <a href="#/contact" className="inline-flex items-center justify-center px-5 py-3 rounded-xl border border-white/60 text-white hover:bg-white/10">تواصل معنا</a>
@@ -258,9 +239,7 @@
                 <>
                   <label className="block text-sm text-slate-600">المبلغ (ر.س)</label>
                   <input value={amount} onChange={(e) => setAmount(e.target.value)} type="number" min={1} className="w-full rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                  <button disabled={processing} onClick={pay} className="w-full rounded-xl bg-emerald-600 text-white font-semibold py-2.5 hover:bg-emerald-700 disabled:opacity-60">
-                    {processing ? "جارِ المعالجة..." : "ادفع الآن"}
-                  </button>
+                  <button disabled={processing} onClick={pay} className="w-full rounded-xl bg-emerald-600 text-white font-semibold py-2.5 hover:bg-emerald-700 disabled:opacity-60">{processing ? "جارِ المعالجة..." : "ادفع الآن"}</button>
                   <p className="text-xs text-slate-500">هذه محاكاة دفع لأغراض العرض — يمكن ربط مزود حقيقي لاحقًا (تابي/تمارا/مدى...).</p>
                 </>
               ) : (
@@ -324,7 +303,7 @@
     }
 
     function Sponsors() {
-      const sponsors = new Array(10).fill(0).map((_, i) => ({ name: \`Sponsor \${i + 1}\`, logo: ASSETS.placeholders.sponsor }));
+      const sponsors = new Array(10).fill(0).map((_, i) => ({ name: `Sponsor ${i + 1}`, logo: ASSETS.placeholders.sponsor }));
       const { ref, visible } = useReveal();
       return (
         <section id="sponsors" ref={ref} className="py-14 sm:py-16">
@@ -355,7 +334,7 @@
             <form onSubmit={onSubmit} className="mt-6 grid gap-3 max-w-xl">
               <input required placeholder="الاسم" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
               <input required type="email" placeholder="البريد الإلكتروني" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-              <textarea rows={5} placeholder="رسالتك" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+              <textarea rows="5" placeholder="رسالتك" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
               <button className="rounded-xl bg-emerald-600 text-white font-semibold py-2.5 hover:bg-emerald-700">إرسال</button>
               {sent && <p className="text-sm text-emerald-700">تم الإرسال — سنعود إليك قريبًا.</p>}
             </form>
@@ -409,24 +388,28 @@
     }
 
     function App() {
-      useEffect(() => {
-        if (!window.location.hash) window.location.hash = "/home";
-      }, []);
+      useEffect(() => { if (!window.location.hash) window.location.hash = "/home"; }, []);
       return (
         <div dir="rtl" className="min-h-screen bg-white text-slate-800">
           <TopRibbon />
           <Header />
           <SectionRouter />
           <Footer />
-          <style>{\`
+          <style>{`
             @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-          \`}</style>
+          `}</style>
         </div>
       );
     }
 
     const root = ReactDOM.createRoot(document.getElementById("root"));
     root.render(<App />);
+  </script>
+
+  <!-- لمساعدة سريعة لو حدث خطأ -->
+  <script>
+    window.addEventListener('error', e => console.error('JS Error:', e.message, 'at', e.filename+':'+e.lineno));
+    window.addEventListener('unhandledrejection', e => console.error('Promise Rejection:', e.reason));
   </script>
 </body>
 </html>
