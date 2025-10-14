@@ -18,10 +18,9 @@
   <style>html,body{height:100%}body{background:#fff}</style>
 </head>
 <body>
-  <noscript>هذه الصفحة تحتاج تفعيل JavaScript.</noscript>
   <div id="root"></div>
 
-  <!-- React 18 + ReactDOM + Babel (لتجميع JSX داخل المتصفح) -->
+  <!-- React & ReactDOM (UMD) + Babel للـJSX -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -29,66 +28,37 @@
   <script type="text/babel" data-presets="react">
     const { useEffect, useRef, useState } = React;
 
-    const ASSETS = {
-      logos: {
-        vision2030: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Vision_2030_Logo.svg/512px-Vision_2030_Logo.svg.png",
-        talabiya: "https://raw.githubusercontent.com/hasseef/assets/main/talabiya-logo.png",
-        nomu: "https://raw.githubusercontent.com/hasseef/assets/main/nomu-logo.svg" /* إن رغبت بشعار عربي صرف أرسل لي ملفه */
-      },
-      hero: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1750&auto=format&fit=crop",
-      placeholderSponsor: "https://dummyimage.com/240x100/eeeeee/222222.png&text=Sponsor+Logo"
-    };
+    // شعار نمو (مكانه هنا — حدّث الرابط إن لديك SVG رسمي)
+    const NOMULogo = ({ className="h-8 w-auto" }) => (
+      <svg viewBox="0 0 200 50" className={className} aria-label="منصة نمو">
+        <rect width="200" height="50" rx="10" fill="#10b981" opacity="0.08"></rect>
+        <text x="100" y="33" textAnchor="middle" fontFamily="Tahoma, 'Noto Sans Arabic', Arial" fontSize="26" fill="#065f46">نمو</text>
+      </svg>
+    );
 
     const cn = (...a)=>a.filter(Boolean).join(" ");
-
-    function useReveal(opts={threshold:0.12}){
-      const ref=useRef(null), [visible,setVisible]=useState(false);
+    function useReveal(opts={threshold:0.12}){ const ref=useRef(null),[v,setV]=useState(false);
       useEffect(()=>{ const el=ref.current; if(!el) return;
-        const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&setVisible(true)),opts);
+        const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&setV(true)),opts);
         io.observe(el); return ()=>io.disconnect();
-      },[opts]); return {ref,visible};
-    }
+      },[opts]); return {ref,visible:v}; }
 
-    const useHash=()=>{
-      const [hash,setHash]=useState(()=>window.location.hash||"#/home");
-      useEffect(()=>{ const on=()=>setHash(window.location.hash||"#/home");
+    const useHash=()=>{ const [h,setH]=useState(()=>window.location.hash||"#/home");
+      useEffect(()=>{ const on=()=>setH(window.location.hash||"#/home");
         window.addEventListener("hashchange",on); return ()=>window.removeEventListener("hashchange",on);
-      },[]);
-      return hash;
-    };
+      },[]); return h; };
 
     const NavLink=({to,children})=>(
       <a href={to} className={cn("px-3 py-2 text-sm font-medium hover:opacity-80 transition-opacity", window.location.hash===to?"underline underline-offset-4":"")}>{children}</a>
     );
 
-    function TopRibbon(){
-      return (
-        <div className="w-full bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <div className="flex items-center justify-between h-12">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <img src={ASSETS.logos.vision2030} alt="Vision 2030" className="h-6 w-auto object-contain" loading="lazy" />
-                <img src={ASSETS.logos.talabiya} alt="Talabiya" className="h-6 w-auto object-contain" loading="lazy" />
-              </div>
-              <div className="md:hidden flex items-center">
-                <img src={ASSETS.logos.nomu} alt="منصة نمو" className="h-6 w-auto object-contain" loading="lazy" />
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
     function Header(){
       const [open,setOpen]=useState(false);
       return (
-        <header className="w-full sticky top-0 z-40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-slate-200">
+        <header className="w-full sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
             <div className="flex items-center justify-between h-14">
-              <a href="#/home" className="hidden md:flex items-center gap-3">
-                <img src={ASSETS.logos.nomu} alt="منصة نمو" className="h-8 w-auto object-contain" loading="lazy" />
-                <span className="sr-only">منصة نمو</span>
-              </a>
+              <a href="#/home" className="flex items-center gap-3"><NOMULogo/><span className="sr-only">منصة نمو</span></a>
               <nav className="hidden md:flex items-center gap-1 text-slate-700">
                 <NavLink to="#/home">الرئيسية</NavLink>
                 <NavLink to="#/about">تعريف المنصة</NavLink>
@@ -98,20 +68,18 @@
                 <NavLink to="#/kpis">مؤشرات الأداء</NavLink>
                 <NavLink to="#/support">الدعم الفني والتواصل</NavLink>
               </nav>
-              <button onClick={()=>setOpen(v=>!v)} className="md:hidden inline-flex items-center justify-center p-2 rounded-lg border border-slate-300 hover:bg-slate-50" aria-label="Toggle menu">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+              <button onClick={()=>setOpen(v=>!v)} className="md:hidden p-2 rounded-lg border border-slate-300" aria-label="القائمة">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
               </button>
             </div>
             {open && (
               <div className="md:hidden pb-3 animate-[fadeIn_.2s_ease]">
-                <div className="grid gap-1">
-                  {[
-                    ["#/home","الرئيسية"],["#/about","تعريف المنصة"],["#/features","المزايا"],
-                    ["#/accounts","الحسابات"],["#/pricing","الباقات"],["#/kpis","مؤشرات الأداء"],["#/support","الدعم الفني والتواصل"]
-                  ].map(([to,label])=>(
-                    <a key={to} href={to} className="px-3 py-2 rounded-lg hover:bg-slate-50 active:bg-slate-100" onClick={()=>setOpen(false)}>{label}</a>
-                  ))}
-                </div>
+                {[
+                  ["#/home","الرئيسية"],["#/about","تعريف المنصة"],["#/features","المزايا"],
+                  ["#/accounts","الحسابات"],["#/pricing","الباقات"],["#/kpis","مؤشرات الأداء"],["#/support","الدعم الفني والتواصل"]
+                ].map(([to,label])=>(
+                  <a key={to} href={to} className="block px-3 py-2 rounded-lg hover:bg-slate-50" onClick={()=>setOpen(false)}>{label}</a>
+                ))}
               </div>
             )}
           </div>
@@ -123,15 +91,18 @@
       const {ref,visible}=useReveal();
       return (
         <section id="home" ref={ref} className="relative overflow-hidden">
-          <div className="absolute inset-0" style={{ backgroundImage: `url(${ASSETS.hero})`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden />
-          <div className="absolute inset-0 bg-slate-900/60" aria-hidden />
-          <div className="relative max-w-7xl mx-auto px-3 sm:px-4 py-24 sm:py-28 md:py-36">
-            <div className={cn("max-w-2xl text-white transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">منصة <span className="text-nomu-300">نمو</span> — تمكين الحلول وربط القطاعات لتحقيق رؤية 2030</h1>
-              <p className="mt-4 text-slate-100/90 text-base sm:text-lg">منظومة رقمية وطنية تُنسّق رحلة الطفل من ما قبل الحمل وحتى الجاهزية للمدرسة، مع ربط الأسرة بالصحة والتعليم والتنمية والقطاع غير الربحي والخاص تحت حوكمة موحّدة.</p>
+          <div className="absolute inset-0 bg-gradient-to-tr from-nomu-50 via-white to-sky-50"></div>
+          <div className="relative max-w-7xl mx-auto px-3 sm:px-4 py-20 sm:py-24">
+            <div className={cn("max-w-2xl transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-slate-900">
+                منصة <span className="text-nomu-600">نمو</span> — رحلة الطفل المتكاملة تحت حوكمة موحّدة
+              </h1>
+              <p className="mt-4 text-slate-600 text-base sm:text-lg">
+                منصة وطنية للطفولة المبكرة تُنسّق الخدمات بين الأسرة والصحة والتعليم والقطاعين غير الربحي والخاص، مع مؤشرات أداء شفافة لتحقيق أثر قابل للقياس.
+              </p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <a href="#/about" className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100">عن المنصة</a>
-                <a href="#/kpis" className="inline-flex items-center justify-center px-5 py-3 rounded-xl border border-white/60 text-white hover:bg-white/10">مؤشرات الأداء</a>
+                <a href="#/about" className="px-5 py-3 rounded-xl bg-nomu-600 text-white font-semibold hover:bg-nomu-700">ما هي نمو؟</a>
+                <a href="#/kpis" className="px-5 py-3 rounded-xl border border-slate-300 hover:bg-slate-50">مؤشرات الأداء</a>
               </div>
             </div>
           </div>
@@ -147,19 +118,19 @@
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">تعريف المنصة</h2>
             <div className={cn("mt-4 grid md:grid-cols-2 gap-6 items-start transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm leading-8 text-slate-700">
-                <p><strong>منصة نمو</strong> منظومة وطنية للطفولة المبكرة تُوحّد الخدمات والبيانات والرحلات عبر الجهات الصحية والتعليمية والتنموية وغير الربحية والقطاع الخاص، بهدف رفع الجودة وتمكين الأسرة وتحقيق الأثر وفق مستهدفات رؤية 2030.</p>
+                <p><strong>منصة نمو</strong> تُوحِّد الرحلات والبيانات بين القطاعات، وتربط المبادرات بالأهداف الوطنية، وتقدم لوحات أداء لحظية لدعم القرار ورفع الجودة وترشيد الإنفاق.</p>
                 <ul className="list-disc pr-5 mt-3 space-y-2">
-                  <li>خرائط رحلة الطفل (قبل الحمل/الحمل/الولادة/0–3/3–6) مع خدمات مساندة للأسرة.</li>
-                  <li>لوحات مؤشرات وربط بالمبادرات الوطنية وقياس الأثر.</li>
-                  <li>حوكمة وشفافية وتقارير قابلة للمشاركة مع الشركاء.</li>
+                  <li>رحلة الطفل: قبل الحمل → الحمل → الولادة → 0–3 → 3–6.</li>
+                  <li>إدارة الإحالات، الرعايات، والفعاليات مع تتبع الأثر.</li>
+                  <li>حوكمة بيانات وصلاحيات حسب الدور.</li>
                 </ul>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h3 className="font-semibold text-slate-900">أهداف رئيسية</h3>
                 <ol className="mt-3 list-decimal pr-5 space-y-2 text-slate-700">
-                  <li>تحسين نتائج الطفولة المبكرة عبر التكامل بين القطاعات.</li>
-                  <li>ترشيد الإنفاق ورفع الجودة بالاعتماد على الأدلة العلمية.</li>
-                  <li>تمكين المجتمع والقطاع الخاص من المساهمة الفعالة (رعايات/منح/استثمار اجتماعي).</li>
+                  <li>تحسين نتائج الطفولة المبكرة عبر التكامل.</li>
+                  <li>قياس الأثر بمؤشرات واضحة ومعلنة.</li>
+                  <li>تمكين مساهمات القطاع غير الربحي والخاص.</li>
                 </ol>
               </div>
             </div>
@@ -170,12 +141,12 @@
 
     function Features(){
       const items=[
-        { title:"تكامل الحسابات", desc:"ستة حسابات مترابطة: الأسرة/الأفراد، القطاع الخاص، الجامعات، الجهات غير الربحية، المانحون، والجهات الحكومية."},
-        { title:"ربط برؤية 2030", desc:"إسناد المبادرات للأهداف والبرامج الوطنية وقياس الأثر عبر لوحات رقمية."},
-        { title:"حوكمة وشفافية", desc:"توثيق الملفات، تتبع الأداء، والتقارير القابلة للمشاركة مع الشركاء."},
-        { title:"الدفع والدعم", desc:"بوابة دفع وتجميع رعايات ومنح واستثمارات مع إيصال فوري."},
-        { title:"إدارة الفعاليات", desc:"موافقات، ربط المشاركين، وتتبع المساهمات والرعايات."},
-        { title:"القيمة العلمية", desc:"تعزيز علمي من الجامعات للمشاريع لرفع الجودة وترشيد الإنفاق."},
+        { title:"تكامل الحسابات", desc:"أسرة/أفراد، قطاع خاص، جامعات، غير ربحي، مانحون، جهات حكومية."},
+        { title:"مؤشرات أداء حية", desc:"لوحات قابلة للتصفية حسب المنطقة/الفترة مع تحذيرات تلقائية."},
+        { title:"إحالات فعّالة", desc:"قياس وقت الإغلاق، جودة التحويلات، وتتبع الحالات العاجلة."},
+        { title:"بوابة تمويل", desc:"رعايات ومنح واستثمار اجتماعي مرتبطة بمقاييس الأثر."},
+        { title:"إدارة فعاليات", desc:"موافقات وربط مشاركين وتقارير دعم."},
+        { title:"تعزيز علمي", desc:"مراجعات جامعية لرفع الجودة وترشيد الإنفاق."},
       ];
       const {ref,visible}=useReveal();
       return (
@@ -197,12 +168,12 @@
 
     function Accounts(){
       const items=[
-        { name:"الأسرة/الأفراد", points:["رحلتي وخدماتي","فرص التدريب/التطوع/الدعم","محفظة ومتابعة الأثر"]},
-        { name:"القطاع الخاص", points:["رعايات ومسؤولية اجتماعية","تقارير أثر وربط بالجهات","إدارة الفعاليات"]},
-        { name:"الجامعات", points:["تعزيز علمي للمشاريع","برامج وأبحاث","عوائد واستشارات"]},
-        { name:"غير الربحي", points:["حشد التمويل والرعايات","إدارة الحلول والفرص","شفافية وتقارير أداء"]},
-        { name:"المانحون", points:["حقيبة مانح وتقارير","فرص منح حسب المعايير","متابعة الصرف والأثر"]},
-        { name:"الجهات الحكومية", points:["طلبات حلول مبتكرة","لوحات أداء ورصد","موافقات فعاليات ومبادرات"]},
+        { name:"الأسرة/الأفراد", points:["رحلتي وخدماتي","فرص التدريب/الدعم","محفظة ومتابعة الأثر"]},
+        { name:"القطاع الخاص", points:["رعايات ومسؤولية اجتماعية","تقارير أثر","إدارة فعاليات"]},
+        { name:"الجامعات", points:["تعزيز علمي","برامج وأبحاث","عوائد واستشارات"]},
+        { name:"غير الربحي", points:["حشد التمويل","إدارة الحلول","شفافية وأداء"]},
+        { name:"المانحون", points:["حقيبة مانح","فرص منح","متابعة الصرف"]},
+        { name:"الجهات الحكومية", points:["طلبات حلول","لوحات أداء","موافقات"]},
       ];
       const {ref,visible}=useReveal();
       return (
@@ -215,7 +186,7 @@
                   <h3 className="text-lg font-semibold text-slate-900">{acc.name}</h3>
                   <ul className="mt-3 space-y-1 text-slate-700 text-sm">
                     {acc.points.map(p=>(
-                      <li key={p} className="flex items-start gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-nomu-500"/><span>{p}</span></li>
+                      <li key={p} className="flex items-start gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-nomu-500"></span><span>{p}</span></li>
                     ))}
                   </ul>
                 </div>
@@ -226,12 +197,13 @@
       );
     }
 
+    /* الدفع التجريبي */
     function PaymentModal({open,onClose}){
       const [amount,setAmount]=useState("2500");
       const [processing,setProcessing]=useState(false);
       const [receipt,setReceipt]=useState(null);
       const pay=()=>{ setProcessing(true);
-        setTimeout(()=>{ const id="نمو-" + Math.random().toString(36).slice(2,10).toUpperCase();
+        setTimeout(()=>{ const id="نمو-"+Math.random().toString(36).slice(2,10).toUpperCase();
           setReceipt({id,amount:Number(amount),date:new Date().toLocaleString()}); setProcessing(false);
         },1100);
       };
@@ -240,16 +212,18 @@
         <div className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/50">
           <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
             <div className="p-5 border-b border-slate-200 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">دفع اشتراك — بوابة دفع نمو</h3>
-              <button className="p-2 rounded-lg hover:bg-slate-100" onClick={onClose} aria-label="Close">✕</button>
+              <h3 className="text-lg font-semibold">بوابة دفع نمو (تجريب)</h3>
+              <button className="p-2 rounded-lg hover:bg-slate-100" onClick={onClose} aria-label="إغلاق">✕</button>
             </div>
             <div className="p-5 space-y-4">
               {!receipt ? (
                 <>
                   <label className="block text-sm text-slate-600">المبلغ (ر.س)</label>
                   <input value={amount} onChange={(e)=>setAmount(e.target.value)} type="number" min={1} className="w-full rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
-                  <button disabled={processing} onClick={pay} className="w-full rounded-xl bg-nomu-600 text-white font-semibold py-2.5 hover:bg-nomu-700 disabled:opacity-60">{processing ? "جارِ المعالجة..." : "ادفع الآن"}</button>
-                  <p className="text-xs text-slate-500">هذه محاكاة دفع لأغراض العرض — يمكن ربط مزوّد حقيقي لاحقًا.</p>
+                  <button disabled={processing} onClick={pay} className="w-full rounded-xl bg-nomu-600 text-white font-semibold py-2.5 hover:bg-nomu-700 disabled:opacity-60">
+                    {processing ? "جارِ المعالجة..." : "ادفع الآن"}
+                  </button>
+                  <p className="text-xs text-slate-500">هذه محاكاة دفع للعرض — يمكن ربط مزود فعلي لاحقًا.</p>
                 </>
               ) : (
                 <div className="space-y-3">
@@ -270,9 +244,9 @@
 
     function Pricing(){
       const plans=[
-        { name:"أساسي", price:"0", features:["عرض عام للمنصة","روابط حسابات","تقارير عامة"]},
+        { name:"أساسي", price:"0", features:["عرض عام","روابط حسابات","تقارير عامة"]},
         { name:"احترافي", price:"2500", features:["لوحات أداء مخصصة","ربط دفع","إدارة فعاليات"], highlighted:true },
-        { name:"مؤسسي", price:"—", features:["تكامل API موسع","تحليلات متقدمة","دعم مخصص"]},
+        { name:"مؤسسي", price:"—", features:["تكامل APIs","تحليلات متقدمة","دعم مخصص"]},
       ];
       const [open,setOpen]=useState(false);
       return (
@@ -289,14 +263,13 @@
                   </div>
                   <ul className="mt-4 space-y-2 text-sm text-slate-700">
                     {p.features.map(f=>(
-                      <li key={f} className="flex items-start gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-nomu-500"/><span>{f}</span></li>
+                      <li key={f} className="flex items-start gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-nomu-500"></span><span>{f}</span></li>
                     ))}
                   </ul>
-                  {p.price !== "—" ? (
-                    <button onClick={()=>setOpen(true)} className={cn("mt-6 w-full rounded-xl py-2.5 font-semibold", p.highlighted ? "bg-nomu-600 text-white hover:bg-nomu-700" : "border border-slate-300 hover:bg-slate-50")}>اشترك الآن</button>
-                  ) : (
-                    <a href="#/support" className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-slate-300 py-2.5 hover:bg-slate-50 font-semibold">حلول مؤسسية</a>
-                  )}
+                  {p.price !== "—"
+                    ? <button onClick={()=>setOpen(true)} className={cn("mt-6 w-full rounded-xl py-2.5 font-semibold", p.highlighted ? "bg-nomu-600 text-white hover:bg-nomu-700" : "border border-slate-300 hover:bg-slate-50")}>اشترك الآن</button>
+                    : <a href="#/support" className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-slate-300 py-2.5 hover:bg-slate-50 font-semibold">حلول مؤسسية</a>
+                  }
                 </div>
               ))}
             </div>
@@ -306,7 +279,7 @@
       );
     }
 
-    /* -------- صفحة مؤشرات الأداء KPIs -------- */
+    /* -------- KPIs -------- */
     function KPI({ label, value, suffix="%", trend="+0%", good=true }) {
       return (
         <div className={cn("rounded-2xl border p-5 shadow-sm", good? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50")}>
@@ -318,35 +291,22 @@
         </div>
       );
     }
-
     function KPIs(){
       const regions = ["الرياض","مكة المكرمة","الشرقية","المدينة","عسير","حائل","تبوك","القصيم","نجران","جازان","الجوف","الباحة","الحدود الشمالية"];
       const [region,setRegion]=useState("الرياض");
       const [period,setPeriod]=useState("آخر 30 يومًا");
-
-      // بيانات عرض تجريبية ثابتة — اربطها لاحقًا بواجهاتك
-      const data = {
-        coverage: 82, immunization: 91, readiness: 76,
-        referralsMedianHrs: 18, kgEnroll: 88, completeness: 96
-      };
-
+      const data = { coverage:82, immunization:91, readiness:76, referralsMedianHrs:18, kgEnroll:88, completeness:96 };
       return (
         <section id="kpis" className="py-14 sm:py-16 bg-slate-50">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">مؤشرات الأداء</h2>
               <div className="flex flex-wrap items-center gap-2">
-                <select value={region} onChange={e=>setRegion(e.target.value)} className="rounded-xl border border-slate-300 px-3 py-2 text-sm">
-                  {regions.map(r=><option key={r} value={r}>{r}</option>)}
-                </select>
-                <select value={period} onChange={e=>setPeriod(e.target.value)} className="rounded-xl border border-slate-300 px-3 py-2 text-sm">
-                  {["آخر 7 أيام","آخر 30 يومًا","آخر 90 يومًا","سنة كاملة"].map(p=><option key={p} value={p}>{p}</option>)}
-                </select>
+                <select value={region} onChange={e=>setRegion(e.target.value)} className="rounded-xl border border-slate-300 px-3 py-2 text-sm">{regions.map(r=><option key={r}>{r}</option>)}</select>
+                <select value={period} onChange={e=>setPeriod(e.target.value)} className="rounded-xl border border-slate-300 px-3 py-2 text-sm">{["آخر 7 أيام","آخر 30 يومًا","آخر 90 يومًا","سنة كاملة"].map(p=><option key={p}>{p}</option>)}</select>
               </div>
             </div>
-
             <p className="mt-2 text-slate-600 text-sm">المنطقة: <span className="font-semibold">{region}</span> • الفترة: <span className="font-semibold">{period}</span></p>
-
             <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               <KPI label="التغطية السكانية لعُمر 0–6" value={data.coverage} trend="+1.3%" good={data.coverage>=80}/>
               <KPI label="اكتمال التحصين الأساسي" value={data.immunization} trend="+0.6%" good={data.immunization>=90}/>
@@ -359,13 +319,12 @@
               <KPI label="الالتحاق برياض الأطفال (3–6)" value={data.kgEnroll} trend="+0.9%" good={data.kgEnroll>=85}/>
               <KPI label="اكتمال السجل الأسري" value={data.completeness} trend="+0.2%" good={data.completeness>=95}/>
             </div>
-
             <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <h3 className="font-semibold text-slate-900">تفاصيل وتنبيهات</h3>
+              <h3 className="font-semibold text-slate-900">تنبيهات</h3>
               <ul className="mt-3 text-sm text-slate-700 space-y-2">
-                <li>أي مؤشر <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-800">أصفر</span> يعني يحتاج متابعة. اضبط العتبات من «الإعدادات» لاحقًا.</li>
-                <li>انقر على بطاقات المؤشرات (لاحقًا) للانتقال لقوائم الإحالات/السجلات المتأثرة.</li>
-                <li>اربط هذه الصفحة بواجهات بياناتك ليصبح التحديث لحظيًا للإحالات ويوميًا لبقية المؤشرات.</li>
+                <li>عتبات الألوان قابلة للتعديل لاحقًا من الإعدادات.</li>
+                <li>يمكن ربط البطاقات بسجلات تفصيلية (إحالات/أطفال/مرافق).</li>
+                <li>التحديث المقترح: لحظي للإحالات، يومي لباقي المؤشرات.</li>
               </ul>
             </div>
           </div>
@@ -391,9 +350,7 @@
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h3 className="font-semibold text-slate-900">اتفاقية مستوى الخدمة (SLA)</h3>
                 <table className="mt-3 w-full text-sm">
-                  <thead>
-                    <tr className="text-right text-slate-500"><th className="font-medium py-2">الأولوية</th><th className="font-medium">الوصف</th><th className="font-medium">زمن الاستجابة</th></tr>
-                  </thead>
+                  <thead><tr className="text-right text-slate-500"><th className="font-medium py-2">الأولوية</th><th className="font-medium">الوصف</th><th className="font-medium">زمن الاستجابة</th></tr></thead>
                   <tbody className="text-slate-700">
                     <tr className="border-t"><td className="py-2">عاجلة</td><td>انقطاع خدمة/خطأ يمنع الاستخدام</td><td>≤ 2 ساعة</td></tr>
                     <tr className="border-t"><td className="py-2">مرتفعة</td><td>عطل يؤثر على شريحة من المستخدمين</td><td>≤ 8 ساعات</td></tr>
@@ -402,13 +359,13 @@
                 </table>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <h3 className="font-semibold text-slate-900">نموذج تواصل سريع</h3>
+                <h3 className="font-semibold text-slate-900">نموذج تواصل سريع (تجريبي)</h3>
                 <form className="mt-3 grid gap-2">
                   <input required placeholder="الاسم" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
                   <input required type="email" placeholder="البريد الإلكتروني" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
-                  <textarea rows="4" placeholder="وصف الطلب/المشكلة" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
+                  <textarea rows="4" placeholder="وصف الطلب/المشكلة" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500"></textarea>
                   <button type="button" className="rounded-xl bg-nomu-600 text-white font-semibold py-2.5 hover:bg-nomu-700">إرسال</button>
-                  <p className="text-xs text-slate-500">هذا نموذج تجريبي — يمكن ربطه لاحقًا بنظام تذاكر (Jira/Zoho/HelpScout...).</p>
+                  <p className="text-xs text-slate-500">للإرسال الحقيقي سنربطه لاحقًا بـ Formspree/Resend/SMTP.</p>
                 </form>
               </div>
             </div>
@@ -432,33 +389,30 @@
     }
 
     function SectionRouter(){
-      const hash=useHash();
-      const route=hash.replace("#","");
-      const showFullHero = route==="/home" || route==="/" || route==="";
+      const route=(useHash().replace("#",""))||"/home";
+      const showHero = route==="/home" || route==="/" || route==="";
       return (
         <main>
-          {showFullHero ? (
-            <Hero />
-          ) : (
+          {showHero ? <Hero/> : (
             <div className="bg-gradient-to-r from-nomu-50 to-sky-50 border-b border-slate-200">
               <div className="max-w-7xl mx-auto px-3 sm:px-4 py-8">
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
-                  {route === "/about" ? "تعريف المنصة" :
-                   route === "/features" ? "المزايا" :
-                   route === "/accounts" ? "الحسابات" :
-                   route === "/pricing" ? "الباقات" :
-                   route === "/kpis" ? "مؤشرات الأداء" :
-                   route === "/support" ? "الدعم الفني والتواصل" : "منصة نمو"}
+                  {route==="/about"?"تعريف المنصة":
+                   route==="/features"?"المزايا":
+                   route==="/accounts"?"الحسابات":
+                   route==="/pricing"?"الباقات":
+                   route==="/kpis"?"مؤشرات الأداء":
+                   route==="/support"?"الدعم الفني والتواصل":"منصة نمو"}
                 </h1>
               </div>
             </div>
           )}
-          {(showFullHero || route === "/about") && <About />}
-          {(showFullHero || route === "/features") && <Features />}
-          {(showFullHero || route === "/accounts") && <Accounts />}
-          {(showFullHero || route === "/pricing") && <Pricing />}
-          {(showFullHero || route === "/kpis") && <KPIs />}
-          {(showFullHero || route === "/support") && <Support />}
+          {(showHero || route==="/about") && <About/>}
+          {(showHero || route==="/features") && <Features/>}
+          {(showHero || route==="/accounts") && <Accounts/>}
+          {(showHero || route==="/pricing") && <Pricing/>}
+          {(showHero || route==="/kpis") && <KPIs/>}
+          {(showHero || route==="/support") && <Support/>}
         </main>
       );
     }
@@ -467,7 +421,6 @@
       useEffect(()=>{ if(!window.location.hash) window.location.hash="/home"; },[]);
       return (
         <div dir="rtl" className="min-h-screen bg-white text-slate-800">
-          <TopRibbon />
           <Header />
           <SectionRouter />
           <Footer />
@@ -476,8 +429,7 @@
       );
     }
 
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    root.render(<App />);
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   </script>
 </body>
 </html>
