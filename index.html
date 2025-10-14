@@ -3,34 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منصة NOMU — نسخة تشغيل فوري (ملف واحد)</title>
-  <!-- Tailwind via CDN -->
+  <title>منصة NOMU — نسخة ملف واحد</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['ui-sans-serif','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans Arabic','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] }
+          fontFamily: { sans: ['ui-sans-serif','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans Arabic','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] },
+          colors: { nomu: { 50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b' } }
         }
       }
     }
   </script>
-  <style>
-    html, body { height: 100%; }
-    body { background: #fff; }
-  </style>
+  <style>html,body{height:100%}body{background:#fff}</style>
 </head>
 <body>
   <noscript>هذه الصفحة تحتاج تفعيل JavaScript.</noscript>
   <div id="root"></div>
 
-  <!-- React 18 UMD (إصدار الإنتاج) -->
+  <!-- React 18 + ReactDOM -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <!-- Babel Standalone: لبناء JSX داخل المتصفح -->
+  <!-- Babel لتجميع JSX داخل المتصفح -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- ملاحظة هامة: يجب data-presets="react" حتى يعمل JSX -->
   <script type="text/babel" data-presets="react">
     const { useEffect, useRef, useState } = React;
 
@@ -38,46 +34,36 @@
       logos: {
         vision2030: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Vision_2030_Logo.svg/512px-Vision_2030_Logo.svg.png",
         talabiya: "https://raw.githubusercontent.com/hasseef/assets/main/talabiya-logo.png",
-        nomu: "https://raw.githubusercontent.com/hasseef/assets/main/nomu-logo.svg",
+        nomu: "https://raw.githubusercontent.com/hasseef/assets/main/nomu-logo.svg"
       },
       hero: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=1750&auto=format&fit=crop",
-      placeholders: { sponsor: "https://dummyimage.com/240x100/eeeeee/222222.png&text=Sponsor+Logo" },
+      placeholders: { sponsor: "https://dummyimage.com/240x100/eeeeee/222222.png&text=Sponsor+Logo" }
     };
 
-    const cn = (...arr) => arr.filter(Boolean).join(" ");
+    const cn = (...a)=>a.filter(Boolean).join(" ");
 
-    function useReveal(opts = { threshold: 0.12 }) {
-      const ref = useRef(null);
-      const [visible, setVisible] = useState(false);
-      useEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach((e) => e.isIntersecting && setVisible(true));
-        }, opts);
-        io.observe(el);
-        return () => io.disconnect();
-      }, [opts]);
-      return { ref, visible };
+    function useReveal(opts={threshold:0.12}){
+      const ref=useRef(null), [visible,setVisible]=useState(false);
+      useEffect(()=>{ const el=ref.current; if(!el) return;
+        const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&setVisible(true)),opts);
+        io.observe(el); return ()=>io.disconnect();
+      },[opts]); return {ref,visible};
     }
 
-    const useHash = () => {
-      const [hash, setHash] = useState(() => window.location.hash || "#/home");
-      useEffect(() => {
-        const onHash = () => setHash(window.location.hash || "#/home");
-        window.addEventListener("hashchange", onHash);
-        return () => window.removeEventListener("hashchange", onHash);
-      }, []);
+    const useHash=()=>{
+      const [hash,setHash]=useState(()=>window.location.hash||"#/home");
+      useEffect(()=>{ const onHash=()=>setHash(window.location.hash||"#/home");
+        window.addEventListener("hashchange",onHash);
+        return ()=>window.removeEventListener("hashchange",onHash);
+      },[]);
       return hash;
     };
 
-    const NavLink = ({ to, children }) => (
-      <a href={to} className={cn("px-3 py-2 text-sm font-medium hover:opacity-80 transition-opacity", window.location.hash === to ? "underline underline-offset-4" : "")}>
-        {children}
-      </a>
+    const NavLink=({to,children})=>(
+      <a href={to} className={cn("px-3 py-2 text-sm font-medium hover:opacity-80 transition-opacity", window.location.hash===to?"underline underline-offset-4":"")}>{children}</a>
     );
 
-    function TopRibbon() {
+    function TopRibbon(){
       return (
         <div className="w-full bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
@@ -95,9 +81,8 @@
       );
     }
 
-    function Header() {
-      const [open, setOpen] = useState(false);
-      const toggle = () => setOpen((v) => !v);
+    function Header(){
+      const [open,setOpen]=useState(false);
       return (
         <header className="w-full sticky top-0 z-40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
@@ -108,21 +93,21 @@
               </a>
               <nav className="hidden md:flex items-center gap-1 text-slate-700">
                 <NavLink to="#/home">الرئيسية</NavLink>
+                <NavLink to="#/about">تعريف المنصة</NavLink>
                 <NavLink to="#/features">المزايا</NavLink>
-                <NavLink to="#/accounts">حسابات المنصة</NavLink>
+                <NavLink to="#/accounts">الحسابات</NavLink>
                 <NavLink to="#/pricing">الباقات</NavLink>
-                <NavLink to="#/sponsors">الرعاة</NavLink>
-                <NavLink to="#/contact">تواصل</NavLink>
+                <NavLink to="#/support">الدعم الفني والتواصل</NavLink>
               </nav>
-              <button onClick={toggle} className="md:hidden inline-flex items-center justify-center p-2 rounded-lg border border-slate-300 hover:bg-slate-50" aria-label="Toggle menu">
+              <button onClick={()=>setOpen(v=>!v)} className="md:hidden inline-flex items-center justify-center p-2 rounded-lg border border-slate-300 hover:bg-slate-50" aria-label="Toggle menu">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
               </button>
             </div>
             {open && (
               <div className="md:hidden pb-3 animate-[fadeIn_.2s_ease]">
                 <div className="grid gap-1">
-                  {[["#/home","الرئيسية"],["#/features","المزايا"],["#/accounts","حسابات المنصة"],["#/pricing","الباقات"],["#/sponsors","الرعاة"],["#/contact","تواصل"]].map(([to,label]) => (
-                    <a key={to} href={to} className="px-3 py-2 rounded-lg hover:bg-slate-50 active:bg-slate-100" onClick={() => setOpen(false)}>{label}</a>
+                  {[["#/home","الرئيسية"],["#/about","تعريف المنصة"],["#/features","المزايا"],["#/accounts","الحسابات"],["#/pricing","الباقات"],["#/support","الدعم الفني والتواصل"]].map(([to,label]) => (
+                    <a key={to} href={to} className="px-3 py-2 rounded-lg hover:bg-slate-50 active:bg-slate-100" onClick={()=>setOpen(false)}>{label}</a>
                   ))}
                 </div>
               </div>
@@ -132,19 +117,19 @@
       );
     }
 
-    function Hero() {
-      const { ref, visible } = useReveal();
+    function Hero(){
+      const {ref,visible}=useReveal();
       return (
         <section id="home" ref={ref} className="relative overflow-hidden">
           <div className="absolute inset-0" style={{ backgroundImage: `url(${ASSETS.hero})`, backgroundSize: "cover", backgroundPosition: "center" }} aria-hidden />
           <div className="absolute inset-0 bg-slate-900/60" aria-hidden />
           <div className="relative max-w-7xl mx-auto px-3 sm:px-4 py-24 sm:py-28 md:py-36">
             <div className={cn("max-w-2xl text-white transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">منصة <span className="text-emerald-300">نمو NOMU</span> — تمكين الحلول وربط القطاعات لتحقيق رؤية 2030</h1>
-              <p className="mt-4 text-slate-100/90 text-base sm:text-lg">نموذج تشغيلي متكامل يربط الأفراد والقطاع الخاص والجامعات والجهات غير الربحية والجهات الحكومية ضمن منظومة رقمية شفافة.</p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">منصة <span className="text-nomu-300">نمو NOMU</span> — تمكين الحلول وربط القطاعات لتحقيق رؤية 2030</h1>
+              <p className="mt-4 text-slate-100/90 text-base sm:text-lg">منظومة رقمية وطنية تُنسّق رحلة الطفل من ما قبل الحمل وحتى الجاهزية للمدرسة، وتربط الأسرة بالصحة والتعليم والتنمية والقطاع غير الربحي والخاص تحت حوكمة موحّدة.</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <a href="#/features" className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100">استعراض المزايا</a>
-                <a href="#/contact" className="inline-flex items-center justify-center px-5 py-3 rounded-xl border border-white/60 text-white hover:bg-white/10">تواصل معنا</a>
+                <a href="#/about" className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100">عن المنصة</a>
+                <a href="#/support" className="inline-flex items-center justify-center px-5 py-3 rounded-xl border border-white/60 text-white hover:bg-white/10">الدعم والتواصل</a>
               </div>
             </div>
           </div>
@@ -152,23 +137,51 @@
       );
     }
 
-    function Features() {
-      const items = [
-        { title: "تكامل الحسابات", desc: "ستة حسابات مترابطة: الأفراد، القطاع الخاص، الجامعات، الجهات غير الربحية، المانحون، والجهات الحكومية."},
-        { title: "ربط برؤية 2030", desc: "إسناد المبادرات للأهداف والبرامج الوطنية وقياس الأثر عبر لوحات رقمية."},
-        { title: "حوكمة وشفافية", desc: "توثيق الملفات، تتبع الأداء، والتقارير القابلة للمشاركة مع الشركاء."},
-        { title: "الدفع والدعم", desc: "بوابة دفع وتجميع رعايات وتبرعات واستثمارات مع نسب ورسوم واضحة."},
-        { title: "إدارة الفعاليات", desc: "موافقات للفعاليات، ربط المشاركين، وتتبع المساهمات والرعايات."},
-        { title: "القيمة العلمية", desc: "تعزيز علمي من الجامعات للمشاريع المدرجة لرفع الجودة وترشيد الإنفاق."},
-      ];
-      const { ref, visible } = useReveal();
+    function About(){
+      const {ref,visible}=useReveal();
       return (
-        <section id="features" ref={ref} className="py-14 sm:py-16 bg-slate-50">
+        <section id="about" ref={ref} className="py-14 sm:py-16 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">تعريف المنصة</h2>
+            <div className={cn("mt-4 grid md:grid-cols-2 gap-6 items-start transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm leading-8 text-slate-700">
+                <p><strong>NOMU</strong> منصة وطنية للطفولة المبكرة تُوحّد الخدمات والبيانات والرحلات عبر الجهات الصحية والتعليمية والتنموية وغير الربحية والقطاع الخاص، بهدف رفع الجودة وتمكين الأسرة وتحقيق الأثر وفق مستهدفات رؤية 2030.</p>
+                <ul className="list-disc pr-5 mt-3 space-y-2">
+                  <li>خرائط رحلة الطفل (قبل الحمل/الحمل/الولادة/0–3/3–6) مع خدمات مساندة للأسرة.</li>
+                  <li>لوحات مؤشرات وربط بالمبادرات الوطنية وقياس الأثر.</li>
+                  <li>حوكمة وشفافية وتقارير قابلة للمشاركة مع الشركاء.</li>
+                </ul>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h3 className="font-semibold text-slate-900">أهداف رئيسية</h3>
+                <ol className="mt-3 list-decimal pr-5 space-y-2 text-slate-700">
+                  <li>تحسين نتائج الطفولة المبكرة عبر التكامل بين القطاعات.</li>
+                  <li>ترشيد الإنفاق ورفع الجودة بالاعتماد على الأدلة العلمية.</li>
+                  <li>تمكين المجتمع والقطاع الخاص من المساهمة الفعالة (رعايات/منح/استثمار اجتماعي).</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function Features(){
+      const items=[
+        { title:"تكامل الحسابات", desc:"ستة حسابات مترابطة: الأسرة/الأفراد، القطاع الخاص، الجامعات، الجهات غير الربحية، المانحون، والجهات الحكومية."},
+        { title:"ربط برؤية 2030", desc:"إسناد المبادرات للأهداف والبرامج الوطنية وقياس الأثر عبر لوحات رقمية."},
+        { title:"حوكمة وشفافية", desc:"توثيق الملفات، تتبع الأداء، والتقارير القابلة للمشاركة مع الشركاء."},
+        { title:"الدفع والدعم", desc:"بوابة دفع وتجميع رعايات ومنح واستثمارات مع إيصال فوري."},
+        { title:"إدارة الفعاليات", desc:"موافقات، ربط المشاركين، وتتبع المساهمات والرعايات."},
+        { title:"القيمة العلمية", desc:"تعزيز علمي من الجامعات للمشاريع لرفع الجودة وترشيد الإنفاق."},
+      ];
+      const {ref,visible}=useReveal();
+      return (
+        <section id="features" ref={ref} className="py-14 sm:py-16">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">المزايا</h2>
-            <p className="mt-2 text-slate-600 max-w-2xl">بنية تقنية تصمم على هيئة اللبنات التسع وتكامل حسابات متعددة لخدمة التنمية الوطنية.</p>
             <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {items.map((it) => (
+              {items.map(it=>(
                 <div key={it.title} className={cn("rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
                   <h3 className="text-lg font-semibold text-slate-900">{it.title}</h3>
                   <p className="mt-2 text-slate-600 text-sm leading-7">{it.desc}</p>
@@ -180,30 +193,27 @@
       );
     }
 
-    function Accounts() {
-      const items = [
-        { name: "حساب الأفراد", points: ["مبادراتي — نموذج اللبنات التسعة","فرص تدريب وتطوع ووظائف","محفظة ومتابعة الأداء"]},
-        { name: "القطاع الخاص", points: ["رعايات ومسؤولية اجتماعية","تقارير أثر وربط بالجهات","إدارة الفعاليات والمرافق"]},
-        { name: "الجامعات", points: ["تعزيز علمي للمشاريع","تسويق البرامج والبحوث","عوائد واستشارات"]},
-        { name: "غير الربحي", points: ["حشد التمويل والرعايات","إدارة الحلول والفرص","شفافية وتقارير أداء"]},
-        { name: "المانحون", points: ["حقيبة مانح وتقارير","فرص منح حسب المعايير","متابعة الصرف والأثر"]},
-        { name: "الجهات الحكومية", points: ["طلبات حلول مبتكرة","لوحات أداء ورصد","موافقات فعاليات ومبادرات"]},
+    function Accounts(){
+      const items=[
+        { name:"الأسرة/الأفراد", points:["رحلتي وخدماتي","فرص التدريب/التطوع/الدعم","محفظة ومتابعة الأثر"]},
+        { name:"القطاع الخاص", points:["رعايات ومسؤولية اجتماعية","تقارير أثر وربط بالجهات","إدارة الفعاليات"]},
+        { name:"الجامعات", points:["تعزيز علمي للمشاريع","برامج وأبحاث","عوائد واستشارات"]},
+        { name:"غير الربحي", points:["حشد التمويل والرعايات","إدارة الحلول والفرص","شفافية وتقارير أداء"]},
+        { name:"المانحون", points:["حقيبة مانح وتقارير","فرص منح حسب المعايير","متابعة الصرف والأثر"]},
+        { name:"الجهات الحكومية", points:["طلبات حلول مبتكرة","لوحات أداء ورصد","موافقات فعاليات ومبادرات"]},
       ];
-      const { ref, visible } = useReveal();
+      const {ref,visible}=useReveal();
       return (
-        <section id="accounts" ref={ref} className="py-14 sm:py-16">
+        <section id="accounts" ref={ref} className="py-14 sm:py-16 bg-slate-50">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">حسابات المنصة</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">الحسابات</h2>
             <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {items.map((acc) => (
+              {items.map(acc=>(
                 <div key={acc.name} className={cn("rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
                   <h3 className="text-lg font-semibold text-slate-900">{acc.name}</h3>
                   <ul className="mt-3 space-y-1 text-slate-700 text-sm">
-                    {acc.points.map((p) => (
-                      <li key={p} className="flex items-start gap-2">
-                        <span className="mt-1 inline-block h-2 w-2 rounded-full bg-emerald-500" />
-                        <span>{p}</span>
-                      </li>
+                    {acc.points.map(p=>(
+                      <li key={p} className="flex items-start gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-nomu-500"/><span>{p}</span></li>
                     ))}
                   </ul>
                 </div>
@@ -214,19 +224,16 @@
       );
     }
 
-    function PaymentModal({ open, onClose }) {
-      const [amount, setAmount] = useState("2500");
-      const [processing, setProcessing] = useState(false);
-      const [receipt, setReceipt] = useState(null);
-      const pay = async () => {
-        setProcessing(true);
-        setTimeout(() => {
-          const id = "NOMU-" + Math.random().toString(36).slice(2, 10).toUpperCase();
-          setReceipt({ id, amount: Number(amount), date: new Date().toLocaleString() });
-          setProcessing(false);
-        }, 1100);
+    function PaymentModal({open,onClose}){
+      const [amount,setAmount]=useState("2500");
+      const [processing,setProcessing]=useState(false);
+      const [receipt,setReceipt]=useState(null);
+      const pay=()=>{ setProcessing(true);
+        setTimeout(()=>{ const id="NOMU-"+Math.random().toString(36).slice(2,10).toUpperCase();
+          setReceipt({id,amount:Number(amount),date:new Date().toLocaleString()}); setProcessing(false);
+        },1100);
       };
-      if (!open) return null;
+      if(!open) return null;
       return (
         <div className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/50">
           <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
@@ -238,17 +245,17 @@
               {!receipt ? (
                 <>
                   <label className="block text-sm text-slate-600">المبلغ (ر.س)</label>
-                  <input value={amount} onChange={(e) => setAmount(e.target.value)} type="number" min={1} className="w-full rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                  <button disabled={processing} onClick={pay} className="w-full rounded-xl bg-emerald-600 text-white font-semibold py-2.5 hover:bg-emerald-700 disabled:opacity-60">{processing ? "جارِ المعالجة..." : "ادفع الآن"}</button>
-                  <p className="text-xs text-slate-500">هذه محاكاة دفع لأغراض العرض — يمكن ربط مزود حقيقي لاحقًا (تابي/تمارا/مدى...).</p>
+                  <input value={amount} onChange={(e)=>setAmount(e.target.value)} type="number" min={1} className="w-full rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
+                  <button disabled={processing} onClick={pay} className="w-full rounded-xl bg-nomu-600 text-white font-semibold py-2.5 hover:bg-nomu-700 disabled:opacity-60">{processing ? "جارِ المعالجة..." : "ادفع الآن"}</button>
+                  <p className="text-xs text-slate-500">هذه محاكاة دفع لأغراض العرض — يمكن ربط مزوّد حقيقي لاحقًا.</p>
                 </>
               ) : (
                 <div className="space-y-3">
-                  <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4">
-                    <p className="font-semibold text-emerald-800">تم الدفع بنجاح ✅</p>
-                    <p className="text-sm text-emerald-900/80 mt-1">رقم الإيصال: {receipt.id}</p>
-                    <p className="text-sm text-emerald-900/80">المبلغ: {receipt.amount.toLocaleString()} ر.س</p>
-                    <p className="text-sm text-emerald-900/80">التاريخ: {receipt.date}</p>
+                  <div className="rounded-xl bg-nomu-50 border border-nomu-200 p-4">
+                    <p className="font-semibold text-nomu-800">تم الدفع بنجاح ✅</p>
+                    <p className="text-sm text-nomu-900/80 mt-1">رقم الإيصال: {receipt.id}</p>
+                    <p className="text-sm text-nomu-900/80">المبلغ: {receipt.amount.toLocaleString()} ر.س</p>
+                    <p className="text-sm text-nomu-900/80">التاريخ: {receipt.date}</p>
                   </div>
                   <button className="w-full rounded-xl border border-slate-300 py-2.5 hover:bg-slate-50" onClick={onClose}>إغلاق</button>
                 </div>
@@ -259,157 +266,147 @@
       );
     }
 
-    function Pricing() {
-      const plans = [
-        { name: "أساسي", price: "0", features: ["عرض عام للمنصة", "روابط حسابات", "تقارير عامة"]},
-        { name: "احترافي", price: "2500", features: ["لوحات أداء مخصصة", "ربط دفع", "إدارة فعاليات"], highlighted: true },
-        { name: "مؤسسي", price: "—", features: ["تكامل API موسع", "تحليلات متقدمة", "دعم مخصص"]},
+    function Pricing(){
+      const plans=[
+        { name:"أساسي", price:"0", features:["عرض عام للمنصة","روابط حسابات","تقارير عامة"]},
+        { name:"احترافي", price:"2500", features:["لوحات أداء مخصصة","ربط دفع","إدارة فعاليات"], highlighted:true },
+        { name:"مؤسسي", price:"—", features:["تكامل API موسع","تحليلات متقدمة","دعم مخصص"]},
       ];
-      const [open, setOpen] = useState(false);
+      const [open,setOpen]=useState(false);
       return (
-        <section id="pricing" className="py-14 sm:py-16 bg-slate-50">
+        <section id="pricing" className="py-14 sm:py-16">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">الباقات</h2>
             <div className="mt-8 grid md:grid-cols-3 gap-4 sm:gap-6">
-              {plans.map((p) => (
-                <div key={p.name} className={cn("rounded-2xl border bg-white p-6 shadow-sm", p.highlighted ? "border-emerald-300 ring-2 ring-emerald-200" : "border-slate-200")}>
+              {plans.map(p=>(
+                <div key={p.name} className={cn("rounded-2xl border bg-white p-6 shadow-sm", p.highlighted ? "border-nomu-300 ring-2 ring-nomu-200" : "border-slate-200")}>
                   <h3 className="text-lg font-semibold text-slate-900">{p.name}</h3>
                   <div className="mt-2 flex items-baseline gap-1">
                     <span className="text-3xl font-bold text-slate-900">{p.price}</span>
                     {p.price !== "—" && <span className="text-slate-500">ر.س / شهر</span>}
                   </div>
                   <ul className="mt-4 space-y-2 text-sm text-slate-700">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2">
-                        <span className="mt-1 h-2 w-2 rounded-full bg-emerald-500" />
-                        <span>{f}</span>
-                      </li>
+                    {p.features.map(f=>(
+                      <li key={f} className="flex items-start gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-nomu-500"/><span>{f}</span></li>
                     ))}
                   </ul>
                   {p.price !== "—" ? (
-                    <button onClick={() => setOpen(true)} className={cn("mt-6 w-full rounded-xl py-2.5 font-semibold", p.highlighted ? "bg-emerald-600 text-white hover:bg-emerald-700" : "border border-slate-300 hover:bg-slate-50")}>
-                      اشترك الآن
-                    </button>
+                    <button onClick={()=>setOpen(true)} className={cn("mt-6 w-full rounded-xl py-2.5 font-semibold", p.highlighted ? "bg-nomu-600 text-white hover:bg-nomu-700" : "border border-slate-300 hover:bg-slate-50")}>اشترك الآن</button>
                   ) : (
-                    <a href="#/contact" className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-slate-300 py-2.5 hover:bg-slate-50 font-semibold">تواصل للمؤسسات</a>
+                    <a href="#/support" className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-slate-300 py-2.5 hover:bg-slate-50 font-semibold">حلول مؤسسية</a>
                   )}
                 </div>
               ))}
             </div>
           </div>
-          <PaymentModal open={open} onClose={() => setOpen(false)} />
+          <PaymentModal open={open} onClose={()=>setOpen(false)}/>
         </section>
       );
     }
 
-    function Sponsors() {
-      const sponsors = new Array(10).fill(0).map((_, i) => ({ name: `Sponsor ${i + 1}`, logo: ASSETS.placeholders.sponsor }));
-      const { ref, visible } = useReveal();
+    function Support(){
+      const {ref,visible}=useReveal();
       return (
-        <section id="sponsors" ref={ref} className="py-14 sm:py-16">
+        <section id="support" ref={ref} className="py-14 sm:py-16 bg-slate-50">
           <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">الرعاة</h2>
-              <a href="#/contact" className="rounded-xl border border-slate-300 px-4 py-2 hover:bg-slate-50">كن راعياً</a>
-            </div>
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-              {sponsors.map((s) => (
-                <div key={s.name} className={cn("rounded-2xl border border-slate-200 bg-white p-4 grid place-items-center transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
-                  <img src={s.logo} alt={s.name} className="h-10 w-auto object-contain" />
-                </div>
-              ))}
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">الدعم الفني والتواصل</h2>
+            <div className={cn("mt-6 grid lg:grid-cols-3 gap-6", visible ? "opacity-100" : "opacity-0")}>
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h3 className="font-semibold text-slate-900">قنوات التواصل</h3>
+                <ul className="mt-3 space-y-2 text-slate-700 text-sm leading-7">
+                  <li>البريد: <a href="mailto:support@nomu.sa" className="underline decoration-nomu-400 decoration-2 underline-offset-2 hover:text-nomu-700">support@nomu.sa</a></li>
+                  <li>واتساب: <a href="https://wa.me/966500000000" target="_blank" className="underline decoration-nomu-400 decoration-2 underline-offset-2 hover:text-nomu-700">+966 50 000 0000</a></li>
+                  <li>الهاتف: 9200 000 00 (أيام العمل 9ص–5م)</li>
+                </ul>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h3 className="font-semibold text-slate-900">اتفاقية مستوى الخدمة (SLA)</h3>
+                <table className="mt-3 w-full text-sm">
+                  <thead>
+                    <tr className="text-right text-slate-500"><th className="font-medium py-2">الأولوية</th><th className="font-medium">الوصف</th><th className="font-medium">زمن الاستجابة</th></tr>
+                  </thead>
+                  <tbody className="text-slate-700">
+                    <tr className="border-t"><td className="py-2">عاجلة</td><td>انقطاع خدمة/خطأ يمنع الاستخدام</td><td>≤ 2 ساعة</td></tr>
+                    <tr className="border-t"><td className="py-2">مرتفعة</td><td>عطل يؤثر على شريحة من المستخدمين</td><td>≤ 8 ساعات</td></tr>
+                    <tr className="border-t"><td className="py-2">عادية</td><td>استفسارات/تحسينات طفيفة</td><td>≤ 1 يوم عمل</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h3 className="font-semibold text-slate-900">نموذج تواصل سريع</h3>
+                <form className="mt-3 grid gap-2">
+                  <input required placeholder="الاسم" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
+                  <input required type="email" placeholder="البريد الإلكتروني" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
+                  <textarea rows="4" placeholder="وصف الطلب/المشكلة" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
+                  <button type="button" className="rounded-xl bg-nomu-600 text-white font-semibold py-2.5 hover:bg-nomu-700">إرسال</button>
+                  <p className="text-xs text-slate-500">هذا نموذج تجريبي — يمكن ربطه لاحقًا بنظام تذاكر (Jira/Zoho/HelpScout...).</p>
+                </form>
+              </div>
             </div>
           </div>
         </section>
       );
     }
 
-    function Contact() {
-      const [sent, setSent] = useState(false);
-      const onSubmit = (e) => { e.preventDefault(); setSent(true); };
-      return (
-        <section id="contact" className="py-14 sm:py-16 bg-slate-50">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">تواصل معنا</h2>
-            <form onSubmit={onSubmit} className="mt-6 grid gap-3 max-w-xl">
-              <input required placeholder="الاسم" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-              <input required type="email" placeholder="البريد الإلكتروني" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-              <textarea rows="5" placeholder="رسالتك" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-              <button className="rounded-xl bg-emerald-600 text-white font-semibold py-2.5 hover:bg-emerald-700">إرسال</button>
-              {sent && <p className="text-sm text-emerald-700">تم الإرسال — سنعود إليك قريبًا.</p>}
-            </form>
-          </div>
-        </section>
-      );
-    }
-
-    function Footer() {
+    function Footer(){
       return (
         <footer className="py-8 border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-3 sm:px-4 text-sm text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p>© {new Date().getFullYear()} منصة نمو NOMU — جميع الحقوق محفوظة.</p>
             <div className="flex items-center gap-4">
-              <a href="#/privacy" className="hover:opacity-80">الخصوصية</a>
-              <a href="#/terms" className="hover:opacity-80">الشروط</a>
+              <a href="#/support" className="hover:opacity-80">الدعم</a>
+              <a href="#/about" className="hover:opacity-80">عن المنصة</a>
             </div>
           </div>
         </footer>
       );
     }
 
-    function SectionRouter() {
-      const hash = useHash();
-      const route = hash.replace("#", "");
-      const showFullHero = route === "/home" || route === "/" || route === "";
+    function SectionRouter(){
+      const hash=useHash();
+      const route=hash.replace("#","");
+      const showFullHero = route==="/home" || route==="/" || route==="";
       return (
         <main>
           {showFullHero ? (
             <Hero />
           ) : (
-            <div className="bg-gradient-to-r from-emerald-50 to-sky-50 border-b border-slate-200">
+            <div className="bg-gradient-to-r from-nomu-50 to-sky-50 border-b border-slate-200">
               <div className="max-w-7xl mx-auto px-3 sm:px-4 py-8">
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
-                  {route === "/features" ? "المزايا" :
-                   route === "/accounts" ? "حسابات المنصة" :
+                  {route === "/about" ? "تعريف المنصة" :
+                   route === "/features" ? "المزايا" :
+                   route === "/accounts" ? "الحسابات" :
                    route === "/pricing" ? "الباقات" :
-                   route === "/sponsors" ? "الرعاة" :
-                   route === "/contact" ? "تواصل معنا" : "منصة نمو NOMU"}
+                   route === "/support" ? "الدعم الفني والتواصل" : "منصة نمو NOMU"}
                 </h1>
               </div>
             </div>
           )}
+          {(showFullHero || route === "/about") && <About />}
           {(showFullHero || route === "/features") && <Features />}
           {(showFullHero || route === "/accounts") && <Accounts />}
           {(showFullHero || route === "/pricing") && <Pricing />}
-          {(showFullHero || route === "/sponsors") && <Sponsors />}
-          {(showFullHero || route === "/contact") && <Contact />}
+          {(showFullHero || route === "/support") && <Support />}
         </main>
       );
     }
 
-    function App() {
-      useEffect(() => { if (!window.location.hash) window.location.hash = "/home"; }, []);
+    function App(){
+      useEffect(()=>{ if(!window.location.hash) window.location.hash="/home"; },[]);
       return (
         <div dir="rtl" className="min-h-screen bg-white text-slate-800">
           <TopRibbon />
           <Header />
           <SectionRouter />
           <Footer />
-          <style>{`
-            @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-          `}</style>
+          <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}`}</style>
         </div>
       );
     }
 
     const root = ReactDOM.createRoot(document.getElementById("root"));
     root.render(<App />);
-  </script>
-
-  <!-- لمساعدة سريعة لو حدث خطأ -->
-  <script>
-    window.addEventListener('error', e => console.error('JS Error:', e.message, 'at', e.filename+':'+e.lineno));
-    window.addEventListener('unhandledrejection', e => console.error('Promise Rejection:', e.reason));
   </script>
 </body>
 </html>
