@@ -1,540 +1,527 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منصة نمو NOMU</title>
-  <meta name="description" content="منصة نمو NOMU لتمكين التكامل التنموي والاقتصادي وفق رؤية السعودية 2030" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#2B7BBC"/>
+  <title>NOMU – المنصة الوطنية للطفولة المبكرة</title>
+  <meta name="description" content="منصة نمو NOMU: رحلة الطفل من قبل الحمل حتى دخول المدرسة عبر تكامل صحي/تعليمي/اجتماعي"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#0c0a12;
-      --card:#12101a;
-      --muted:#1a1724;
-      --primary:#8b5cf6;      /* بنفسجي نمو */
-      --primary-weak:#7c3aed;
-      --text:#f6f6fb;
-      --text-dim:#c7c6d4;
-      --accent:#22d3ee;       /* سماوي إبراز */
-      --danger:#ef4444;
-      --ok:#22c55e;
-      --chip:#0f0d16;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:16px;
+      --primary:#2B7BBC; --accent:#15A085;
+      --beige:#FFF6EA; --beige-2:#FDEBD2;
+      --bg:#FAFCFF; --card:#FFFFFF; --text:#0B2239; --muted:#56627A;
+      --radius:16px; --gap:16px; --shadow:0 8px 24px rgba(2,18,46,.08);
+      --animDur:420ms;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Kufi Arabic", "Noto Sans Arabic", "Helvetica Neue", Arial;
-      background:radial-gradient(1100px 600px at 80% -10%, rgba(139,92,246,.18), transparent 60%), linear-gradient(140deg,#0c0a12 0%, #0e0b19 60%, #0c0a12 100%);
-      color:var(--text);
-    }
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:1200px; margin-inline:auto; padding:16px}
-    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(10px); background:rgba(12,10,18,.75); border-bottom:1px solid rgba(255,255,255,.05)}
-    .bar{display:flex; align-items:center; gap:16px; padding:12px 0}
-    .logo{display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:999px; background:var(--chip); border:1px solid rgba(255,255,255,.06)}
-    .logo svg{width:28px; height:28px}
-    .brand{display:flex; flex-direction:column; line-height:1.1}
-    .brand b{font-weight:800}
-    .brand small{color:var(--text-dim)}
-    nav{margin-inline-start:auto; display:flex; gap:8px; flex-wrap:wrap}
-    .tab{padding:10px 14px; border-radius:12px; background:transparent; border:1px solid rgba(255,255,255,.08); cursor:pointer; transition:.2s}
-    .tab.active,.tab:hover{background:var(--muted); border-color:rgba(255,255,255,.18)}
-    .primary-btn{padding:10px 16px; border-radius:12px; background:var(--primary); color:#0b0716; font-weight:800; border:none; cursor:pointer; transition:.2s}
-    .primary-btn:hover{filter:brightness(1.05)}
-    main{padding:24px 0}
-    .grid{display:grid; gap:16px}
-    @media(min-width:720px){ .grid.cols-3{grid-template-columns:repeat(3,1fr)} .grid.cols-2{grid-template-columns:repeat(2,1fr)} .grid.cols-4{grid-template-columns:repeat(4,1fr)} }
-    .card{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
-    .card h3{margin:0 0 8px 0}
-    .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:var(--chip); border:1px solid rgba(255,255,255,.08); font-size:12px; color:var(--text-dim)}
-    .h{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px}
-    .muted{color:var(--text-dim)}
-    .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-    .kpi{background:linear-gradient(180deg,rgba(139,92,246,.12),rgba(139,92,246,.04)); border:1px solid rgba(139,92,246,.3); border-radius:14px; padding:12px; text-align:center}
-    .kpi b{font-size:22px}
-    .pill{padding:6px 10px; border-radius:12px; background:rgba(255,255,255,.06)}
-    .divider{height:1px; background:rgba(255,255,255,.06); margin:12px 0}
-    .note{background:#0e0c17; border:1px dashed rgba(255,255,255,.15); padding:12px; border-radius:12px; color:var(--text-dim)}
-    .badge{background:rgba(34,211,238,.15); border:1px solid rgba(34,211,238,.35); color:#baf6ff; padding:4px 8px; border-radius:10px; font-size:12px}
-    .vis2030{display:flex; gap:8px; flex-wrap:wrap}
-    .vis2030 .goal{padding:6px 10px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); font-size:12px}
-    /* Tabs */
-    .tabs{display:flex; gap:8px; border-bottom:1px solid rgba(255,255,255,.06); margin-bottom:12px; flex-wrap:wrap}
-    .tabs .t{padding:10px 12px; border-radius:12px 12px 0 0; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.08); border-bottom:none; cursor:pointer}
-    .tabs .t.active{background:var(--muted); font-weight:700}
-    .tab-panel{display:none}
-    .tab-panel.active{display:block}
-    /* Accordion */
-    .acc{border:1px solid rgba(255,255,255,.08); border-radius:14px; overflow:hidden}
-    .acc .acc-h{padding:12px; background:rgba(255,255,255,.03); cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px}
-    .acc .acc-c{display:none; padding:12px; background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.06)}
-    .acc.open .acc-c{display:block}
-    /* Inputs */
-    .input, select{width:100%; padding:10px 12px; border-radius:12px; background:#0f0d18; border:1px solid rgba(255,255,255,.1); color:var(--text)}
-    .input::placeholder{color:#777089}
-    footer{margin-top:24px; padding:24px 0; color:var(--text-dim)}
-    .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:linear-gradient(180deg,var(--bg),var(--beige) 200%);color:var(--text);font-family:"IBM Plex Sans Arabic",system-ui;line-height:1.65}
+    a{text-decoration:none;color:var(--primary)}
+    .container{max-width:1200px;margin:auto;padding:0 16px}
+    .row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+    .muted{color:var(--muted)}
+    .badge{background:rgba(43,123,188,.10);color:var(--primary);padding:6px 12px;border-radius:999px;font-size:.92rem}
+    .btn{background:var(--primary);color:#fff;border:none;padding:12px 18px;border-radius:14px;cursor:pointer;box-shadow:var(--shadow);transition:.2s}
+    .btn:hover{transform:translateY(-2px)}
+    .btn.alt{background:var(--accent)}
+    .btn.ghost{background:transparent;color:var(--primary);border:1px solid rgba(43,123,188,.35)}
+    .card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+    main section{padding:56px 0}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    @media(max-width:900px){.grid-3,.grid-4{grid-template-columns:1fr}}
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;align-items:center}
+    @media(max-width:1000px){.hero{grid-template-columns:1fr}}
+
+    /* === Top strip (logos) === */
+    .top-strip{background:#fff;border-bottom:1px solid #E9EEF5}
+    .top-strip .in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 0}
+    .top-logos{display:flex;align-items:center;gap:10px}
+    .top-logos img{height:34px;display:block}
+    @media(max-width:768px){ .top-logos img{height:28px} }
+
+    /* Header (wordmark only) */
+    header{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(6px) saturate(140%);z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+    .hdr-line{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0}
+    .wordmark svg{height:88px; display:block}
+    .wordmark text{paint-order:stroke fill; stroke:#fff; stroke-width:2.8px}
+    /* Mobile alignment fix: NOMU opposite to top logos */
+    @media(max-width:768px){ .wordmark svg{ height:68px } }
+
+    nav a{padding:10px 14px;border-radius:10px;color:var(--text)}
+    nav a.active,nav a:hover{background:rgba(43,123,188,.10)}
+
+    .hide{display:none}
+    .view{opacity:0;transform:translateY(10px);animation:fadeUp var(--animDur) ease forwards}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none}}
+    .slideIn{animation:slideIn var(--animDur) ease both}
+    @keyframes slideIn{from{opacity:.0;transform:translateX(12px)} to{opacity:1;transform:none}}
+
+    .timeline{position:relative;padding-inline-start:18px}
+    .timeline::before{content:"";position:absolute;inset-inline-start:6px;top:0;bottom:0;width:4px;background:linear-gradient(#2B7BBC,#15A085);border-radius:4px;opacity:.4}
+    .tl-item{position:relative;margin:12px 0;padding:12px 12px 12px 18px;background:linear-gradient(180deg,#fff,var(--beige));border-radius:12px;box-shadow:var(--shadow)}
+    .tl-item::before{content:"";position:absolute;inset-inline-start:-2px;top:18px;width:12px;height:12px;background:#2B7BBC;border:3px solid #fff;border-radius:50%}
+
+    .wallet{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+    @media(max-width:900px){.wallet{grid-template-columns:1fr}}
+
+    .sponsors-line{display:flex;gap:10px;overflow:auto;scrollbar-width:none;padding:6px 0}
+    .sponsors-line::-webkit-scrollbar{display:none}
+    .s-logo{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:var(--shadow);cursor:pointer}
+    .tier-gold .s-logo{background:linear-gradient(135deg,#FFF4CC,#FFE79A);color:#7A5B00;border:1px solid #E8C96B}
+    .tier-silver .s-logo{background:linear-gradient(135deg,#F3F7FB,#E7EEF6);color:#475569;border:1px solid #CBD5E1}
+    .tier-bronze .s-logo{background:linear-gradient(135deg,#F7EDE6,#EDD8CB);color:#6B4F3A;border:1px solid #D7B8A2}
+
+    .stats-bar{background:#fff; border-top:1px solid #E5EAF0; border-bottom:1px solid #E5EAF0; padding:10px 0; margin-top:8px}
+    .stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; align-items:center}
+    .stat{background:linear-gradient(180deg,#fff,var(--beige)); border-radius:12px; padding:10px; text-align:center; box-shadow:var(--shadow)}
+    .stat h4{margin-bottom:4px}
+
+    footer{background:#fff;border-top:1px solid #EDF2F7;padding:12px;text-align:center;font-size:.9rem;color:var(--muted)}
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap bar">
-      <!-- شعار NOMU -->
-      <a href="#/home" class="logo" aria-label="الصفحة الرئيسية">
-        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+
+  <!-- شريط علوي: شعاري رؤية 2030 + تلبية -->
+  <div class="top-strip">
+    <div class="container in">
+      <div class="top-logos">
+        <!-- خيار يعمل فورًا (SVG نصّي خفيف): -->
+        <img alt="رؤية 2030"
+             src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="36"><rect width="180" height="36" fill="white"/><text x="50%" y="62%" text-anchor="middle" font-family="Arial" font-size="16" fill="%23666">رؤية 2030</text></svg>'/>
+        <img alt="شركة تلبية"
+             src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="36"><rect width="160" height="36" fill="white"/><text x="50%" y="62%" text-anchor="middle" font-family="Arial" font-size="16" fill="%23009055">Talbiya</text></svg>'/>
+
+        <!-- بدائل Base64 الرسمية (أزل التعليقات وضع السلاسل لديك):
+        <img alt="رؤية 2030" src="data:image/png;base64, VISION_B64_HERE"/>
+        <img alt="شركة تلبية" src="data:image/png;base64, TALBIYA_B64_HERE"/>
+        -->
+      </div>
+      <div style="font-size:.85rem;color:#6B7280">—</div>
+    </div>
+  </div>
+
+  <!-- Header: الشعار الكتابي فقط -->
+  <header id="hdr">
+    <div class="container hdr-line">
+      <div class="wordmark" aria-label="شعار نمو NOMU">
+        <svg viewBox="0 0 900 240" preserveAspectRatio="xMaxYMid meet" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="g" x1="0" y1="0" x2="64" y2="64">
-              <stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/>
+            <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#2B7BBC"/><stop offset="1" stop-color="#15A085"/>
             </linearGradient>
           </defs>
-        <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#g)"/>
-        <path d="M18 38c4 0 6-10 12-10s8 10 14 10 8-6 8-10" fill="none" stroke="#0c0a12" stroke-width="4" stroke-linecap="round"/>
+          <rect width="900" height="240" fill="transparent"/>
+          <path d="M710 45c22 0 40 14 45 34-22 8-44-2-53-20-3-6-2-10 8-14z" fill="#15A085" opacity=".9"/>
+          <text x="860" y="118" text-anchor="end" font-family="IBM Plex Sans Arabic, system-ui" font-weight="800" font-size="100" fill="url(#grad)">نمو</text>
+          <text x="852" y="168" text-anchor="end" font-family="IBM Plex Sans Arabic, system-ui" font-weight="700" font-size="52" fill="url(#grad)">NOMU</text>
+          <text x="855" y="210" text-anchor="end" font-family="IBM Plex Sans Arabic, system-ui" font-weight="400" font-size="26" fill="#6B7280">المنصة الوطنية للطفولة المبكرة</text>
         </svg>
-        <div class="brand">
-          <b>منصة نمو NOMU</b>
-          <small>حل متكامل للتكامل التنموي</small>
-        </div>
-      </a>
-
-      <nav>
-        <a class="tab" data-link="#/home">الرئيسية</a>
-        <a class="tab" data-link="#/journey">الرحلة</a>
-        <a class="tab" data-link="#/accounts">الحسابات</a>
-        <a class="tab" data-link="#/directory">الدليل</a>
-        <a class="tab" data-link="#/about">عن نمو</a>
-      </nav>
-
-      <button class="primary-btn" onclick="location.hash='#/start'">ابدأ الآن</button>
+      </div>
     </div>
+
+    <div class="container sponsors-line" id="sponsorsLine"></div>
+
+    <nav class="container row" style="justify-content:center;gap:8px;flex-wrap:wrap;padding-bottom:10px">
+      <a href="#/home" id="nav-home" class="active">الرئيسية</a>
+      <a href="#/journey" id="nav-journey">رحلة الطفل</a>
+      <a href="#/roles" id="nav-roles">الأدوار المؤسسية</a>
+      <a href="#/wallet" id="nav-wallet">محفظتي</a>
+      <a href="#/market" id="nav-market">سوق الرعاية</a>
+      <a href="#/kpis" id="nav-kpis">المؤشرات</a>
+      <a href="#/about" id="nav-about">عن المنصة</a>
+      <a href="#/sponsor" id="nav-sponsor">رعاية المنصة</a>
+      <a href="#/contact" id="nav-contact">تواصل</a>
+    </nav>
   </header>
 
-  <main class="wrap">
-    <div id="app"></div>
+  <main class="container">
+    <section id="home" class="hero view">
+      <div class="card slideIn" style="background:linear-gradient(180deg,#fff,var(--beige-2));">
+        <span class="badge">المنصة الوطنية للطفولة المبكرة</span>
+        <h1 style="margin:10px 0 8px">رحلة الطفل من قبل الحمل حتى المدرسة</h1>
+        <p class="muted" style="margin-bottom:16px;">توحيد الخدمات بين الصحة والتعليم والتنمية الاجتماعية، مع توصيات ذكية وتقارير أثر وطنية.</p>
+        <div class="row">
+          <button class="btn" onclick="go('#/journey')">ابدأ من رحلة الطفل</button>
+          <button class="btn alt" onclick="go('#/market')">فرص الرعاية</button>
+        </div>
+      </div>
+      <div class="card slideIn">
+        <h3>لماذا NOMU؟</h3>
+        <div class="grid-3" style="margin-top:12px;">
+          <div class="card view"><strong>توحيد الخدمات</strong><p class="muted">صحة + تعليم + تنمية اجتماعية في منصة واحدة.</p></div>
+          <div class="card view"><strong>تمكين الأسرة</strong><p class="muted">ملف حمل/طفل وتوصيات وتقارير جاهزية.</p></div>
+          <div class="card view"><strong>بيانات وطنية</strong><p class="muted">مؤشرات لدعم القرار والتخطيط الاستراتيجي.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="journey" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">رحلة الطفل</h2>
+      <div class="timeline">
+        <div class="tl-item view"><strong>ما قبل الحمل</strong><p class="muted">فحص ما قبل الزواج، التوعية، دعم اتخاذ القرار الصحي.</p></div>
+        <div class="tl-item view"><strong>الحمل</strong><p class="muted">متابعة الزيارات، التحاليل، دعم نفسي للأم، تذكير بالمواعيد.</p></div>
+        <div class="tl-item view"><strong>الولادة</strong><p class="muted">إنشاء ملف الطفل، اللقاحات، فحص السمع والكشف المبكر.</p></div>
+        <div class="tl-item view"><strong>0–3 سنوات</strong><p class="muted">متابعة نمائية، توصيات منزلية، إحالات للتدخل المبكر.</p></div>
+        <div class="tl-item view"><strong>3–6 سنوات</strong><p class="muted">تهيئة روضية، تقرير الجاهزية المدرسية، الربط مع التعليم.</p></div>
+      </div>
+    </section>
+
+    <section id="roles" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">الأدوار المؤسسية</h2>
+      <div class="grid-3">
+        <div class="card view"><h3>وزارة الصحة</h3><p>فحوص الحمل والطفولة، تدخل مبكر، دعم نفسي للأم.</p></div>
+        <div class="card view"><h3>وزارة التعليم</h3><p>رياض الأطفال، خطط فردية IEP، تقارير جاهزية.</p></div>
+        <div class="card view"><h3>الموارد البشرية</h3><p>دعم مالي وأسري، منصات تمكين وتطوع.</p></div>
+        <div class="card view"><h3>الجمعيات الأهلية</h3><p>برامج دعم وإرشاد، إدارة مستفيدين ومتطوعين.</p></div>
+        <div class="card view"><h3>القطاع الخاص (CSR)</h3><p>سوق رعاية، مساهمات مستدامة، تقارير أثر.</p></div>
+        <div class="card view"><h3>اللجنة الوطنية</h3><p>حوكمة ومؤشرات وطنية وتناسق سياساتي.</p></div>
+      </div>
+    </section>
+
+    <section id="wallet" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">محفظتي</h2>
+      <div class="wallet">
+        <div class="card view">
+          <h3>الرصيد</h3><p id="bal" style="font-weight:700;font-size:1.25rem">0 ريال</p>
+          <div class="row"><button class="btn" onclick="charge(500)">شحن 500</button><button class="btn alt" onclick="charge(1000)">شحن 1000</button><button class="btn ghost" onclick="charge(5000)">شحن 5000</button></div>
+        </div>
+        <div class="card view">
+          <h3>العمليات</h3><div id="tx" class="muted" style="margin-top:8px">لا توجد عمليات بعد.</div>
+          <div style="height:12px"></div>
+          <div class="row" style="justify-content:flex-end">
+            <button class="btn" onclick="buy('اشتراك مدرسة أهلية',1500)">دفع اشتراك مدرسة أهلية (1,500)</button>
+            <button class="btn alt" onclick="buy('تقرير جاهزية متقدم',200)">شراء تقرير جاهزية (200)</button>
+            <button class="btn ghost" onclick="go('#/sponsor')">رعاية مبادرة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="market" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">سوق الرعاية (CSR)</h2>
+      <div class="grid-3">
+        <div class="card view"><h3>برنامج دعم الأمهات الجدد</h3><p class="muted">جلسات إرشاد ونفسية بعد الولادة – منطقة حائل.</p><div class="row" style="justify-content:space-between"><span class="badge">مستهدف: 120,000 ريال</span><button class="btn" onclick="openSponsor('برنامج دعم الأمهات الجدد',120000)">رعاية</button></div></div>
+        <div class="card view"><h3>فحص نمائي مبكر 0–3</h3><p class="muted">حملات فحص مجتمعية وربط بالإحالة.</p><div class="row" style="justify-content:space-between"><span class="badge">مستهدف: 200,000 ريال</span><button class="btn" onclick="openSponsor('فحص نمائي مبكر',200000)">رعاية</button></div></div>
+        <div class="card view"><h3>جاهزية المدرسة</h3><p class="muted">تهيئة 3–6 سنوات وتدريب أولياء الأمور.</p><div class="row" style="justify-content:space-between"><span class="badge">مستهدف: 150,000 ريال</span><button class="btn" onclick="openSponsor('جاهزية المدرسة',150000)">رعاية</button></div></div>
+      </div>
+    </section>
+
+    <section id="kpis" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">المؤشرات الوطنية</h2>
+      <div class="grid-3">
+        <div class="card view"><h3>% فحوص ما قبل الزواج</h3><p>—</p></div>
+        <div class="card view"><h3>% دعم نفسي للأمهات</h3><p>—</p></div>
+        <div class="card view"><h3>% فحص نمائي</h3><p>—</p></div>
+        <div class="card view"><h3>% تدخل مبكر</h3><p>—</p></div>
+        <div class="card view"><h3>% جاهزية المدرسة</h3><p>—</p></div>
+        <div class="card view"><h3>% مشاركة مجتمعية</h3><p>—</p></div>
+      </div>
+    </section>
+
+    <section id="about" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">عن المنصة</h2>
+      <div class="card view"><p>«نمو NOMU» مبادرة وطنية تنموية من شركة تلبية للبحث والتطوير (الحاضنة لمبادرة تلبية)، توحّد رحلة الطفل من ما قبل الحمل حتى دخول المدرسة عبر تكامل صحي/تعليمي/اجتماعي، وترتكز على الوقاية بالتدخل المبكر وخفض الأعباء الاقتصادية بما ينسجم مع رؤية المملكة 2030.</p></div>
+    </section>
+
+    <section id="sponsor" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">رعاية منصة NOMU</h2>
+      <p class="muted view" style="margin-bottom:8px;">اختر باقة الرعاية المناسبة وادفع إلكترونياً لدعم استدامة المنصة وتأثيرها الوطني.</p>
+      <div class="grid-4">
+        <div class="card view"><h3>شريك مجتمعي</h3><p class="muted">25,000 ريال / سنوي</p><ul><li>إدراج في سجل الشركاء</li><li>شعار في صفحة الرعاية</li><li>تقرير أثر مختصر</li></ul><button class="btn" onclick="openSponsor('شريك مجتمعي',25000)">رعاية الآن</button></div>
+        <div class="card view"><h3>شريك فضي</h3><p class="muted">100,000 ريال / سنوي</p><ul><li>شعار في المؤشرات والمكتبة</li><li>قصة نجاح سنوية</li><li>وصول لتقارير محددة</li></ul><button class="btn" onclick="openSponsor('شريك فضي',100000)">رعاية الآن</button></div>
+        <div class="card view"><h3>شريك ذهبي</h3><p class="muted">250,000 ريال / سنوي</p><ul><li>شعار في صفحة الحسابات</li><li>تقارير تفاعلية مخصصة</li><li>دعوات لملتقيات المنصة</li></ul><button class="btn" onclick="openSponsor('شريك ذهبي',250000)">رعاية الآن</button></div>
+        <div class="card view"><h3>شريك استراتيجي</h3><p class="muted">500,000 ريال / سنوي</p><ul><li>شعار في كل الصفحات</li><li>تقرير أثر سنوي موسع</li><li>أولوية المشاركة الوطنية</li></ul><button class="btn" onclick="openSponsor('شريك استراتيجي',500000)">رعاية الآن</button></div>
+      </div>
+
+      <div class="card view" style="margin-top:16px;">
+        <h3>إضافة راعٍ (محليًا للتجربة)</h3>
+        <div class="row" style="gap:10px;align-items:flex-end;flex-wrap:wrap">
+          <div style="display:grid;gap:6px">
+            <label>اسم الراعي</label>
+            <input id="spName" placeholder="اسم الشركة" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:12px"/>
+          </div>
+          <div style="display:grid;gap:6px">
+            <label>الفئة</label>
+            <select id="spTier" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:12px">
+              <option value="gold">ذهبي</option>
+              <option value="silver">فضي</option>
+              <option value="bronze">مجتمعي</option>
+            </select>
+          </div>
+          <div style="display:grid;gap:6px;flex:1;min-width:240px">
+            <label>رابط الشعار (اختياري)</label>
+            <input id="spLogo" placeholder="https://example.com/logo.png" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:12px"/>
+          </div>
+          <button class="btn alt" onclick="addSponsor()">إضافة</button>
+          <button class="btn ghost" onclick="resetSponsors()">حذف الكل</button>
+          <button class="btn" onclick="exportSponsorsCSV()">تصدير CSV</button>
+        </div>
+        <small class="muted">* يتم الحفظ محليًا داخل المتصفح (localStorage) لغرض العرض فقط.</small>
+      </div>
+    </section>
+
+    <section id="sponsorProfile" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">ملف الراعي</h2>
+      <div id="spProfileCard" class="card view">—</div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px;gap:8px">
+        <button class="btn ghost" onclick="go('#/sponsor')">عودة إلى الرعاية</button>
+        <button class="btn alt" onclick="shareSponsor()">مشاركة</button>
+      </div>
+    </section>
+
+    <section id="contact" class="hide">
+      <h2 class="view" style="margin-bottom:12px;">تواصل معنا</h2>
+      <div class="card view"><p>📧 info@talbiya.sa<br/>📞 +966507208120</p></div>
+    </section>
   </main>
 
-  <footer class="wrap">
-    <div class="row">
-      <span class="badge">نسخة عرض تشغيلية NOMU</span>
-      <span class="pill">متوافقة مع GitHub Pages</span>
-      <span class="pill">بدون مكتبات خارجية</span>
+  <div class="stats-bar">
+    <div class="container stats-grid" id="statsGrid">
+      <div class="stat"><h4>إجمالي الرعايات</h4><div id="stTotal" class="muted">—</div></div>
+      <div class="stat"><h4>عدد الرعاة</h4><div id="stCount" class="muted">—</div></div>
+      <div class="stat"><h4>ذهبي/فضي/مجتمعي</h4><div id="stTiers" class="muted">—</div></div>
+      <div class="stat"><h4>آخر إضافة</h4><div id="stLast" class="muted">—</div></div>
     </div>
-    <div class="divider"></div>
-    <p>© <span id="year"></span> منصة نمو NOMU. جميع الحقوق محفوظة.</p>
+  </div>
+
+  <footer>
+    <div>© جميع الحقوق محفوظة – منصة نمو NOMU<br>الشريك الاستشاري: شركة تلبية للبحث والتطوير الحاضنة لمبادرة تلبية</div>
   </footer>
 
-  <script>
-    /* ===== بيانات NOMU ===== */
-    const DATA = {
-      kpis:{ beneficiaries: 400, programs: 6, goals: 27, subgoals: 96 },
-      vision2030: [
-        "تعزيز فاعلية الحكومة","تنمية وتنويع الاقتصاد","تمكين المسؤولية الاجتماعية",
-        "تعزيز الهوية الوطنية","تمكين حياة عامرة وصحية"
-      ],
-      accounts:[
-        {
-          id:"individual", name:"الأفراد", emoji:"👤",
-          tagline:"مبادرات، فرص عمل وتدريب وتطوع، أحداث، ومحفظة.",
-          value:["إدراج مبادرة (نموذج اللبنات التسعة)","مطابقة فرص حسب ملفي","تذاكر وشهادات حضور"],
-          services:[
-            {title:"مبادراتي", items:[{title:"لبنات تسع"},{title:"تتبع الاعتماد والتمويل"}]},
-            {title:"الفرص", items:[{title:"وظائف"},{title:"تدريب تعاوني"},{title:"تطوع"},{title:"متحدث/مدرب"}]},
-            {title:"الأحداث", items:[{title:"منتديات/ورش"},{title:"تذاكر إلكترونية"}]},
-            {title:"المحفظة", items:[{title:"تبرعات واشتراكات"}]}
-          ]
-        },
-        {
-          id:"private", name:"القطاع الخاص", emoji:"🏢",
-          tagline:"مسؤولية اجتماعية، رعايات، مرافق وأحداث، حلول.",
-          value:["عرض فرص رعاية حسب المعايير","تقارير أثر وشفافية","طلب/تنظيم فعاليات"],
-          services:[
-            {title:"المسؤولية الاجتماعية", items:[{title:"فرص رعاية/منح"},{title:"تقارير أثر"}]},
-            {title:"الأحداث والمرافق", items:[{title:"طلب حدث"},{title:"حجز مرافق"}]},
-            {title:"حلول", items:[{title:"اقتراح حلول لاحتياج جهات"}]}
-          ]
-        },
-        {
-          id:"nonprofit", name:"القطاع غير الربحي", emoji:"🤝",
-          tagline:"وظائف وتطوع، تمويل، إدارة مشاريع ومؤشرات.",
-          value:["جذب رعاة وممولين","لوحات متابعة الأثر","نشر فرص التطوع"],
-          services:[
-            {title:"الفرص", items:[{title:"وظائف"},{title:"تطوع"},{title:"تدريب"}]},
-            {title:"التمويل", items:[{title:"رعايات"},{title:"تبرعات"},{title:"اشتراكات/استثمار"}]},
-            {title:"المشاريع", items:[{title:"جدول زمني"},{title:"مؤشرات/تقارير"}]}
-          ]
-        },
-        {
-          id:"donor", name:"المانحون", emoji:"💜",
-          tagline:"بحث فرص منح حسب المعايير، محفظة وتقارير الأثر.",
-          value:["تخصيص المعايير","محفظة منح وتبرعات","مواءمة مع رؤية 2030"],
-          services:[
-            {title:"فرص المنح", items:[{title:"حسب المنطقة/القطاع/البرنامج"}]},
-            {title:"محفظتي", items:[{title:"التزامات/مدفوعات"},{title:"متابعة الأثر"}]},
-            {title:"التقارير", items:[{title:"مواءمة رؤية 2030"}]}
-          ]
-        },
-        {
-          id:"university", name:"الجامعات", emoji:"🏛️",
-          tagline:"تعزيز علمي للمشاريع، شراكات، تسويق برامج وبحوث.",
-          value:["مراجعات محكّمة","عوائد مشاركة علمية","تسويق البرامج والبحوث"],
-          services:[
-            {title:"التعزيز العلمي", items:[{title:"مراجعة جدوى"},{title:"اعتماد مؤشرات"}]},
-            {title:"الشراكات", items:[{title:"مع الجهات كافة"}]},
-            {title:"التسويق والتمويل", items:[{title:"برامج وبحوث"}]}
-          ]
-        },
-        {
-          id:"government", name:"الجهات الحكومية/الإمارة", emoji:"🏛️‍⚖️",
-          tagline:"مبادرات مرتبطة بالأهداف، اعتماد فعاليات، حلول ولوحات مؤشرات.",
-          value:["ربط مبادرات بالأهداف الثلاثية","اعتماد/رفض فعاليات","طلب/استعراض حلول"],
-          services:[
-            {title:"مبادرات حكومية", items:[{title:"ربط بالأهداف الاستراتيجية/الفرعية/التفصيلية"}]},
-            {title:"إدارة الفعاليات", items:[{title:"طلبات الاعتماد"},{title:"الشراكات الاستراتيجية"},{title:"بيانات المشاركين"}]},
-            {title:"حلول", items:[{title:"طلب حلول"},{title:"استعراض حلول"}]},
-            {title:"لوحات مؤشرات", items:[{title:"برامج مدعومة"},{title:"شركات مساهمة"},{title:"عدد مستفيدين"}]}
-          ]
-        }
-      ],
-      partners:[
-        { name:"إمارة منطقة حائل", type:"حكومي", region:"حائل", programs:["تعزيز فاعلية الحكومة","تمكين المسؤولية الاجتماعية"] },
-        { name:"وزارة الاتصالات وتقنية المعلومات", type:"حكومي", region:"الرياض", programs:["تعزيز فاعلية الحكومة","تنمية وتنويع الاقتصاد"] },
-        { name:"جامعة حائل", type:"جامعة", region:"حائل", programs:["تمكين حياة عامرة وصحية","تنمية وتنويع الاقتصاد"] },
-        { name:"غرفة حائل", type:"خاص", region:"حائل", programs:["تنمية وتنويع الاقتصاد","تعزيز الهوية الوطنية"] },
-        { name:"جمعية منار الصحية", type:"غير ربحي", region:"الشرقية", programs:["تمكين حياة عامرة وصحية"] },
-        { name:"شركة تسجيل (سجلها ERP)", type:"خاص", region:"الرياض", programs:["تعزيز فاعلية الحكومة"] }
-      ]
-    };
-
-    /* ===== أدوات عامة ===== */
-    const $ = (s, r=document)=>r.querySelector(s);
-    const $$ = (s, r=document)=>[...r.querySelectorAll(s)];
-    const escapeHTML = s=>s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-    const relativeDate = (d=new Date())=>new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(d);
-
-    function setActiveTopTab(){
-      const hash = location.hash || "#/home";
-      $$(".tab").forEach(t=>{
-        const on = (t.dataset.link===hash) || (hash.startsWith("#/account/") && t.dataset.link==="#/accounts");
-        t.classList.toggle("active", on);
-      });
-    }
-
-    /* ===== مركبات واجهة ===== */
-    const KPIGrid = () => `
-      <div class="grid cols-4">
-        <div class="kpi"><div class="muted">مستفيدون</div><b>${DATA.kpis.beneficiaries}+</b></div>
-        <div class="kpi"><div class="muted">برامج رؤية</div><b>${DATA.kpis.programs}</b></div>
-        <div class="kpi"><div class="muted">أهداف تفصيلية</div><b>${DATA.kpis.goals}</b></div>
-        <div class="kpi"><div class="muted">أهداف فرعية</div><b>${DATA.kpis.subgoals}</b></div>
+  <!-- Modal الرعاية -->
+  <div class="modal hide" id="sponsorModal" aria-hidden="true" aria-label="نموذج الرعاية"
+       style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(3,12,23,.45);z-index:200">
+    <div class="content" style="background:#fff;border-radius:16px;max-width:680px;width:92%;padding:18px;box-shadow:var(--shadow)">
+      <div class="row" style="justify-content:space-between">
+        <h3 id="pkgTitle">طلب رعاية</h3>
+        <button class="btn ghost" onclick="closeSponsor()">إغلاق</button>
       </div>
-    `;
-    const VisionChips = () => `<div class="vis2030">${DATA.vision2030.map(g=>`<span class="goal">🎯 ${g}</span>`).join("")}</div>`;
+      <form onsubmit="return submitSponsor(event)">
+        <div class="field" style="display:grid;gap:6px;margin:10px 0">
+          <label>اسم الجهة</label>
+          <input required id="orgName" placeholder="اسم الشركة/المؤسسة" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:12px;font-family:inherit"/>
+        </div>
+        <div class="field" style="display:grid;gap:6px;margin:10px 0">
+          <label>الباقة</label>
+          <select id="pkgSelect" onchange="recalc()" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:12px;font-family:inherit">
+            <option value="25000">شريك مجتمعي – 25,000</option>
+            <option value="100000">شريك فضي – 100,000</option>
+            <option value="250000">شريك ذهبي – 250,000</option>
+            <option value="500000">شريك استراتيجي – 500,000</option>
+          </select>
+        </div>
+        <div class="field" style="display:grid;gap:6px;margin:10px 0">
+          <label>مدة الرعاية</label>
+          <select id="duration" onchange="recalc()" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:12px;font-family:inherit">
+            <option value="1">سنة واحدة</option>
+            <option value="2">سنتان (خصم 5%)</option>
+            <option value="3">ثلاث سنوات (خصم 10%)</option>
+          </select>
+        </div>
+        <div class="field" style="display:grid;gap:6px;margin:10px 0">
+          <label>ملاحظات</label>
+          <textarea id="notes" rows="3" placeholder="أي ملاحظات إضافية" style="padding:10px 12px;border:1px solid #E2E8F0;border-radius:12px;font-family:inherit"></textarea>
+        </div>
+        <div class="row" style="justify-content:space-between;align-items:center;margin-top:6px">
+          <div>الإجمالي التقديري</div>
+          <div id="totalPrice" style="font-weight:700;font-size:1.15rem">—</div>
+        </div>
+        <div class="row" style="justify-content:flex-end;margin-top:10px">
+          <button class="btn alt" type="button" onclick="simulatePay()">دفع إلكتروني</button>
+          <button class="btn" type="submit">إرسال طلب</button>
+        </div>
+        <p class="muted" style="margin-top:8px">* الربط الإنتاجي مع HyperPay يتطلب إنشاء checkoutId عبر خادم المنصة.</p>
+      </form>
+    </div>
+  </div>
 
-    function Accordion(items){
-      return items.map(it=>`
-        <div class="acc" data-acc>
-          <div class="acc-h" role="button" aria-expanded="false">
-            <span>${escapeHTML(it.title)}</span><span class="muted">▼</span>
-          </div>
-          <div class="acc-c">${it.content||""}</div>
-        </div>`).join("");
-    }
+  <script>
+    // ===== Routing =====
+    const sections = ['home','journey','roles','wallet','market','kpis','about','sponsor','sponsorProfile','contact'];
+    const navIds   = ['nav-home','nav-journey','nav-roles','nav-wallet','nav-market','nav-kpis','nav-about','nav-sponsor','nav-contact'];
 
-    function NestedList(nodes, depth=1){
-      if(!nodes) return "";
-      return `<ul style="margin:6px 0 6px ${depth*12}px; list-style:none; padding:0">
-        ${nodes.map(n=>`<li style="margin:6px 0">▪︎ ${escapeHTML(n.title)}${n.children?NestedList(n.children, depth+1):""}</li>`).join("")}
-      </ul>`;
-    }
-
-    function ServicesAccordion(svcs){
-      const accItems = svcs.map(s=>({title:"🧩 "+s.title, content: s.items?.length? NestedList(s.items):"<div class='muted'>لا توجد عناصر</div>"}));
-      return Accordion(accItems);
-    }
-
-    /* ===== الصفحات ===== */
-    function HomePage(){
-      return `
-        <section class="grid cols-2">
-          <div class="card">
-            <div class="h">
-              <h3>منصة نمو NOMU</h3>
-              <span class="chip">آخر تحديث: ${relativeDate()}</span>
-            </div>
-            <p class="muted">منصة وطنية لتمكين التكامل بين الجهات الحكومية والقطاع الخاص والقطاع غير الربحي والجامعات والأفراد، عبر أدوات علمية وتنفيذية تسرّع تحقيق مستهدفات رؤية 2030.</p>
-            <div class="divider"></div>
-            ${VisionChips()}
-            <div class="divider"></div>
-            ${KPIGrid()}
-            <div class="divider"></div>
-            <div class="row">
-              <a class="primary-btn" href="#/journey">استكشف رحلة NOMU</a>
-              <a class="tab" href="#/accounts">الحسابات</a>
-              <span class="pill">نسخة MVPLAB</span>
-            </div>
-          </div>
-          <div class="card">
-            <h3>روابط سريعة</h3>
-            <div class="grid">
-              <a class="tab" href="#/account/individual">👤 الأفراد</a>
-              <a class="tab" href="#/account/private">🏢 القطاع الخاص</a>
-              <a class="tab" href="#/account/nonprofit">🤝 غير الربحي</a>
-              <a class="tab" href="#/account/donor">💜 المانحون</a>
-              <a class="tab" href="#/account/university">🏛️ الجامعات</a>
-              <a class="tab" href="#/account/government">🏛️‍⚖️ الجهات الحكومية</a>
-            </div>
-            <div class="divider"></div>
-            <div class="note"><b>معلومة:</b> تربط NOMU المشاريع بأهداف رؤية 2030 (استراتيجية ← فرعية ← تفصيلية) مع تتبع المؤشرات وعدد المستفيدين.</div>
-          </div>
-        </section>
-      `;
-    }
-
-    function JourneyPage(){
-      const steps = [
-        {t:"إنشاء الحساب",d:"تسجيل سريع للأفراد أو الجهات."},
-        {t:"اختيار الدور",d:"تحديد نوع الحساب (جهة حكومية، جامعة، خاص، غير ربحي، فرد)."},
-        {t:"بناء المبادرة/الاحتياج",d:"نمذجة باللبنات التسع وربط بالأهداف والبرامج."},
-        {t:"التعزيز العلمي",d:"مراجعة محكّمة عبر الجامعات واعتماد مؤشرات الأداء."},
-        {t:"التمويل/الرعاية",d:"مطابقة معايير المانحين والرعاة والاشتراكات."},
-        {t:"التنفيذ والمتابعة",d:"جدولة، مهام، ومراقبة المخاطر."},
-        {t:"التقارير والشفافية",d:"تقارير أثر، فواتير وإثباتات، وربط الجهات الشريكة."}
-      ];
-      return `
-        <section class="grid">
-          <div class="card">
-            <div class="h">
-              <h3>رحلة NOMU</h3>
-              <span class="chip">7 مراحل</span>
-            </div>
-            <div class="divider"></div>
-            <div class="grid">
-              ${steps.map((s,i)=>`
-                <div class="acc open">
-                  <div class="acc-h"><b>المرحلة ${i+1} — ${escapeHTML(s.t)}</b><span class="muted">▼</span></div>
-                  <div class="acc-c"><p class="muted">${escapeHTML(s.d)}</p></div>
-                </div>
-              `).join("")}
-            </div>
-            <div class="divider"></div>
-            <div class="row">
-              <a class="primary-btn" href="#/start">ابدأ الرحلة</a>
-              <a class="tab" href="#/accounts">عرض الحسابات</a>
-            </div>
-          </div>
-        </section>
-      `;
-    }
-
-    function AccountsPage(){
-      return `
-        <section class="grid cols-3">
-          ${DATA.accounts.map(acc=>`
-            <div class="card">
-              <div class="h">
-                <h3>${acc.emoji} ${acc.name}</h3>
-                <span class="chip">ID: ${acc.id}</span>
-              </div>
-              <p class="muted">${acc.tagline}</p>
-              <div class="divider"></div>
-              <div class="row">${acc.value.slice(0,3).map(v=>`<span class="pill">${escapeHTML(v)}</span>`).join("")}</div>
-              <div class="divider"></div>
-              <a class="primary-btn" href="#/account/${acc.id}">فتح الحساب</a>
-            </div>
-          `).join("")}
-        </section>
-      `;
-    }
-
-    function AccountDetailPage(id){
-      const acc = DATA.accounts.find(a=>a.id===id);
-      if(!acc) return `<div class="card"><h3>الحساب غير موجود</h3><a class="tab" href="#/accounts">عودة</a></div>`;
-      return `
-        <section class="grid">
-          <div class="card">
-            <div class="h">
-              <h3>${acc.emoji} ${acc.name}</h3>
-              <a class="tab" href="#/accounts">عودة</a>
-            </div>
-            <div class="tabs" data-tabs>
-              <button class="t active" data-tab="overview">نظرة عامة</button>
-              <button class="t" data-tab="services">الخدمات</button>
-              <button class="t" data-tab="value">القيمة</button>
-            </div>
-            <div class="tab-panel active" data-panel="overview">
-              <p class="muted">${acc.tagline}</p>
-              <div class="divider"></div>
-              ${VisionChips()}
-              <div class="divider"></div>
-              <div class="row"><span class="pill">حوكمة وشفافية</span><span class="pill">مؤشرات أداء</span><span class="pill">تكامل بين القطاعات</span></div>
-            </div>
-            <div class="tab-panel" data-panel="services">${ServicesAccordion(acc.services)}</div>
-            <div class="tab-panel" data-panel="value">
-              <div class="grid cols-2">
-                ${acc.value.map(v=>`<div class="kpi"><div class="muted">قيمة</div><b>${escapeHTML(v)}</b></div>`).join("")}
-              </div>
-            </div>
-          </div>
-        </section>
-      `;
-    }
-
-    function DirectoryPage(){
-      const types = ["الكل","حكومي","خاص","غير ربحي","جامعة"];
-      const regions = ["الكل","حائل","الرياض","الشرقية","مكة","المدينة","القصيم","الحدود الشمالية","عسير","الباحة","جازان","نجران","تبوك","الجوف"];
-      return `
-        <section class="grid">
-          <div class="card">
-            <div class="h"><h3>الدليل الوطني للشركاء (NOMU)</h3><span class="chip">عناصر: ${DATA.partners.length}</span></div>
-            <div class="row" style="gap:8px; flex-wrap:wrap">
-              <input class="input" id="q" placeholder="ابحث بالاسم..." />
-              <select id="type">${types.map(t=>`<option>${t}</option>`).join("")}</select>
-              <select id="region">${regions.map(r=>`<option>${r}</option>`).join("")}</select>
-              <button class="tab" id="reset">إعادة تعيين</button>
-            </div>
-            <div class="divider"></div>
-            <div id="plist"></div>
-          </div>
-        </section>
-      `;
-    }
-
-    function AboutPage(){
-      return `
-        <section class="grid cols-2">
-          <div class="card">
-            <h3>عن NOMU</h3>
-            <p class="muted">تم تطوير منصة نمو على مدى سنتين كنظام وطني يدعم التكامل بين القطاعات ويعزز الشفافية ورفع الأثر، مع ربط المشاريع بأهداف رؤية 2030 وتتبع المؤشرات.</p>
-            <div class="divider"></div>
-            ${VisionChips()}
-            <div class="divider"></div>
-            <div class="note">هذه نسخة عرض. يمكن لاحقًا دمج تسجيل الدخول، المحافظ الرقمية، وربط API للأنظمة الخارجية.</div>
-          </div>
-          <div class="card">
-            <h3>تواصل</h3>
-            <ul>
-              <li>شراكات وتكامل مع الجهات</li>
-              <li>رعايات ومسؤولية اجتماعية</li>
-              <li>تعزيز علمي عبر الجامعات</li>
-            </ul>
-            <div class="divider"></div>
-            <p class="muted">* أزرار النماذج ستُضاف لاحقًا.</p>
-          </div>
-        </section>
-      `;
-    }
-
-    function StartPage(){
-      return `
-        <section class="grid">
-          <div class="card">
-            <h3>ابدأ الآن</h3>
-            <p class="muted">اختر الحساب الأنسب لبدء رحلتك داخل NOMU.</p>
-            <div class="divider"></div>
-            <div class="grid cols-3">
-              ${DATA.accounts.map(a=>`<a class="tab" href="#/account/${a.id}">${a.emoji} ${a.name}</a>`).join("")}
-            </div>
-          </div>
-        </section>
-      `;
-    }
-
-    /* ===== Router + Delegated Events (الإصلاح) ===== */
-    (function RouterAndEvents(){
-      const Router = (()=> {
-        const routes = {
-          "/home":      () => HomePage(),
-          "/journey":   () => JourneyPage(),
-          "/accounts":  () => AccountsPage(),
-          "/directory": () => DirectoryPage(),
-          "/about":     () => AboutPage(),
-          "/start":     () => StartPage()
-        };
-        function parse(){
-          const h = (location.hash || "#/home").replace(/^#/, "");
-          const parts = h.split("/").filter(Boolean);
-          if (parts[0]==="account") return { path:"/account", param: parts[1] || null };
-          return { path: "/" + (parts[0] || "home"), param:null };
-        }
-        function render(){
-          const {path, param} = parse();
-          setActiveTopTab();
-          const app = $("#app");
-          if (path==="/account"){ app.innerHTML = AccountDetailPage(param); return; }
-          const view = routes[path] || routes["/home"];
-          app.innerHTML = view();
-          if (path==="/directory") afterRenderDirectory();
-        }
-        return { render };
-      })();
-
-      /* تفويض أحداث عام */
-      document.addEventListener("click", (e)=>{
-        // روابط القائمة العليا
-        const link = e.target.closest("[data-link]");
-        if (link){ e.preventDefault(); location.hash = link.dataset.link; return; }
-
-        // تبويبات داخلية
-        const tabBtn = e.target.closest("[data-tabs] .t");
-        if (tabBtn){
-          const tabsContainer = tabBtn.closest("[data-tabs]");
-          const root = tabsContainer.parentElement;
-          const name = tabBtn.dataset.tab;
-          $$(".t", tabsContainer).forEach(x=>x.classList.toggle("active", x===tabBtn));
-          $$(".tab-panel", root).forEach(p=>p.classList.toggle("active", p.dataset.panel===name));
-          return;
-        }
-
-        // أكورديون
-        const head = e.target.closest(".acc .acc-h");
-        if (head){
-          const acc = head.closest(".acc");
-          const open = acc.classList.toggle("open");
-          head.setAttribute("aria-expanded", open?"true":"false");
-        }
+    function render(){
+      const hash = location.hash || '#/home';
+      const route = hash.replace('#/','');
+      const [base, query] = route.split('?');
+      sections.forEach(id=>{
+        const el=document.getElementById(id); if(!el) return;
+        const show=(id===base);
+        el.classList.toggle('hide',!show);
+        if(show){ el.classList.remove('view'); void el.offsetWidth; el.classList.add('view'); }
       });
+      navIds.forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.toggle('active', el.getAttribute('href')===('#/'+base)); });
+      if(base==='sponsorProfile'){ renderSponsorProfile(new URLSearchParams(query)); }
+      updateStats();
+      window.scrollTo({top:0,behavior:'smooth'});
+      try{ recalc(); loadWallet(); }catch(e){}
+    }
+    function go(h){ location.hash=h; }
+    window.addEventListener('hashchange', render);
+    document.addEventListener('DOMContentLoaded', ()=>{ render(); drawSponsors(); updateStats(); });
 
-      /* الدليل: ربط الحقول عند ظهور الصفحة */
-      function afterRenderDirectory(){
-        const list   = $("#plist");
-        const q      = $("#q");
-        const type   = $("#type");
-        const region = $("#region");
-        const reset  = $("#reset");
-        if (!list || !q || !type || !region || !reset) return;
+    // ===== Payment (HyperPay stub) =====
+    async function simulatePay(){
+      const amount = recalc();
+      if(!amount){ alert('الرجاء اختيار باقة أولاً.'); return; }
+      try{
+        const res = await fetch('/create-checkout', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ amount, currency:'SAR', paymentType:'DB' })
+        });
+        const data = await res.json();
+        if(!data.checkoutId) throw new Error('لم يتم استلام checkoutId');
+        const s = document.createElement('script'); s.src = 'https://oppwa.com/v1/paymentWidgets.js?checkoutId='+data.checkoutId;
+        s.onload = ()=>{ window.location.href = 'https://oppwa.com/payment-widget?checkoutId='+data.checkoutId; };
+        s.onerror = ()=>alert('تعذّر تحميل Widget HyperPay');
+        document.body.appendChild(s);
+      }catch(err){ alert('تعذّر إنشاء عملية الدفع: '+err.message); }
+    }
 
-        function draw(items){
-          list.innerHTML = items.length ? `
-            <div class="grid cols-2">
-              ${items.map(p=>`
-                <div class="card">
-                  <div class="h"><h3>${escapeHTML(p.name||"")}</h3><span class="chip">${p.type} • ${p.region}</span></div>
-                  <div class="row">${(p.programs||[]).map(pr=>`<span class="pill">🎯 ${escapeHTML(pr)}</span>`).join("")}</div>
-                </div>`).join("")}
-            </div>` : `<div class="note">لا توجد نتائج مطابقة.</div>`;
+    // ===== Wallet (demo) =====
+    function loadWallet(){ const bal=+localStorage.getItem('nomu_bal')||0; const txs=JSON.parse(localStorage.getItem('nomu_txs')||'[]'); const balEl=document.getElementById('bal'); if(balEl) balEl.textContent=bal.toLocaleString('ar-EG')+' ريال'; const txEl=document.getElementById('tx'); if(txEl) txEl.innerHTML= txs.length?('<ul>'+txs.map(t=>'<li>'+t+'</li>').join('')+'</ul>'):'لا توجد عمليات بعد.'; }
+    function saveWallet(bal, note){ localStorage.setItem('nomu_bal', String(bal)); const txs=JSON.parse(localStorage.getItem('nomu_txs')||'[]'); txs.unshift(new Date().toLocaleString('ar-EG')+' — '+note); localStorage.setItem('nomu_txs', JSON.stringify(txs.slice(0,50))); loadWallet(); }
+    function charge(amount){ let bal=+localStorage.getItem('nomu_bal')||0; bal+=amount; saveWallet(bal,'شحن محفظة +'+amount.toLocaleString('ar-EG')+' ريال'); alert('تم الشحن بنجاح.'); }
+    function buy(label, amount){ let bal=+localStorage.getItem('nomu_bal')||0; if(bal<amount){ alert('الرصيد غير كافٍ.'); return; } bal-=amount; saveWallet(bal,'شراء: '+label+' -'+amount.toLocaleString('ar-EG')+' ريال'); alert('تمت العملية بنجاح.'); }
+
+    // ===== Sponsors =====
+    const DEFAULT_SPONSORS=[
+      { id:'alef', name:'شركة ألف', tier:'gold',  logo:'', initials:'أ', amount:250000, since:'2025-01-01' },
+      { id:'baa',  name:'شركة باء', tier:'silver',logo:'', initials:'ب', amount:100000, since:'2025-02-10' },
+      { id:'jeem', name:'شركة جيم', tier:'bronze',logo:'', initials:'ج', amount:25000,  since:'2025-03-05' }
+    ];
+    function getSponsors(){ try{ return JSON.parse(localStorage.getItem('nomu_sponsors')||'null')||DEFAULT_SPONSORS; }catch(_ ){ return DEFAULT_SPONSORS; } }
+    function saveSponsors(list){ localStorage.setItem('nomu_sponsors', JSON.stringify(list)); drawSponsors(); updateStats(); }
+    function addSponsor(){
+      const name=spName.value.trim(); const tier=spTier.value; const logo=spLogo.value.trim();
+      if(!name){ alert('أدخل اسم الراعي'); return; }
+      const initials = Array.from(name)[0];
+      const id = (name+'-'+Date.now()).toLowerCase().replace(/[^a-z0-9]+/g,'-');
+      const amount = tier==='gold'?250000 : tier==='silver'?100000 : 25000;
+      const sp={id,name,tier,logo,initials,amount, since:new Date().toISOString().slice(0,10)};
+      const list=getSponsors(); list.unshift(sp); saveSponsors(list);
+      spName.value=''; spLogo.value='';
+    }
+    function resetSponsors(){ if(confirm('سيتم حذف قائمة الرعاة المحلية.')) saveSponsors(DEFAULT_SPONSORS); }
+    function drawSponsors(){
+      const list=getSponsors();
+      const line=document.getElementById('sponsorsLine'); if(!line) return;
+      line.innerHTML='';
+      list.forEach(sp=>{
+        const wrap=document.createElement('div'); wrap.className='tier-'+(sp.tier||'bronze');
+        const box=document.createElement('div'); box.className='s-logo'; box.title=sp.name;
+        if(sp.logo){ const img=document.createElement('img'); img.src=sp.logo; img.alt=sp.name; img.style='max-width:100%;max-height:100%;border-radius:8px;'; box.appendChild(img); }
+        else{ box.textContent=sp.initials||sp.name?.slice(0,1)||'—'; }
+        box.onclick=()=>go('#/sponsorProfile?id='+encodeURIComponent(sp.id));
+        wrap.appendChild(box);
+        line.appendChild(wrap);
+      });
+    }
+
+    // ===== Stats =====
+    function updateStats(){
+      const list=getSponsors();
+      const total=list.reduce((s,sp)=>s+(+sp.amount||0),0);
+      const gold=list.filter(s=>s.tier==='gold').length;
+      const silver=list.filter(s=>s.tier==='silver').length;
+      const bronze=list.filter(s=>s.tier==='bronze').length;
+      const last = list[0];
+      document.getElementById('stTotal').textContent = total.toLocaleString('ar-EG')+' ريال';
+      document.getElementById('stCount').textContent = list.length.toLocaleString('ar-EG');
+      document.getElementById('stTiers').textContent = gold+' / '+silver+' / '+bronze;
+      document.getElementById('stLast').textContent  = last? (last.name+' – '+(last.since||'—')):'—';
+    }
+
+    // ===== Sponsor Profile & Share =====
+    function renderSponsorProfile(params){
+      const id = params.get('id')||'';
+      const sp = getSponsors().find(s=>String(s.id)===String(id));
+      const card=document.getElementById('spProfileCard');
+      if(!card) return;
+      if(!sp){ card.innerHTML='<p class="muted">لم يتم العثور على الراعي المطلوب.</p>'; return; }
+      const badge = sp.tier==='gold'?'ذهبي': sp.tier==='silver'?'فضي':'مجتمعي';
+      card.innerHTML = `
+        <div class="row" style="gap:16px; align-items:center; flex-wrap:wrap">
+          <div class="s-logo tier-${sp.tier}">${sp.logo?'<img src="${sp.logo}" alt="${sp.name}" style="max-width:100%;max-height:100%;border-radius:8px;">': (sp.initials||sp.name.slice(0,1)) }</div>
+          <div>
+            <h3 style="margin-bottom:4px">${sp.name}</h3>
+            <div class="muted">فئة الرعاية: ${badge} • قيمة الالتزام: ${(+sp.amount||0).toLocaleString('ar-EG')} ريال • منذ: ${sp.since||'—'}</div>
+            <div style="margin-top:6px"><small class="muted">رابط المشاركة سيشير مباشرة إلى هذه الصفحة.</small></div>
+          </div>
+        </div>
+      `;
+      localStorage.setItem('nomu_last_sp', id);
+    }
+    async function shareSponsor(){
+      const lastId = localStorage.getItem('nomu_last_sp');
+      if(!lastId){ alert('افتح ملف راعٍ أولاً.'); return; }
+      const url = location.origin + location.pathname + '#/sponsorProfile?id=' + encodeURIComponent(lastId);
+      const title = 'منصة NOMU – ملف راعٍ';
+      const text = 'اطلع على ملف الراعي في منصة نمو NOMU';
+      try{
+        if(navigator.share){
+          await navigator.share({ title, text, url });
+        }else{
+          await navigator.clipboard.writeText(url);
+          alert('تم نسخ رابط المشاركة: ' + url);
         }
-        function apply(){
-          const query=q.value.trim().toLowerCase(), ty=type.value, rg=region.value;
-          let items=DATA.partners.slice();
-          if(query) items=items.filter(p=>(p.name||"").toLowerCase().includes(query));
-          if(ty!=="الكل") items=items.filter(p=>p.type===ty);
-          if(rg!=="الكل") items=items.filter(p=>p.region===rg);
-          draw(items);
-        }
-        q.addEventListener("input", apply, {passive:true});
-        type.addEventListener("input", apply, {passive:true});
-        region.addEventListener("input", apply, {passive:true});
-        reset.addEventListener("click", ()=>{ q.value=""; type.value="الكل"; region.value="الكل"; apply(); });
-        draw(DATA.partners);
+      }catch(e){
+        try{ await navigator.clipboard.writeText(url); alert('تم نسخ رابط المشاركة: ' + url); }
+        catch(_){ alert(url); }
       }
+    }
 
-      /* تشغيل */
-      window.addEventListener("hashchange", Router.render);
-      window.addEventListener("load", ()=>{
-        const y = document.getElementById("year");
-        if (y) y.textContent = new Date().getFullYear();
-        $$(".tab[data-link]").forEach(el=>el.addEventListener("click",(e)=>{e.preventDefault(); location.hash = el.dataset.link;}));
-        Router.render();
-      });
+    // ===== CSV Export =====
+    function exportSponsorsCSV(){
+      const list = getSponsors();
+      const rows = [['id','name','tier','amount','since','logo']].concat(
+        list.map(s=>[s.id,s.name,s.tier,s.amount,s.since||'',s.logo||''])
+      );
+      const csv = rows.map(r=>r.map(v=>(''+v).replace(/"/g,'""')).map(v=>`"${v}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'nomu_sponsors.csv'; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ===== Calc helpers =====
+    function openSponsor(title, price){
+      const m=document.getElementById('sponsorModal');
+      m.style.display='flex';
+      document.getElementById('pkgTitle').textContent='طلب رعاية – '+title;
+      const select=document.getElementById('pkgSelect');
+      [...select.options].forEach(o=>{ if(parseInt(o.value)==price) select.value=o.value; });
+      recalc();
+    }
+    function closeSponsor(){ document.getElementById('sponsorModal').style.display='none'; }
+    function recalc(){
+      const base=parseInt(document.getElementById('pkgSelect')?.value||'0');
+      const years=parseInt(document.getElementById('duration')?.value||'1');
+      let total=base*years; if(years==2) total*=0.95; if(years==3) total*=0.90;
+      const el=document.getElementById('totalPrice');
+      if(el) el.textContent= total? (total.toLocaleString('ar-EG')+' ريال'):'—'; return total;
+    }
+    function submitSponsor(e){
+      e.preventDefault();
+      const data={ org:orgName.value.trim(), pkg:+pkgSelect.value, years:+duration.value, notes:notes.value.trim(), total:recalc() };
+      alert('تم استلام الطلب بنجاح.\n'+JSON.stringify(data,null,2));
+      closeSponsor(); return false;
+    }
+  </script>
+
+  <script>
+    (function enhanceModalClose(){
+      try{
+        const modal = document.getElementById('sponsorModal');
+        if(modal){
+          modal.addEventListener('click', function(e){ if(e.target===modal){ modal.style.display='none'; }});
+          document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ modal.style.display='none'; }});
+          window.addEventListener('hashchange', function(){ modal.style.display='none'; });
+        }
+      }catch(e){}
     })();
   </script>
 </body>
