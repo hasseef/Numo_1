@@ -3,433 +3,726 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منصة نمو — نسخة ملف واحد</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['ui-sans-serif','system-ui','-apple-system','Segoe UI','Roboto','Noto Sans Arabic','Ubuntu','Cantarell','Helvetica Neue','Arial','sans-serif'] },
-          colors: { nomu: { 50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b' } }
-        }
-      }
+  <title>منصة حصيف - مبادرة تلبية</title>
+  <meta name="description" content="منصة حصيف - مبادرة تلبية لتمكين التكامل التنموي وفق رؤية السعودية 2030" />
+  <style>
+    :root{
+      --bg:#0b0f14;          /* خلفية داكنة أنيقة */
+      --card:#11161d;
+      --muted:#1a2029;
+      --primary:#37c7a3;     /* لون تلبية مائل للفيروزي */
+      --primary-weak:#2aa487;
+      --text:#f3f7f9;
+      --text-dim:#b9c3cc;
+      --accent:#ffd166;      /* لون إبراز */
+      --danger:#ef4444;
+      --ok:#22c55e;
+      --chip:#0f1720;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
     }
-  </script>
-  <style>html,body{height:100%}body{background:#fff}</style>
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Kufi Arabic", "Noto Sans Arabic", "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:linear-gradient(140deg,#0b0f14 0%, #0d141c 60%, #0b0f14 100%);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:1200px; margin-inline:auto; padding:16px}
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(180%) blur(10px);
+      background:rgba(11,15,20,.75);
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .bar{
+      display:flex; align-items:center; gap:16px; padding:12px 0;
+    }
+    .logo{
+      display:flex; align-items:center; gap:10px;
+      padding:8px 12px; border-radius:999px; background:var(--chip); border:1px solid rgba(255,255,255,.06)
+    }
+    .logo svg{width:28px; height:28px}
+    .brand{
+      display:flex; flex-direction:column; line-height:1.1
+    }
+    .brand b{font-weight:800}
+    .brand small{color:var(--text-dim)}
+    nav{
+      margin-inline-start:auto; display:flex; gap:8px; flex-wrap:wrap
+    }
+    .tab{
+      padding:10px 14px; border-radius:12px; background:transparent; border:1px solid rgba(255,255,255,.08);
+      color:var(--text); cursor:pointer; transition:.2s;
+    }
+    .tab.active,.tab:hover{background:var(--muted); border-color:rgba(255,255,255,.18)}
+    .primary-btn{
+      padding:10px 16px; border-radius:12px; background:var(--primary); color:#06251e; font-weight:700; border:none; cursor:pointer; transition:.2s;
+    }
+    .primary-btn:hover{filter:brightness(1.05)}
+
+    main{padding:24px 0}
+    .grid{display:grid; gap:16px}
+    @media(min-width:720px){ .grid.cols-3{grid-template-columns:repeat(3,1fr)} .grid.cols-2{grid-template-columns:repeat(2,1fr)} }
+    .card{
+      background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .card h3{margin:0 0 8px 0}
+    .chip{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:var(--chip);
+      border:1px solid rgba(255,255,255,.08); font-size:12px; color:var(--text-dim)
+    }
+    .h{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px
+    }
+    .muted{color:var(--text-dim)}
+    .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .kpi{
+      background:linear-gradient(180deg,rgba(55,199,163,.12),rgba(55,199,163,.04));
+      border:1px solid rgba(55,199,163,.25);
+      border-radius:14px; padding:12px; text-align:center
+    }
+    .kpi b{font-size:22px}
+    .pill{padding:6px 10px; border-radius:12px; background:rgba(255,255,255,.06)}
+    .divider{height:1px; background:rgba(255,255,255,.06); margin:12px 0}
+    .note{background:#0c141a; border:1px dashed rgba(255,255,255,.15); padding:12px; border-radius:12px; color:var(--text-dim)}
+
+    /* Tabs (local within pages) */
+    .tabs{display:flex; gap:8px; border-bottom:1px solid rgba(255,255,255,.06); margin-bottom:12px; flex-wrap:wrap}
+    .tabs .t{
+      padding:10px 12px; border-radius:12px 12px 0 0; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.08); border-bottom:none; cursor:pointer
+    }
+    .tabs .t.active{background:var(--muted); font-weight:700}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* Accordion */
+    .acc{border:1px solid rgba(255,255,255,.08); border-radius:14px; overflow:hidden}
+    .acc .acc-h{
+      padding:12px; background:rgba(255,255,255,.03); cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px
+    }
+    .acc .acc-c{display:none; padding:12px; background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.06)}
+    .acc.open .acc-c{display:block}
+
+    /* Inputs */
+    .input, select{
+      width:100%; padding:10px 12px; border-radius:12px; background:#0f1620; border:1px solid rgba(255,255,255,.1); color:var(--text)
+    }
+    .input::placeholder{color:#6b7280}
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap}
+
+    footer{
+      margin-top:24px; padding:24px 0; color:var(--text-dim)
+    }
+    .linkish{color:var(--accent); cursor:pointer}
+    .badge{background:rgba(255,209,102,.15); border:1px solid rgba(255,209,102,.35); color:#ffe6a6; padding:4px 8px; border-radius:10px; font-size:12px}
+    .ok{color:var(--ok)} .danger{color:var(--danger)}
+    .vis2030{display:flex; gap:8px; flex-wrap:wrap}
+    .vis2030 .goal{padding:6px 10px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); font-size:12px}
+
+    /* Helpers */
+    .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
 </head>
 <body>
-  <div id="root"></div>
-
-  <!-- React & ReactDOM (UMD) + Babel للـJSX -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <script type="text/babel" data-presets="react">
-    const { useEffect, useRef, useState } = React;
-
-    // شعار نمو (مكانه هنا — حدّث الرابط إن لديك SVG رسمي)
-    const NOMULogo = ({ className="h-8 w-auto" }) => (
-      <svg viewBox="0 0 200 50" className={className} aria-label="منصة نمو">
-        <rect width="200" height="50" rx="10" fill="#10b981" opacity="0.08"></rect>
-        <text x="100" y="33" textAnchor="middle" fontFamily="Tahoma, 'Noto Sans Arabic', Arial" fontSize="26" fill="#065f46">نمو</text>
-      </svg>
-    );
-
-    const cn = (...a)=>a.filter(Boolean).join(" ");
-    function useReveal(opts={threshold:0.12}){ const ref=useRef(null),[v,setV]=useState(false);
-      useEffect(()=>{ const el=ref.current; if(!el) return;
-        const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&setV(true)),opts);
-        io.observe(el); return ()=>io.disconnect();
-      },[opts]); return {ref,visible:v}; }
-
-    const useHash=()=>{ const [h,setH]=useState(()=>window.location.hash||"#/home");
-      useEffect(()=>{ const on=()=>setH(window.location.hash||"#/home");
-        window.addEventListener("hashchange",on); return ()=>window.removeEventListener("hashchange",on);
-      },[]); return h; };
-
-    const NavLink=({to,children})=>(
-      <a href={to} className={cn("px-3 py-2 text-sm font-medium hover:opacity-80 transition-opacity", window.location.hash===to?"underline underline-offset-4":"")}>{children}</a>
-    );
-
-    function Header(){
-      const [open,setOpen]=useState(false);
-      return (
-        <header className="w-full sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <div className="flex items-center justify-between h-14">
-              <a href="#/home" className="flex items-center gap-3"><NOMULogo/><span className="sr-only">منصة نمو</span></a>
-              <nav className="hidden md:flex items-center gap-1 text-slate-700">
-                <NavLink to="#/home">الرئيسية</NavLink>
-                <NavLink to="#/about">تعريف المنصة</NavLink>
-                <NavLink to="#/features">المزايا</NavLink>
-                <NavLink to="#/accounts">الحسابات</NavLink>
-                <NavLink to="#/pricing">الباقات</NavLink>
-                <NavLink to="#/kpis">مؤشرات الأداء</NavLink>
-                <NavLink to="#/support">الدعم الفني والتواصل</NavLink>
-              </nav>
-              <button onClick={()=>setOpen(v=>!v)} className="md:hidden p-2 rounded-lg border border-slate-300" aria-label="القائمة">
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
-              </button>
-            </div>
-            {open && (
-              <div className="md:hidden pb-3 animate-[fadeIn_.2s_ease]">
-                {[
-                  ["#/home","الرئيسية"],["#/about","تعريف المنصة"],["#/features","المزايا"],
-                  ["#/accounts","الحسابات"],["#/pricing","الباقات"],["#/kpis","مؤشرات الأداء"],["#/support","الدعم الفني والتواصل"]
-                ].map(([to,label])=>(
-                  <a key={to} href={to} className="block px-3 py-2 rounded-lg hover:bg-slate-50" onClick={()=>setOpen(false)}>{label}</a>
-                ))}
-              </div>
-            )}
-          </div>
-        </header>
-      );
-    }
-
-    function Hero(){
-      const {ref,visible}=useReveal();
-      return (
-        <section id="home" ref={ref} className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-tr from-nomu-50 via-white to-sky-50"></div>
-          <div className="relative max-w-7xl mx-auto px-3 sm:px-4 py-20 sm:py-24">
-            <div className={cn("max-w-2xl transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-slate-900">
-                منصة <span className="text-nomu-600">نمو</span> — رحلة الطفل المتكاملة تحت حوكمة موحّدة
-              </h1>
-              <p className="mt-4 text-slate-600 text-base sm:text-lg">
-                منصة وطنية للطفولة المبكرة تُنسّق الخدمات بين الأسرة والصحة والتعليم والقطاعين غير الربحي والخاص، مع مؤشرات أداء شفافة لتحقيق أثر قابل للقياس.
-              </p>
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <a href="#/about" className="px-5 py-3 rounded-xl bg-nomu-600 text-white font-semibold hover:bg-nomu-700">ما هي نمو؟</a>
-                <a href="#/kpis" className="px-5 py-3 rounded-xl border border-slate-300 hover:bg-slate-50">مؤشرات الأداء</a>
-              </div>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    function About(){
-      const {ref,visible}=useReveal();
-      return (
-        <section id="about" ref={ref} className="py-14 sm:py-16 bg-slate-50">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">تعريف المنصة</h2>
-            <div className={cn("mt-4 grid md:grid-cols-2 gap-6 items-start transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm leading-8 text-slate-700">
-                <p><strong>منصة نمو</strong> تُوحِّد الرحلات والبيانات بين القطاعات، وتربط المبادرات بالأهداف الوطنية، وتقدم لوحات أداء لحظية لدعم القرار ورفع الجودة وترشيد الإنفاق.</p>
-                <ul className="list-disc pr-5 mt-3 space-y-2">
-                  <li>رحلة الطفل: قبل الحمل → الحمل → الولادة → 0–3 → 3–6.</li>
-                  <li>إدارة الإحالات، الرعايات، والفعاليات مع تتبع الأثر.</li>
-                  <li>حوكمة بيانات وصلاحيات حسب الدور.</li>
-                </ul>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <h3 className="font-semibold text-slate-900">أهداف رئيسية</h3>
-                <ol className="mt-3 list-decimal pr-5 space-y-2 text-slate-700">
-                  <li>تحسين نتائج الطفولة المبكرة عبر التكامل.</li>
-                  <li>قياس الأثر بمؤشرات واضحة ومعلنة.</li>
-                  <li>تمكين مساهمات القطاع غير الربحي والخاص.</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    function Features(){
-      const items=[
-        { title:"تكامل الحسابات", desc:"أسرة/أفراد، قطاع خاص، جامعات، غير ربحي، مانحون، جهات حكومية."},
-        { title:"مؤشرات أداء حية", desc:"لوحات قابلة للتصفية حسب المنطقة/الفترة مع تحذيرات تلقائية."},
-        { title:"إحالات فعّالة", desc:"قياس وقت الإغلاق، جودة التحويلات، وتتبع الحالات العاجلة."},
-        { title:"بوابة تمويل", desc:"رعايات ومنح واستثمار اجتماعي مرتبطة بمقاييس الأثر."},
-        { title:"إدارة فعاليات", desc:"موافقات وربط مشاركين وتقارير دعم."},
-        { title:"تعزيز علمي", desc:"مراجعات جامعية لرفع الجودة وترشيد الإنفاق."},
-      ];
-      const {ref,visible}=useReveal();
-      return (
-        <section id="features" ref={ref} className="py-14 sm:py-16">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">المزايا</h2>
-            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {items.map(it=>(
-                <div key={it.title} className={cn("rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
-                  <h3 className="text-lg font-semibold text-slate-900">{it.title}</h3>
-                  <p className="mt-2 text-slate-600 text-sm leading-7">{it.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    function Accounts(){
-      const items=[
-        { name:"الأسرة/الأفراد", points:["رحلتي وخدماتي","فرص التدريب/الدعم","محفظة ومتابعة الأثر"]},
-        { name:"القطاع الخاص", points:["رعايات ومسؤولية اجتماعية","تقارير أثر","إدارة فعاليات"]},
-        { name:"الجامعات", points:["تعزيز علمي","برامج وأبحاث","عوائد واستشارات"]},
-        { name:"غير الربحي", points:["حشد التمويل","إدارة الحلول","شفافية وأداء"]},
-        { name:"المانحون", points:["حقيبة مانح","فرص منح","متابعة الصرف"]},
-        { name:"الجهات الحكومية", points:["طلبات حلول","لوحات أداء","موافقات"]},
-      ];
-      const {ref,visible}=useReveal();
-      return (
-        <section id="accounts" ref={ref} className="py-14 sm:py-16 bg-slate-50">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">الحسابات</h2>
-            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {items.map(acc=>(
-                <div key={acc.name} className={cn("rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-all duration-700", visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3")}>
-                  <h3 className="text-lg font-semibold text-slate-900">{acc.name}</h3>
-                  <ul className="mt-3 space-y-1 text-slate-700 text-sm">
-                    {acc.points.map(p=>(
-                      <li key={p} className="flex items-start gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-nomu-500"></span><span>{p}</span></li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    /* الدفع التجريبي */
-    function PaymentModal({open,onClose}){
-      const [amount,setAmount]=useState("2500");
-      const [processing,setProcessing]=useState(false);
-      const [receipt,setReceipt]=useState(null);
-      const pay=()=>{ setProcessing(true);
-        setTimeout(()=>{ const id="نمو-"+Math.random().toString(36).slice(2,10).toUpperCase();
-          setReceipt({id,amount:Number(amount),date:new Date().toLocaleString()}); setProcessing(false);
-        },1100);
-      };
-      if(!open) return null;
-      return (
-        <div className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/50">
-          <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
-            <div className="p-5 border-b border-slate-200 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">بوابة دفع نمو (تجريب)</h3>
-              <button className="p-2 rounded-lg hover:bg-slate-100" onClick={onClose} aria-label="إغلاق">✕</button>
-            </div>
-            <div className="p-5 space-y-4">
-              {!receipt ? (
-                <>
-                  <label className="block text-sm text-slate-600">المبلغ (ر.س)</label>
-                  <input value={amount} onChange={(e)=>setAmount(e.target.value)} type="number" min={1} className="w-full rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
-                  <button disabled={processing} onClick={pay} className="w-full rounded-xl bg-nomu-600 text-white font-semibold py-2.5 hover:bg-nomu-700 disabled:opacity-60">
-                    {processing ? "جارِ المعالجة..." : "ادفع الآن"}
-                  </button>
-                  <p className="text-xs text-slate-500">هذه محاكاة دفع للعرض — يمكن ربط مزود فعلي لاحقًا.</p>
-                </>
-              ) : (
-                <div className="space-y-3">
-                  <div className="rounded-xl bg-nomu-50 border border-nomu-200 p-4">
-                    <p className="font-semibold text-nomu-800">تم الدفع بنجاح ✅</p>
-                    <p className="text-sm text-nomu-900/80 mt-1">رقم الإيصال: {receipt.id}</p>
-                    <p className="text-sm text-nomu-900/80">المبلغ: {receipt.amount.toLocaleString()} ر.س</p>
-                    <p className="text-sm text-nomu-900/80">التاريخ: {receipt.date}</p>
-                  </div>
-                  <button className="w-full rounded-xl border border-slate-300 py-2.5 hover:bg-slate-50" onClick={onClose}>إغلاق</button>
-                </div>
-              )}
-            </div>
-          </div>
+  <header>
+    <div class="wrap bar">
+      <!-- شعار تلبية SVG (يمكن استبداله بصورة PNG عبر التعليمات أسفل الملف) -->
+      <a href="#/home" class="logo" aria-label="الانتقال للصفحة الرئيسية">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#37c7a3"/><stop offset="1" stop-color="#2aa487"/>
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#g)"/>
+          <path d="M20 34c6 6 10-8 16-2 2 2 2 6 6 6 4 0 6-4 6-8" stroke="#06251e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="brand">
+          <b>مبادرة تلبية</b>
+          <small>منصة حصيف • حلول صائبة يُقترح فعلها</small>
         </div>
-      );
+      </a>
+
+      <nav>
+        <a class="tab" data-link="#/home">الرئيسية</a>
+        <a class="tab" data-link="#/accounts">الحسابات</a>
+        <a class="tab" data-link="#/directory">دليل الشركاء</a>
+        <a class="tab" data-link="#/about">عن المنصة</a>
+      </nav>
+
+      <button class="primary-btn" onclick="location.hash='#/start'">ابدأ الآن</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="app"></div>
+  </main>
+
+  <footer class="wrap">
+    <div class="row">
+      <span class="badge">نسخة عرض تشغيلية</span>
+      <span class="pill">متوافقة مع صفحات GitHub</span>
+      <span class="pill">دون مكاتب خارجية</span>
+    </div>
+    <div class="divider"></div>
+    <p>© <span id="year"></span> مبادرة تلبية • منصة حصيف. جميع الحقوق محفوظة.</p>
+  </footer>
+
+  <script>
+    // ---------------------------
+    // بيانات المنصة (مختصرة ولكن شاملة هيكليًا حتى 4 مستويات)
+    // ---------------------------
+    const DATA = {
+      kpis:{
+        beneficiaries: 400, // عدد منشآت مستفيدة من سجلها
+        programs: 6,        // برامج الرؤية المغطاة
+        goals: 27,          // أهداف تفصيلية
+        subgoals: 96        // أهداف فرعية
+      },
+      vision2030: [
+        "تعزيز فاعلية الحكومة", "تنمية وتنويع الاقتصاد", "تمكين المسؤولية الاجتماعية",
+        "تعزيز الهوية الوطنية", "تمكين حياة عامرة وصحية"
+      ],
+      accounts: [
+        {
+          id:"individual", name:"حساب الأفراد", emoji:"👤",
+          tagline:"مبادراتي، فرص الوظائف، التدريب، التطوع، الأحداث، والمحفظة.",
+          value:[
+            "إدراج مبادرة عبر نموذج اللبنات التسعة",
+            "مطابقة الفرص (وظائف، تدريب، تطوع) حسب السيرة والاهتمامات",
+            "المشاركة في فعاليات ومنتديات ومحاضرات حسب المنطقة",
+            "التبرع والمساهمة المجتمعية للمشاريع"
+          ],
+          services:[
+            { title:"مبادراتي", items:[
+                { title:"إدراج مبادرة (اللبنات التسعة)", children:[
+                  { title:"الفكرة والقيمة", children:[
+                    { title:"المشكلة والحل"},{title:"شريحة المستفيدين"},{title:"القيمة المقترحة"}
+                  ]},
+                  { title:"النموذج التشغيلي", children:[
+                    { title:"الأنشطة الرئيسية"},{title:"الموارد والشركاء"}
+                  ]},
+                  { title:"الخطة المالية", children:[
+                    { title:"التكلفة"},{title:"الإيرادات"},{title:"مؤشرات الأداء"}
+                  ]}
+                ]},
+                { title:"متابعة الاعتماد والتمويل" }
+            ]},
+            { title:"فرص مطابقة", items:[
+                { title:"وظائف"},{title:"تدريب تعاوني"},{title:"تطوع"},{title:"متحدث/مدرب مؤهل"}
+            ]},
+            { title:"الأحداث", items:[
+                { title:"منتديات وورش عمل"},{title:"تذاكر إلكترونية"},{title:"شهادات حضور"}
+            ]},
+            { title:"المحفظة", items:[
+                { title:"التبرعات والمساهمات"},{title:"الاشتراكات والخدمات المدفوعة"}
+            ]}
+          ]
+        },
+        {
+          id:"private", name:"حساب القطاع الخاص", emoji:"🏢",
+          tagline:"تقارير المسؤولية الاجتماعية، المنح والرعاية، الأحداث والمرافق، والحلول.",
+          value:[
+            "عرض فرص الرعاية والمنح وفق معايير الشركة",
+            "تقارير أثر المسؤولية الاجتماعية وربطها بجهات حكومية",
+            "استئجار مرافق، تنظيم فعاليات، وتقديم حلول للجهات"
+          ],
+          services:[
+            { title:"المسؤولية الاجتماعية", items:[
+              { title:"فرص منح/رعاية", children:[
+                { title:"تصنيف حسب البرنامج", children:[
+                  { title:"رؤية 2030"},{title:"تعليم"},{title:"صحة"},{title:"ثقافة"}
+                ]}
+              ]},
+              { title:"التقارير", children:[
+                { title:"الأثر", children:[
+                  { title:"مؤشرات أداء"},{title:"عدد المستفيدين"},{title:"التغطية الجغرافية"}
+                ]},
+                { title:"الشفافية", children:[
+                  { title:"الفواتير والإثباتات"},{title:"الربط مع الجهات"}
+                ]}
+              ]}
+            ]},
+            { title:"الأحداث والمرافق", items:[
+              { title:"طلب/تنظيم حدث"},{ title:"حجز مرافق" }
+            ]},
+            { title:"حلول للجهات", items:[
+              { title:"اقتراح حلول احتياج حكومي/تعليمي/صحي" }
+            ]}
+          ]
+        },
+        {
+          id:"nonprofit", name:"حساب القطاع غير الربحي", emoji:"🤝",
+          tagline:"الوظائف والتطوع، فرص التمويل، إدارة المشاريع، تقارير الأداء.",
+          value:[
+            "نشر وظائف وتطوع وتدريب",
+            "جذب التمويل عبر الرعاة والممولين والمتبرعين",
+            "لوحات متابعة للمشاريع ومؤشرات الأداء"
+          ],
+          services:[
+            { title:"الفرص", items:[
+              { title:"وظائف"},{ title:"تطوع"},{ title:"تدريب"},{title:"طلب مدربين"}
+            ]},
+            { title:"التمويل", items:[
+              { title:"رعايات"},{ title:"تبرعات"},{ title:"استثمار/اشتراكات في مشاريع"}
+            ]},
+            { title:"المشاريع", items:[
+              { title:"إدارة الجدول الزمني"},{ title:"المؤشرات والأثر"},{ title:"تقارير الممولين"}
+            ]},
+            { title:"المرافق", items:[
+              { title:"قائمة مرافق للإيجار"},{title:"اعتماد وحجوزات"}
+            ]}
+          ]
+        },
+        {
+          id:"donor", name:"حساب المانحين", emoji:"💚",
+          tagline:"فرص منح وفق المعايير، محفظة المانح، تقارير ومطابقة الأهداف.",
+          value:[
+            "تخصيص معايير المنح والقطاعات والبرامج",
+            "محفظة للمنح والتبرعات وتتبع الأثر",
+            "تقارير ربط برؤية 2030 ومؤشرات الأداء"
+          ],
+          services:[
+            { title:"فرص المنح", items:[
+              { title:"حسب المعايير", children:[
+                { title:"المنطقة"},{title:"القطاع"},{title:"البرنامج"}
+              ]}
+            ]},
+            { title:"محفظتي", items:[
+              { title:"التزامات/مدفوعات"},{ title:"متابعة الأثر" }
+            ]},
+            { title:"التقارير", items:[
+              { title:"مواءمة رؤية 2030"},{ title:"أفضل الجهات دعماً في المنطقة" }
+            ]}
+          ]
+        },
+        {
+          id:"university", name:"حساب الجامعات", emoji:"🏛️",
+          tagline:"تعزيز علمي للمشاريع، شراكات، عوائد، تسويق برامج وبحوث.",
+          value:[
+            "دور استشاري علمي لتعزيز المشاريع لجميع القطاعات",
+            "عوائد من المشاركة العلمية/الاستشارية",
+            "تسويق البرامج والبحوث والابتكار للرعاة والممولين"
+          ],
+          services:[
+            { title:"التعزيز العلمي", items:[
+              { title:"مراجعة جدوى"},{title:"اعتماد مؤشرات"},{title:"تقارير محكّمة"}
+            ]},
+            { title:"الشراكات", items:[
+              { title:"مع القطاعات الحكومية والخاصة وغير الربحية" }
+            ]},
+            { title:"التسويق والتمويل", items:[
+              { title:"برامج أكاديمية"},{title:"بحوث ومراكز"},{title:"ابتكار ونقل تقنية"}
+            ]},
+            { title:"المرافق والاستثمارات", items:[
+              { title:"تأجير مرافق"},{title:"استثمار القطاعات في مرافق الجامعة"}
+            ]}
+          ]
+        },
+        {
+          id:"government", name:"حساب الجهة الحكومية/الإمارة", emoji:"🏛️‍⚖️",
+          tagline:"المبادرات الحكومية، الموافقات على الفعاليات، الحلول، لوحات المؤشرات الإقليمية.",
+          value:[
+            "إدارة مبادرات مرتبطة بأهداف رؤية 2030 (استراتيجية/فرعية/تفصيلية)",
+            "اعتماد/رفض طلبات الفعاليات والاطلاع على المشاركين وأدوارهم",
+            "طلب حلول من القطاعات والأفراد وتعزيز فاعلية الحكومة"
+          ],
+          services:[
+            { title:"مبادرات حكومية", items:[
+              { title:"ربط بالأهداف (استراتيجية/فرعية/تفصيلية)"},
+              { title:"الملفات الداعمة والشركاء"}
+            ]},
+            { title:"إدارة الفعاليات", items:[
+              { title:"طلبات الاعتماد"},{ title:"قبول/رفض الشراكات الاستراتيجية"},{ title:"قائمة المشاركين وأدوارهم"}
+            ]},
+            { title:"حلول", items:[
+              { title:"طلب حلول احتياج"},{ title:"استعراض الحلول المقترحة"}
+            ]},
+            { title:"لوحات مؤشرات المنطقة", items:[
+              { title:"البرامج الأكثر دعماً"},{title:"الشركات الأكثر مساهمة"},{title:"عدد المستفيدين"}
+            ]}
+          ]
+        }
+      ],
+      partners: [
+        { name:"إمارة منطقة حائل", type:"حكومي", region:"حائل", programs:["تعزيز فاعلية الحكومة","تمكين المسؤولية الاجتماعية"] },
+        { name:"وزارة الاتصالات وتقنية المعلومات", type:"حكومي", region:"الرياض", programs:["تعزيز فاعلية الحكومة","تنمية وتنويع الاقتصاد"] },
+        { name:"جامعة حائل", type:"جامعة", region:"حائل", programs:["تمكين حياة عامرة وصحية","تنمية وتنويع الاقتصاد"] },
+        { name:"غرفة حائل", type:"خاص", region:"حائل", programs:["تنمية وتنويع الاقتصاد","تعزيز الهوية الوطنية"] },
+        { name:"جمعية منار الصحية", type:"غير ربحي", region:"الشرقية", programs:["تمكين حياة عامرة وصحية"] },
+        { name:"شركة تسجيل (سجلها ERP)", type:"خاص", region:"الرياض", programs:["تعزيز فاعلية الحكومة"] }
+      ]
+    };
+
+    // ---------------------------
+    // أدوات عامة
+    // ---------------------------
+    const $ = (sel, root=document)=>root.querySelector(sel);
+    const $$ = (sel, root=document)=>[...root.querySelectorAll(sel)];
+    const escapeHTML = (s)=>s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+
+    function setActiveTopTab(){
+      const hash = location.hash || "#/home";
+      $$(".tab").forEach(t=>{
+        const on = (t.dataset.link===hash) || (hash.startsWith("#/account") && t.dataset.link==="#/accounts");
+        t.classList.toggle("active", on);
+      });
+    }
+    function relativeTime(date=new Date()){
+      return new Intl.DateTimeFormat('ar-SA', { dateStyle:'medium'}).format(date);
     }
 
-    function Pricing(){
-      const plans=[
-        { name:"أساسي", price:"0", features:["عرض عام","روابط حسابات","تقارير عامة"]},
-        { name:"احترافي", price:"2500", features:["لوحات أداء مخصصة","ربط دفع","إدارة فعاليات"], highlighted:true },
-        { name:"مؤسسي", price:"—", features:["تكامل APIs","تحليلات متقدمة","دعم مخصص"]},
-      ];
-      const [open,setOpen]=useState(false);
-      return (
-        <section id="pricing" className="py-14 sm:py-16">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">الباقات</h2>
-            <div className="mt-8 grid md:grid-cols-3 gap-4 sm:gap-6">
-              {plans.map(p=>(
-                <div key={p.name} className={cn("rounded-2xl border bg-white p-6 shadow-sm", p.highlighted ? "border-nomu-300 ring-2 ring-nomu-200" : "border-slate-200")}>
-                  <h3 className="text-lg font-semibold text-slate-900">{p.name}</h3>
-                  <div className="mt-2 flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-slate-900">{p.price}</span>
-                    {p.price !== "—" && <span className="text-slate-500">ر.س / شهر</span>}
-                  </div>
-                  <ul className="mt-4 space-y-2 text-sm text-slate-700">
-                    {p.features.map(f=>(
-                      <li key={f} className="flex items-start gap-2"><span className="mt-1 h-2 w-2 rounded-full bg-nomu-500"></span><span>{f}</span></li>
-                    ))}
-                  </ul>
-                  {p.price !== "—"
-                    ? <button onClick={()=>setOpen(true)} className={cn("mt-6 w-full rounded-xl py-2.5 font-semibold", p.highlighted ? "bg-nomu-600 text-white hover:bg-nomu-700" : "border border-slate-300 hover:bg-slate-50")}>اشترك الآن</button>
-                    : <a href="#/support" className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-slate-300 py-2.5 hover:bg-slate-50 font-semibold">حلول مؤسسية</a>
-                  }
+    // ---------------------------
+    // مركبات واجهة
+    // ---------------------------
+    function KPIGrid(){
+      const {beneficiaries, programs, goals, subgoals} = DATA.kpis;
+      return `
+        <div class="grid cols-4">
+          <div class="kpi"><div class="muted">منشآت مستفيدة</div><b>${beneficiaries}+</b></div>
+          <div class="kpi"><div class="muted">برامج رؤية</div><b>${programs}</b></div>
+          <div class="kpi"><div class="muted">أهداف تفصيلية</div><b>${goals}</b></div>
+          <div class="kpi"><div class="muted">أهداف فرعية</div><b>${subgoals}</b></div>
+        </div>`;
+    }
+
+    function VisionChips(){
+      return `<div class="vis2030">${DATA.vision2030.map(g=>`<span class="goal">🎯 ${g}</span>`).join("")}</div>`;
+    }
+
+    function Accordion(items){
+      // items: [{title, content}]
+      return items.map((it,i)=>`
+        <div class="acc" data-acc>
+          <div class="acc-h" role="button" aria-expanded="false">
+            <span>${escapeHTML(it.title)}</span>
+            <span class="muted">▼</span>
+          </div>
+          <div class="acc-c">${it.content||""}</div>
+        </div>
+      `).join("");
+    }
+
+    function NestedList(nodes, depth=1){
+      if(!nodes) return "";
+      return `
+        <ul style="margin:6px 0 6px ${depth*12}px; padding:0 0 0 0; list-style: none">
+          ${nodes.map(n=>`
+            <li style="margin:6px 0">
+              <span>▪︎ ${escapeHTML(n.title)}</span>
+              ${n.children? NestedList(n.children, depth+1) : ""}
+            </li>
+          `).join("")}
+        </ul>
+      `;
+    }
+
+    function ServicesAccordion(services){
+      const accItems = services.map(s=>({
+        title: "🧩 " + s.title,
+        content: `
+          ${s.items?.length? NestedList(s.items) : `<div class="muted">لا توجد عناصر</div>`}
+        `
+      }));
+      return Accordion(accItems);
+    }
+
+    // ---------------------------
+    // صفحات
+    // ---------------------------
+    function HomePage(){
+      return `
+        <section class="grid cols-2">
+          <div class="card">
+            <div class="h">
+              <h3>منصة حصيف • مبادرة تلبية</h3>
+              <span class="chip">آخر تحديث: ${relativeTime()}</span>
+            </div>
+            <p class="muted">منصة وطنية لتمكين التكامل بين الجهات الحكومية والقطاع الخاص والقطاع غير الربحي والجامعات والأفراد، عبر آليات علمية وتنفيذية تسهم في تحقيق مستهدفات رؤية 2030.</p>
+            <div class="divider"></div>
+            ${VisionChips()}
+            <div class="divider"></div>
+            ${KPIGrid()}
+            <div class="divider"></div>
+            <div class="row">
+              <a class="primary-btn" href="#/accounts">استكشف الحسابات</a>
+              <a class="tab" href="#/directory">عرض دليل الشركاء</a>
+              <span class="pill">MVPLAB • @ntdpsa</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>روابط سريعة</h3>
+            <div class="grid">
+              <a class="tab" href="#/account/individual">👤 الأفراد</a>
+              <a class="tab" href="#/account/private">🏢 القطاع الخاص</a>
+              <a class="tab" href="#/account/nonprofit">🤝 غير الربحي</a>
+              <a class="tab" href="#/account/donor">💚 المانح</a>
+              <a class="tab" href="#/account/university">🏛️ الجامعة</a>
+              <a class="tab" href="#/account/government">🏛️‍⚖️ الجهة الحكومية/الإمارة</a>
+            </div>
+            <div class="divider"></div>
+            <div class="note">
+              <b>معلومة:</b> يمكن ربط المشاريع بالأهداف (استراتيجية ← فرعية ← تفصيلية) وتتبع المؤشرات وعدد المستفيدين والتغطية الجغرافية.
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function AccountsPage(){
+      return `
+        <section class="grid cols-3">
+          ${DATA.accounts.map(acc=>`
+            <div class="card">
+              <div class="h">
+                <h3>${acc.emoji} ${acc.name}</h3>
+                <span class="chip">معرّف: ${acc.id}</span>
+              </div>
+              <p class="muted">${acc.tagline}</p>
+              <div class="divider"></div>
+              <div class="row">${acc.value.slice(0,3).map(v=>`<span class="pill">${escapeHTML(v)}</span>`).join("")}</div>
+              <div class="divider"></div>
+              <a class="primary-btn" href="#/account/${acc.id}">فتح الحساب</a>
+            </div>
+          `).join("")}
+        </section>
+      `;
+    }
+
+    function AccountDetailPage(id){
+      const acc = DATA.accounts.find(a=>a.id===id);
+      if(!acc){
+        return `<div class="card"><h3>الحساب غير موجود</h3><p class="muted">تأكد من الرابط.</p><a class="tab" href="#/accounts">العودة للحسابات</a></div>`;
+      }
+      // تبويبات داخلية: نظرة عامة / الخدمات / القيمة المضافة
+      return `
+        <section class="grid">
+          <div class="card">
+            <div class="h">
+              <h3>${acc.emoji} ${acc.name}</h3>
+              <a class="tab" href="#/accounts">عودة</a>
+            </div>
+
+            <div class="tabs" data-tabs>
+              <button class="t active" data-tab="overview">نظرة عامة</button>
+              <button class="t" data-tab="services">الخدمات</button>
+              <button class="t" data-tab="value">القيمة المضافة</button>
+            </div>
+
+            <div class="tab-panel active" data-panel="overview">
+              <p class="muted">${acc.tagline}</p>
+              <div class="divider"></div>
+              ${VisionChips()}
+              <div class="divider"></div>
+              <div class="row">
+                <span class="pill">يدعم التكامل بين القطاعات</span>
+                <span class="pill">تقارير ومؤشرات</span>
+                <span class="pill">حوكمة وشفافية</span>
+              </div>
+            </div>
+
+            <div class="tab-panel" data-panel="services">
+              ${ServicesAccordion(acc.services)}
+            </div>
+
+            <div class="tab-panel" data-panel="value">
+              <div class="grid cols-2">
+                ${acc.value.map(v=>`<div class="kpi"><div class="muted">قيمة</div><b>${escapeHTML(v)}</b></div>`).join("")}
+              </div>
+              <div class="divider"></div>
+              <div class="note">يمكن تخصيص هذه القائمة لاحقًا وإضافة مستندات، نماذج اعتماد، وربط API.</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function DirectoryPage(){
+      // واجهة بحث وتصنيف
+      const types = ["الكل","حكومي","خاص","غير ربحي","جامعة"];
+      const regions = ["الكل","حائل","الرياض","الشرقية","مكة","المدينة","القصيم","الحدود الشمالية","عسير","الباحة","جازان","نجران","تبوك","الجوف"];
+
+      return `
+        <section class="grid">
+          <div class="card">
+            <div class="h">
+              <h3>الدليل الوطني للشركاء</h3>
+              <span class="chip">عناصر: ${DATA.partners.length}</span>
+            </div>
+            <div class="toolbar">
+              <input class="input" id="q" placeholder="ابحث بالاسم..." />
+              <select id="type">${types.map(t=>`<option>${t}</option>`).join("")}</select>
+              <select id="region">${regions.map(r=>`<option>${r}</option>`).join("")}</select>
+              <button class="tab" id="reset">إعادة تعيين</button>
+            </div>
+            <div class="divider"></div>
+            <div id="plist"></div>
+          </div>
+        </section>
+      `;
+    }
+
+    function AboutPage(){
+      return `
+        <section class="grid cols-2">
+          <div class="card">
+            <h3>عن المنصة</h3>
+            <p class="muted">منصة حصيف ضمن مبادرة تلبية، نموذج عمل وطني لتمكين الحلول المجتمعية والتنموية وربطها بالجهات ذات العلاقة عبر أدوات علمية وتنفيذية عملية. تم تطويرها على مدى سنتين، وشاركت ضمن منتج MVPLAB في البرنامج الوطني لتنمية تقنية المعلومات.</p>
+            <div class="divider"></div>
+            ${VisionChips()}
+            <div class="divider"></div>
+            <p class="note">تهدف المنصة إلى تنظيم المشاركة، توحيد الجهود، رفع جودة العمل التنموي، زيادة الأثر، وترشيد الإنفاق.</p>
+          </div>
+          <div class="card">
+            <h3>تواصل</h3>
+            <p>للتكامل والشراكات والدعم والاعتمادات العلمية:</p>
+            <ul>
+              <li>التكامل مع الجهات الحكومية والجامعات</li>
+              <li>رعايات ومسؤولية اجتماعية للقطاع الخاص</li>
+              <li>تمكين القطاع غير الربحي</li>
+            </ul>
+            <div class="divider"></div>
+            <p class="muted">* هذه نسخة عرض — يمكن ربط نماذج اتصال/بريد لاحقًا.</p>
+          </div>
+        </section>
+      `;
+    }
+
+    function StartPage(){
+      return `
+        <section class="grid">
+          <div class="card">
+            <h3>ابدأ الآن</h3>
+            <p class="muted">اختر الحساب الأنسب لبدء رحلتك داخل المنصة.</p>
+            <div class="divider"></div>
+            <div class="grid cols-3">
+              ${DATA.accounts.map(a=>`
+                <a class="tab" href="#/account/${a.id}">${a.emoji} ${a.name}</a>
+              `).join("")}
+            </div>
+            <div class="divider"></div>
+            <p class="note">يمكن إضافة تسجيل/دخول لاحقًا (OAuth/SSO) وربط محفظة رقمية.</p>
+          </div>
+        </section>
+      `;
+    }
+
+    // ---------------------------
+    // الراوتنج
+    // ---------------------------
+    function render(){
+      const app = $("#app");
+      const hash = location.hash || "#/home";
+      setActiveTopTab();
+
+      if(hash==="#/" || hash==="#/home"){ app.innerHTML = HomePage(); afterRender(); return; }
+      if(hash==="#/accounts"){ app.innerHTML = AccountsPage(); afterRender(); return; }
+      if(hash.startsWith("#/account/")){
+        const id = hash.split("/")[2];
+        app.innerHTML = AccountDetailPage(id);
+        afterRender();
+        return;
+      }
+      if(hash==="#/directory"){ app.innerHTML = DirectoryPage(); afterRenderDirectory(); return; }
+      if(hash==="#/about"){ app.innerHTML = AboutPage(); afterRender(); return; }
+      if(hash==="#/start"){ app.innerHTML = StartPage(); afterRender(); return; }
+
+      // افتراضي
+      app.innerHTML = HomePage(); afterRender();
+    }
+
+    // ---------------------------
+    // معالجات ما بعد الرسم
+    // ---------------------------
+    function afterRender(){
+      // تبويبات داخلية
+      $$("[data-tabs]").forEach(tabset=>{
+        const tabs = $$(".t", tabset);
+        const panelRoot = tabset.parentElement;
+        tabs.forEach(t=>{
+          t.addEventListener("click", ()=>{
+            const name = t.dataset.tab;
+            tabs.forEach(x=>x.classList.toggle("active", x===t));
+            $$(".tab-panel", panelRoot).forEach(p=>p.classList.toggle("active", p.dataset.panel===name));
+          });
+        });
+      });
+
+      // أكورديون
+      $$(".acc .acc-h").forEach(h=>{
+        h.addEventListener("click", ()=>{
+          const acc = h.closest(".acc");
+          const open = acc.classList.toggle("open");
+          h.setAttribute("aria-expanded", open ? "true":"false");
+        });
+      });
+    }
+
+    function afterRenderDirectory(){
+      afterRender();
+      const list = $("#plist");
+      const q = $("#q");
+      const type = $("#type");
+      const region = $("#region");
+      const reset = $("#reset");
+
+      function draw(items){
+        if(!items.length){ list.innerHTML = `<div class="note">لا توجد نتائج مطابقة.</div>`; return; }
+        list.innerHTML = `
+          <div class="grid cols-2">
+            ${items.map(p=>`
+              <div class="card">
+                <div class="h">
+                  <h3>${escapeHTML(p.name)}</h3>
+                  <span class="chip">${p.type} • ${p.region}</span>
                 </div>
-              ))}
-            </div>
+                <div class="row">
+                  ${p.programs.map(pr=>`<span class="pill">🎯 ${escapeHTML(pr)}</span>`).join("")}
+                </div>
+              </div>
+            `).join("")}
           </div>
-          <PaymentModal open={open} onClose={()=>setOpen(false)}/>
-        </section>
-      );
+        `;
+      }
+
+      function apply(){
+        const query = q.value.trim().toLowerCase();
+        const ty = type.value;
+        const rg = region.value;
+        let items = DATA.partners.slice();
+        if(query) items = items.filter(p=>p.name.toLowerCase().includes(query));
+        if(ty!=="الكل") items = items.filter(p=>p.type===ty);
+        if(rg!=="الكل") items = items.filter(p=>p.region===rg);
+        draw(items);
+      }
+
+      [q,type,region].forEach(el=>el.addEventListener("input", apply));
+      reset.addEventListener("click", ()=>{ q.value=""; type.value="الكل"; region.value="الكل"; apply(); });
+      draw(DATA.partners);
     }
 
-    /* -------- KPIs -------- */
-    function KPI({ label, value, suffix="%", trend="+0%", good=true }) {
-      return (
-        <div className={cn("rounded-2xl border p-5 shadow-sm", good? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50")}>
-          <div className="text-sm text-slate-600">{label}</div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <div className="text-3xl font-bold text-slate-900">{value}<span className="text-xl">{suffix}</span></div>
-            <div className={cn("text-xs px-2 py-1 rounded-full", good? "bg-emerald-100 text-emerald-800":"bg-amber-100 text-amber-800")}>{trend}</div>
-          </div>
-        </div>
-      );
-    }
-    function KPIs(){
-      const regions = ["الرياض","مكة المكرمة","الشرقية","المدينة","عسير","حائل","تبوك","القصيم","نجران","جازان","الجوف","الباحة","الحدود الشمالية"];
-      const [region,setRegion]=useState("الرياض");
-      const [period,setPeriod]=useState("آخر 30 يومًا");
-      const data = { coverage:82, immunization:91, readiness:76, referralsMedianHrs:18, kgEnroll:88, completeness:96 };
-      return (
-        <section id="kpis" className="py-14 sm:py-16 bg-slate-50">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">مؤشرات الأداء</h2>
-              <div className="flex flex-wrap items-center gap-2">
-                <select value={region} onChange={e=>setRegion(e.target.value)} className="rounded-xl border border-slate-300 px-3 py-2 text-sm">{regions.map(r=><option key={r}>{r}</option>)}</select>
-                <select value={period} onChange={e=>setPeriod(e.target.value)} className="rounded-xl border border-slate-300 px-3 py-2 text-sm">{["آخر 7 أيام","آخر 30 يومًا","آخر 90 يومًا","سنة كاملة"].map(p=><option key={p}>{p}</option>)}</select>
-              </div>
-            </div>
-            <p className="mt-2 text-slate-600 text-sm">المنطقة: <span className="font-semibold">{region}</span> • الفترة: <span className="font-semibold">{period}</span></p>
-            <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <KPI label="التغطية السكانية لعُمر 0–6" value={data.coverage} trend="+1.3%" good={data.coverage>=80}/>
-              <KPI label="اكتمال التحصين الأساسي" value={data.immunization} trend="+0.6%" good={data.immunization>=90}/>
-              <KPI label="جاهزية المدرسة المركّبة" value={data.readiness} trend="+2.1%" good={data.readiness>=75}/>
-              <div className="rounded-2xl border p-5 shadow-sm border-sky-200 bg-sky-50">
-                <div className="text-sm text-slate-600">وسيط زمن إغلاق الإحالات (بالساعات)</div>
-                <div className="mt-2 text-3xl font-bold text-slate-900">{data.referralsMedianHrs}<span className="text-xl">س</span></div>
-                <div className="mt-1 text-xs bg-sky-100 text-sky-800 inline-block px-2 py-1 rounded-full">المستهدف ≤ 24 س</div>
-              </div>
-              <KPI label="الالتحاق برياض الأطفال (3–6)" value={data.kgEnroll} trend="+0.9%" good={data.kgEnroll>=85}/>
-              <KPI label="اكتمال السجل الأسري" value={data.completeness} trend="+0.2%" good={data.completeness>=95}/>
-            </div>
-            <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <h3 className="font-semibold text-slate-900">تنبيهات</h3>
-              <ul className="mt-3 text-sm text-slate-700 space-y-2">
-                <li>عتبات الألوان قابلة للتعديل لاحقًا من الإعدادات.</li>
-                <li>يمكن ربط البطاقات بسجلات تفصيلية (إحالات/أطفال/مرافق).</li>
-                <li>التحديث المقترح: لحظي للإحالات، يومي لباقي المؤشرات.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-      );
-    }
+    // أحداث عامة
+    window.addEventListener("hashchange", render);
+    window.addEventListener("load", ()=>{
+      $("#year").textContent = new Date().getFullYear();
+      // تفعيل روابط أعلى الشريط
+      $$(".tab[data-link]").forEach(el=>{
+        el.addEventListener("click", ()=>location.hash = el.dataset.link);
+      });
+      render();
+    });
 
-    function Support(){
-      const {ref,visible}=useReveal();
-      return (
-        <section id="support" ref={ref} className="py-14 sm:py-16 bg-slate-50">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">الدعم الفني والتواصل</h2>
-            <div className={cn("mt-6 grid lg:grid-cols-3 gap-6", visible ? "opacity-100" : "opacity-0")}>
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <h3 className="font-semibold text-slate-900">قنوات التواصل</h3>
-                <ul className="mt-3 space-y-2 text-slate-700 text-sm leading-7">
-                  <li>البريد: <a href="mailto:info@talbiya.sa" className="underline decoration-nomu-400 decoration-2 underline-offset-2 hover:text-nomu-700">info@talbiya.sa</a></li>
-                  <li>واتساب: <a href="https://wa.me/966556083172" target="_blank" className="underline decoration-nomu-400 decoration-2 underline-offset-2 hover:text-nomu-700">+966 55 608 3172</a></li>
-                  <li>الهاتف: يُضاف عند اعتماد الرقم الرسمي</li>
-                </ul>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <h3 className="font-semibold text-slate-900">اتفاقية مستوى الخدمة (SLA)</h3>
-                <table className="mt-3 w-full text-sm">
-                  <thead><tr className="text-right text-slate-500"><th className="font-medium py-2">الأولوية</th><th className="font-medium">الوصف</th><th className="font-medium">زمن الاستجابة</th></tr></thead>
-                  <tbody className="text-slate-700">
-                    <tr className="border-t"><td className="py-2">عاجلة</td><td>انقطاع خدمة/خطأ يمنع الاستخدام</td><td>≤ 2 ساعة</td></tr>
-                    <tr className="border-t"><td className="py-2">مرتفعة</td><td>عطل يؤثر على شريحة من المستخدمين</td><td>≤ 8 ساعات</td></tr>
-                    <tr className="border-t"><td className="py-2">عادية</td><td>استفسارات/تحسينات طفيفة</td><td>≤ 1 يوم عمل</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <h3 className="font-semibold text-slate-900">نموذج تواصل سريع (تجريبي)</h3>
-                <form className="mt-3 grid gap-2">
-                  <input required placeholder="الاسم" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
-                  <input required type="email" placeholder="البريد الإلكتروني" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500" />
-                  <textarea rows="4" placeholder="وصف الطلب/المشكلة" className="rounded-xl border border-slate-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-nomu-500"></textarea>
-                  <button type="button" className="rounded-xl bg-nomu-600 text-white font-semibold py-2.5 hover:bg-nomu-700">إرسال</button>
-                  <p className="text-xs text-slate-500">للإرسال الحقيقي سنربطه لاحقًا بـ Formspree/Resend/SMTP.</p>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    function Footer(){
-      return (
-        <footer className="py-8 border-t border-slate-200">
-          <div className="max-w-7xl mx-auto px-3 sm:px-4 text-sm text-slate-600 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p>© {new Date().getFullYear()} منصة نمو — جميع الحقوق محفوظة.</p>
-            <div className="flex items-center gap-4">
-              <a href="#/kpis" className="hover:opacity-80">مؤشرات الأداء</a>
-              <a href="#/support" className="hover:opacity-80">الدعم</a>
-            </div>
-          </div>
-        </footer>
-      );
-    }
-
-    function SectionRouter(){
-      const route=(useHash().replace("#",""))||"/home";
-      const showHero = route==="/home" || route==="/" || route==="";
-      return (
-        <main>
-          {showHero ? <Hero/> : (
-            <div className="bg-gradient-to-r from-nomu-50 to-sky-50 border-b border-slate-200">
-              <div className="max-w-7xl mx-auto px-3 sm:px-4 py-8">
-                <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
-                  {route==="/about"?"تعريف المنصة":
-                   route==="/features"?"المزايا":
-                   route==="/accounts"?"الحسابات":
-                   route==="/pricing"?"الباقات":
-                   route==="/kpis"?"مؤشرات الأداء":
-                   route==="/support"?"الدعم الفني والتواصل":"منصة نمو"}
-                </h1>
-              </div>
-            </div>
-          )}
-          {(showHero || route==="/about") && <About/>}
-          {(showHero || route==="/features") && <Features/>}
-          {(showHero || route==="/accounts") && <Accounts/>}
-          {(showHero || route==="/pricing") && <Pricing/>}
-          {(showHero || route==="/kpis") && <KPIs/>}
-          {(showHero || route==="/support") && <Support/>}
-        </main>
-      );
-    }
-
-    function App(){
-      useEffect(()=>{ if(!window.location.hash) window.location.hash="/home"; },[]);
-      return (
-        <div dir="rtl" className="min-h-screen bg-white text-slate-800">
-          <Header />
-          <SectionRouter />
-          <Footer />
-          <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}`}</style>
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    // ---------------------------
+    // ملاحظات مهمّة للاستبدال بالشعار
+    // ---------------------------
+    // لاستبدال شعار تلبية بصورة PNG لديك:
+    // 1) ارفع الصورة إلى المسار: assets/talabiya-logo.png
+    // 2) استبدل كتلة <svg> داخل .logo بالعنصر:
+    //    <img src="assets/talabiya-logo.png" alt="شعار تلبية" width="28" height="28" style="border-radius:6px"/>
+    // 3) اترك بقية الملف كما هو.
   </script>
 </body>
 </html>
