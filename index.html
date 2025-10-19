@@ -41,6 +41,11 @@
   .hero{background:linear-gradient(180deg,#0d1830,#0e172a);border:1px solid var(--border);border-radius:18px;padding:22px}
   .pill{display:inline-flex;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:var(--muted);font-size:12px;margin:2px}
   .banner{border:1px dashed var(--border);border-radius:14px;padding:14px;background:#0f172a;color:var(--sub)}
+  /* Wizard */
+  .wizard{display:grid;gap:12px} .steps{display:flex;gap:8px;flex-wrap:wrap}
+  .step{flex:1;min-width:120px;border:1px solid var(--border);background:#0f172a;border-radius:12px;padding:10px}
+  .step.active{outline:2px solid var(--pri)}
+  label{font-size:13px;color:var(--sub)} input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:#0f172a;color:var(--text)}
   /* Architecture */
   .arch {display:grid; gap: var(--gap-lg)}
   .arch .grid-2 {display:grid; grid-template-columns: 1fr 1fr; gap: var(--gap)}
@@ -75,6 +80,7 @@
         <div class="group">
           <h4>بوابة البداية</h4>
           <a class="link" href="#/intro" data-route>التعريفات & أدوار الشركاء</a>
+          <a class="link" href="#/onboarding" data-route>معالج البدء (Wizard)</a>
         </div>
         <div class="group">
           <h4>لوحات</h4>
@@ -104,11 +110,11 @@
   </main>
 
   <footer class="footer" style="margin:30px auto;max-width:1200px;color:#a7b0c3;text-align:center;padding:10px">
-    NOMU — نسخة دمج: التعريفات الافتراضية + المنصة التشغيلية.
+    NOMU — نسخة دمج: التعريفات الافتراضية + معالج البدء + المنصة التشغيلية.
   </footer>
 </div>
 
-<!-- Minimal modals (Login & Screening/Referral/CSR/Market/IEP are same as earlier where needed) -->
+<!-- Login Modal -->
 <div class="modal" id="modal-login" style="position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.5)">
   <div style="width:min(520px,94vw);background:#121a2b;border:1px solid #263251;border-radius:16px;padding:18px">
     <h3>تسجيل الدخول</h3>
@@ -125,7 +131,7 @@
 
 <script>
 const $=(q,root=document)=>root.querySelector(q); const $$=(q,root=document)=>Array.from(root.querySelectorAll(q));
-const store={ load(){ try{ const data=JSON.parse(localStorage.getItem('nomu')||'{}'); this.state=Object.assign({ user:{role:localStorage.getItem('nomu.role')||'guest',region:localStorage.getItem('nomu.region')||'الرياض'}, households:[{id:'H-1001', father:'محمد', mother:'سارة', region:'حائل', children:[{id:'C-501', name:'ليان', dob:'2021-03-10'},{id:'C-502', name:'تركي', dob:'2019-11-02'}]}], screenings:[{id:'S-9001', childId:'C-501', type:'نمو نمائي', date:'2025-09-20', result:'سليم', facility:'مركز صحي شمال حائل'}], referrals:[{id:'R-7001', from:'الصحة', to:'التعليم', childId:'C-502', priority:'عادية', status:'قيد المعالجة', created:'2025-09-25'}], ieps:[{id:'IEP-3001', childId:'C-502', goals:'تحسين المهارات اللغوية', review:'2025-12-01'}], nonprofits:[{id:'NPO-10', name:'جمعية نماء للطفولة', region:'حائل', programs:3, beneficiaries:120}], marketplace:[{id:'M-1', title:'جلسات تدخل مبكر لحائل', kpi:'100 طفل خلال 6 أشهر', ask:250000, funded:120000, owner:'جمعية نماء'}, {id:'M-2', title:'فحوص سمع لحديثي الولادة – الشرقية', kpi:'300 وليد', ask:180000, funded:45000, owner:'صحة الشرقية'}], csr:[{id:'CSR-100', company:'شركة الأفق', amount:50000, to:'M-1', date:'2025-10-01'}]}, data)}catch(e){ this.state={} } }, save(){ localStorage.setItem('nomu', JSON.stringify(this.state)) } };
+const store={ load(){ try{ const data=JSON.parse(localStorage.getItem('nomu')||'{}'); this.state=Object.assign({ user:{role:localStorage.getItem('nomu.role')||'guest',region:localStorage.getItem('nomu.region')||'الرياض'}, consent:{c1:false,c2:false,c3:false}, households:[{id:'H-1001', father:'محمد', mother:'سارة', region:'حائل', children:[{id:'C-501', name:'ليان', dob:'2021-03-10'},{id:'C-502', name:'تركي', dob:'2019-11-02'}]}], screenings:[{id:'S-9001', childId:'C-501', type:'نمو نمائي', date:'2025-09-20', result:'سليم', facility:'مركز صحي شمال حائل'}], referrals:[{id:'R-7001', from:'الصحة', to:'التعليم', childId:'C-502', priority:'عادية', status:'قيد المعالجة', created:'2025-09-25'}], ieps:[{id:'IEP-3001', childId:'C-502', goals:'تحسين المهارات اللغوية', review:'2025-12-01'}], nonprofits:[{id:'NPO-10', name:'جمعية نماء للطفولة', region:'حائل', programs:3, beneficiaries:120}], marketplace:[{id:'M-1', title:'جلسات تدخل مبكر لحائل', kpi:'100 طفل خلال 6 أشهر', ask:250000, funded:120000, owner:'جمعية نماء'}, {id:'M-2', title:'فحوص سمع لحديثي الولادة – الشرقية', kpi:'300 وليد', ask:180000, funded:45000, owner:'صحة الشرقية'}], csr:[{id:'CSR-100', company:'شركة الأفق', amount:50000, to:'M-1', date:'2025-10-01'}]}, data)}catch(e){ this.state={} } }, save(){ localStorage.setItem('nomu', JSON.stringify(this.state)) } };
 store.load();
 
 /* RBAC */
@@ -143,7 +149,7 @@ function drawTrend(el,title,data){ const w=el.clientWidth||600,h=180,p=24; const
 
 /* Router */
 function parseHash(){ const [path,q='']=(location.hash.replace('#','')||'/intro').split('?'); const params=Object.fromEntries(new URLSearchParams(q).entries()); return {path,params} }
-const routes={'/intro':viewIntro,'/home':viewHome,'/family':viewFamily,'/health':viewHealth,'/education':viewEducation,'/nonprofit':viewNonprofit,'/csr':viewCSR,'/admin':viewAdmin,'/market':viewMarket,'/referrals':viewReferrals,'/reports':viewReports,'/settings':viewSettings,'/architecture':viewArchitecture};
+const routes={'/intro':viewIntro,'/onboarding':viewOnboarding,'/home':viewHome,'/family':viewFamily,'/health':viewHealth,'/education':viewEducation,'/nonprofit':viewNonprofit,'/csr':viewCSR,'/admin':viewAdmin,'/market':viewMarket,'/referrals':viewReferrals,'/reports':viewReports,'/settings':viewSettings,'/architecture':viewArchitecture};
 function router(){ const {path,params}=parseHash(); $$('a.link').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${path}`)); const el=$('#view'); el.innerHTML=''; (routes[path]||viewIntro)(el,params); enforceRBAC() }
 window.addEventListener('hashchange',router);
 
@@ -160,11 +166,11 @@ function viewIntro(root){
     </div>
     <div class="grid two">
       <div class="card"><b>سوق الرعاية (CSR)</b><p>تمويل مبادرات مرتبطة بمؤشرات أثر تنموية، محفظة رقمية وتقارير أثر.</p></div>
-      <div class="card"><b>كيف تبدأ؟</b><p>اختر دورك ثم ابدأ. يمكنك تغيير الدور لاحقًا من “تسجيل الدخول”.</p></div>
+      <div class="card"><b>كيف تبدأ؟</b><p>ابدأ بمعالج ثلاثي الخطوات ليُضبط دورك ومنطقتك وموافقات الخصوصية.</p></div>
     </div>
     <div class="grid" style="margin-top:6px">
-      <button class="btn" onclick="location.hash='#/home'">بدء استخدام المنصة ← لوحة القيادة</button>
-      <button class="ghost" onclick="openLogin()">تسجيل الدخول/تبديل الدور</button>
+      <button class="btn" onclick="location.hash='#/onboarding'">بدء الاستخدام عبر المعالج</button>
+      <button class="ghost" onclick="location.hash='#/home'">تخطّي المعالج ← لوحة القيادة</button>
     </div>
   </div>
 
@@ -178,6 +184,7 @@ function viewIntro(root){
         </table>
         <div class="grid" style="margin-top:8px">
           <button class="ghost" onclick="exportRoles()">تصدير Matrix.csv</button>
+          <button class="ghost" onclick="location.hash='#/reports'">فتح صفحة التقارير</button>
         </div>
       </div>
       <div>
@@ -191,6 +198,83 @@ function viewIntro(root){
   renderRoles(); renderAccountDefs();
 }
 
+/* Onboarding Wizard (3 steps) */
+function viewOnboarding(root){
+  root.innerHTML = `
+  <div class="card hero wizard">
+    <h2>معالج البدء</h2>
+    <div class="steps">
+      <div class="step active" id="st1"><b>الخطوة 1:</b> اختر الدور</div>
+      <div class="step" id="st2"><b>الخطوة 2:</b> اختر المنطقة</div>
+      <div class="step" id="st3"><b>الخطوة 3:</b> الموافقات (PDPL)</div>
+    </div>
+    <div id="wBody"></div>
+    <div class="toolbar" style="margin-top:6px">
+      <div></div>
+      <div class="actions">
+        <button class="ghost" id="btnPrev" onclick="wizPrev()" disabled>السابق</button>
+        <button class="btn" id="btnNext" onclick="wizNext()">التالي</button>
+      </div>
+    </div>
+  </div>`;
+  window._wizStep = 1;
+  wizRender();
+}
+function wizRender(){
+  const body=$('#wBody');
+  const s=window._wizStep||1;
+  $$('#st1,#st2,#st3').forEach((el,i)=>el.classList.toggle('active',i===s-1));
+  $('#btnPrev').disabled = s===1;
+  $('#btnNext').textContent = s===3 ? 'إنهاء → دخول المنصة' : 'التالي';
+
+  if(s===1){
+    body.innerHTML = `
+    <div class="grid two">
+      <label>اختر نوع المستخدم
+        <select id="w_role">
+          <option value="family">أسرة</option>
+          <option value="health">الصحة</option>
+          <option value="education">التعليم</option>
+          <option value="nonprofit">جمعية</option>
+          <option value="csr">شركة (CSR)</option>
+          <option value="admin">لجنة وطنية</option>
+        </select>
+      </label>
+      <div class="banner">يمكنك تغيير الدور لاحقًا من قائمة "تسجيل الدخول".</div>
+    </div>`;
+  } else if(s===2){
+    body.innerHTML = `
+    <div class="grid two">
+      <label>اختر المنطقة الإدارية
+        <select id="w_region">
+          <option>الرياض</option><option>مكة المكرمة</option><option>الشرقية</option><option>حائل</option><option>المدينة المنورة</option>
+        </select>
+      </label>
+      <div class="banner">ستُستخدم المنطقة لتصفية اللوحات والمؤشرات.</div>
+    </div>`;
+  } else {
+    body.innerHTML = `
+    <div class="grid">
+      <label><input type="checkbox" id="w_c1"> معالجة بيانات الأم خلال الحمل لأغراض المتابعة الصحية</label>
+      <label><input type="checkbox" id="w_c2"> مشاركة تقارير الطفل النمائية مع وزارة التعليم</label>
+      <label><input type="checkbox" id="w_c3"> تلقي تنبيهات وتوصيات عبر البريد/الرسائل</label>
+      <div class="banner">يمكن تعديل الموافقات لاحقًا من "الإعدادات".</div>
+    </div>`;
+  }
+}
+function wizNext(){
+  const s=window._wizStep||1;
+  if(s<3){ window._wizStep = s+1; wizRender(); return }
+  // save
+  const role = $('#w_role') ? $('#w_role').value : (store.state.user.role||'guest');
+  const region = $('#w_region') ? $('#w_region').value : (store.state.user.region||'الرياض');
+  const consent = { c1:$('#w_c1')?.checked||false, c2:$('#w_c2')?.checked||false, c3:$('#w_c3')?.checked||false };
+  store.state.user={role,region}; store.state.consent=consent; store.save();
+  localStorage.setItem('nomu.role',role); localStorage.setItem('nomu.region',region);
+  toast('تم إعداد الحساب بنجاح'); location.hash='#/home';
+}
+function wizPrev(){ if((window._wizStep||1)>1){ window._wizStep--; wizRender() }}
+
 /* Roles & Accounts (Intro helpers) */
 const rolesMatrix=[
   {partner:'الأسرة', resp:['تحديث ملف الحمل/الطفل','الالتزام بالمواعيد','الموافقة على مشاركة البيانات'], provide:['بيانات ديموغرافية','سجل منزلي'], consume:['توصيات','نتائج فحوص'], out:['حجوزات','طلبات إحالة']},
@@ -201,8 +285,8 @@ const rolesMatrix=[
   {partner:'القطاع الخاص', resp:['تمويل مبادرات','حوكمة CSR'], provide:['مساهمات مالية'], consume:['تقارير أثر'], out:['شراكات مستدامة']},
   {partner:'اللجنة الوطنية', resp:['إشراف وتكامل وطني','سياسات وحوكمة بيانات'], provide:['لوحات وطنية','مؤشرات موحدة'], consume:['بيانات الجهات'], out:['قرارات سياسات']}
 ];
-function renderRoles(){ $('#rolesBody').innerHTML = rolesMatrix.map(r=>`<tr><td>${r.partner}</td><td>${r.resp.join('، ')}</td><td>${r.provide.join('، ')}</td><td>${r.consume.join('، ')}</td><td>${r.out.join('، ')}</td></tr>`).join('') }
 function exportRoles(){ const headers=['partner','responsibilities','provides','consumes','outputs']; const rows=rolesMatrix.map(r=>({partner:r.partner,responsibilities:r.resp.join('|'),provides:r.provide.join('|'),consumes:r.consume.join('|'),outputs:r.out.join('|')})); const csv = headers.join(',') + '\n' + rows.map(o=>headers.map(h=>`"${(''+o[h]).replaceAll('"','""')}"`).join(',')).join('\n'); download('Roles_Matrix.csv',csv) }
+function renderRoles(){ $('#rolesBody') && ($('#rolesBody').innerHTML = rolesMatrix.map(r=>`<tr><td>${r.partner}</td><td>${r.resp.join('، ')}</td><td>${r.provide.join('، ')}</td><td>${r.consume.join('، ')}</td><td>${r.out.join('، ')}</td></tr>`).join('')) }
 
 const accountDefs=[
   {name:'حساب الأسرة', def:'إدارة رحلة الطفل كاملة من الحمل حتى الجاهزية.', menus:['ملف الحمل والطفل','الخدمات المساندة','التوصيات الذكية','المكتبة','حجوزات الفحص']},
@@ -214,13 +298,13 @@ const accountDefs=[
   {name:'اللجنة الوطنية', def:'إشراف موحد وحوكمة وتبادل بيانات ولوحات.', menus:['لوحة وطنية','سياسات وتكامل','حوكمة البيانات','التمويل الوطني']}
 ];
 function renderAccountDefs(){
-  $('#accountDefs').innerHTML = accountDefs.map(a=>`<li><b>${a.name}:</b> ${a.def}</li>`).join('');
-  $('#menusByAccount').innerHTML = accountDefs.map(a=>`
+  $('#accountDefs') && ($('#accountDefs').innerHTML = accountDefs.map(a=>`<li><b>${a.name}:</b> ${a.def}</li>`).join(''));
+  $('#menusByAccount') && ($('#menusByAccount').innerHTML = accountDefs.map(a=>`
     <div class="card">
       <b>${a.name}</b>
       <p class="sub" style="color:#a7b0c3">${a.def}</p>
       <div>${a.menus.map(m=>`<span class="pill">${m}</span>`).join('')}</div>
-    </div>`).join('');
+    </div>`).join(''));
 }
 
 /* Home view (light) */
@@ -245,8 +329,8 @@ function viewHome(root){
   drawTrend($('#chart'),'أطفال مفحوصون خلال 6 أشهر',[40,55,61,70,86,93]);
 }
 
-/* Stubs for other views (optional minimal to keep file compact) */
-function viewFamily(r){ r.innerHTML = `<div class="empty"><b>واجهة حساب الأسرة</b><div>مثال توضيحي مختصر — يمكن توسيعه لاحقًا.</div></div>` }
+/* Stubs for other views (compact) */
+function viewFamily(r){ r.innerHTML = `<div class="empty"><b>واجهة حساب الأسرة</b></div>` }
 function viewHealth(r){ r.innerHTML = `<div class="empty"><b>واجهة الصحة</b></div>` }
 function viewEducation(r){ r.innerHTML = `<div class="empty"><b>واجهة التعليم</b></div>` }
 function viewNonprofit(r){ r.innerHTML = `<div class="empty"><b>واجهة الجمعيات</b></div>` }
@@ -254,8 +338,22 @@ function viewCSR(r){ r.innerHTML = `<div class="empty"><b>واجهة القطا�
 function viewAdmin(r){ r.innerHTML = `<div class="empty"><b>واجهة اللجنة الوطنية</b></div>` }
 function viewMarket(r){ r.innerHTML = `<div class="empty"><b>سوق الرعاية</b></div>` }
 function viewReferrals(r){ r.innerHTML = `<div class="empty"><b>الإحالات</b></div>` }
-function viewReports(r){ r.innerHTML = `<div class="empty"><b>التقارير</b></div>` }
-function viewSettings(r){ r.innerHTML = `<div class="empty"><b>الإعدادات</b></div>` }
+
+/* Reports: add Roles Matrix export here as well */
+function viewReports(r){
+  r.innerHTML = `
+    <div class="toolbar">
+      <h2>التقارير</h2>
+      <div class="actions">
+        <button class="ghost" onclick="exportRoles()">تصدير Matrix.csv</button>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card wide"><b>ملخص</b><div class="banner">تصدير مصفوفة الأدوار متاح من هنا وأيضًا من صفحة التعريفات.</div></div>
+    </div>`;
+}
+
+function viewSettings(r){ r.innerHTML = `<div class="empty"><b>الإعدادات</b><div>يمكنك تعديل الموافقات من هنا لاحقًا.</div></div>` }
 
 /* Architecture page (compact) */
 const archData={ national:{items:['لوحة قيادة وطنية KPIs','إدارة التكامل','السياسات','تمويل وطني','تقارير وطنية','تكامل: NPHIES/SEHA – نور – الضمان – التطوع – نفاذ']}, accounts:[{ key:'family:view', title:'حساب الأسرة', bullets:['ملف الطفل','الخدمات المساندة','التوصيات','المكتبة','حجوزات']},{ key:'health:view', title:'وزارة الصحة', bullets:['فحوص نمائية','تدخل مبكر','صحة نفسية','تكامل NPHIES/SEHA']},{ key:'education:view', title:'وزارة التعليم', bullets:['جاهزية المدرسة','IEP','التواصل مع الأسرة']},{ key:'nonprofit:view', title:'الجمعيات', bullets:['البرامج','المستفيدون','المتطوعون','قياس أثر']},{ key:'csr:view', title:'القطاع الخاص', bullets:['سوق الرعاية','محفظة','تقارير الأثر']},{ key:'admin:view', title:'اللجنة الوطنية', bullets:['إشراف وطني','حوكمة','PDPL','تقارير وطنية']},{ key:'family:view', title:'الموارد البشرية', bullets:['الدعم المالي','الدعم الأسري','مؤشرات الاستقرار','التطوع'] }], shared:['SSO','توقيع إلكتروني','لوحات وتنبيهات','مكتبة','دعم الوصول','تطبيق جوال','API + CSV/PDF','PoLP/MFA/Audit/Aware/PDPL'], journey:[{title:'ما قبل الزواج/الحمل',x:'الصحة + الجمعيات',kpi:'% المقبلين المفحوصين'},{title:'الحمل',x:'المستشفيات + دعم نفسي',kpi:'% الأمهات المفحوصات نفسيًا'},{title:'الولادة',x:'فحص مواليد + NICU',kpi:'% المواليد المفحوصين'},{title:'0–3 سنوات',x:'متابعة نمو + تدخل',kpi:'% الأطفال المفحوصين نمائيًا'},{title:'3–6 سنوات',x:'الدمج ورياض الأطفال',kpi:'% الجاهزين للمدرسة'},{title:'الخدمات المساندة',x:'إرشاد + دعم مالي',kpi:'% الأسر المستفيدة'}]};
@@ -289,7 +387,7 @@ function viewArchitecture(root){ const k=kpisFromStore(); root.innerHTML=`
   drawTrend($('#archChart2'),'تمويل CSR شهري (ر.س)', k.csrTrend.length?k.csrTrend:[0,0,0,0,0,0]);
 }
 
-/* Tables & search (lite) */
+/* Search */
 function globalSearch(q){ q=(q||'').trim(); if(q.length<2) return; const inStr=s=>(s||'').toString().toLowerCase(); const ql=q.toLowerCase(); const h=store.state.households[0]; const kid=h?.children?.find(c=> inStr(c.id).includes(ql) || inStr(c.name).includes(ql)); if(kid){ location.hash=`#/home`; toast('فتح ملف الطفل: '+kid.id); return } const ref=store.state.referrals.find(r=>inStr(r.id).includes(ql)||inStr(r.childId).includes(ql)); if(ref){ location.hash='#/referrals'; toast('عرض الإحالة: '+ref.id); return } const m=store.state.marketplace.find(m=>inStr(m.title).includes(ql)); if(m){ location.hash='#/market'; toast('عرض المبادرة: '+m.id); return } toast('لا نتائج مطابقة') }
 
 /* Session */
