@@ -3,153 +3,105 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منصة حصيف - مبادرة تلبية</title>
-  <meta name="description" content="منصة حصيف - مبادرة تلبية لتمكين التكامل التنموي وفق رؤية السعودية 2030" />
+  <title>منصة نمو NOMU</title>
+  <meta name="description" content="منصة نمو NOMU لتمكين التكامل التنموي والاقتصادي وفق رؤية السعودية 2030" />
   <style>
     :root{
-      --bg:#0b0f14;          /* خلفية داكنة أنيقة */
-      --card:#11161d;
-      --muted:#1a2029;
-      --primary:#37c7a3;     /* لون تلبية مائل للفيروزي */
-      --primary-weak:#2aa487;
-      --text:#f3f7f9;
-      --text-dim:#b9c3cc;
-      --accent:#ffd166;      /* لون إبراز */
+      --bg:#0c0a12;
+      --card:#12101a;
+      --muted:#1a1724;
+      --primary:#8b5cf6;      /* بنفسجي نمو */
+      --primary-weak:#7c3aed;
+      --text:#f6f6fb;
+      --text-dim:#c7c6d4;
+      --accent:#22d3ee;       /* سماوي إبراز */
       --danger:#ef4444;
       --ok:#22c55e;
-      --chip:#0f1720;
+      --chip:#0f0d16;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 16px;
+      --radius:16px;
     }
     *{box-sizing:border-box}
     body{
-      margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Kufi Arabic", "Noto Sans Arabic", "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background:linear-gradient(140deg,#0b0f14 0%, #0d141c 60%, #0b0f14 100%);
+      margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Kufi Arabic", "Noto Sans Arabic", "Helvetica Neue", Arial;
+      background:radial-gradient(1100px 600px at 80% -10%, rgba(139,92,246,.18), transparent 60%), linear-gradient(140deg,#0c0a12 0%, #0e0b19 60%, #0c0a12 100%);
       color:var(--text);
     }
     a{color:inherit; text-decoration:none}
     .wrap{max-width:1200px; margin-inline:auto; padding:16px}
-    header{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter:saturate(180%) blur(10px);
-      background:rgba(11,15,20,.75);
-      border-bottom:1px solid rgba(255,255,255,.05);
-    }
-    .bar{
-      display:flex; align-items:center; gap:16px; padding:12px 0;
-    }
-    .logo{
-      display:flex; align-items:center; gap:10px;
-      padding:8px 12px; border-radius:999px; background:var(--chip); border:1px solid rgba(255,255,255,.06)
-    }
+    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(10px); background:rgba(12,10,18,.75); border-bottom:1px solid rgba(255,255,255,.05)}
+    .bar{display:flex; align-items:center; gap:16px; padding:12px 0}
+    .logo{display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:999px; background:var(--chip); border:1px solid rgba(255,255,255,.06)}
     .logo svg{width:28px; height:28px}
-    .brand{
-      display:flex; flex-direction:column; line-height:1.1
-    }
+    .brand{display:flex; flex-direction:column; line-height:1.1}
     .brand b{font-weight:800}
     .brand small{color:var(--text-dim)}
-    nav{
-      margin-inline-start:auto; display:flex; gap:8px; flex-wrap:wrap
-    }
-    .tab{
-      padding:10px 14px; border-radius:12px; background:transparent; border:1px solid rgba(255,255,255,.08);
-      color:var(--text); cursor:pointer; transition:.2s;
-    }
+    nav{margin-inline-start:auto; display:flex; gap:8px; flex-wrap:wrap}
+    .tab{padding:10px 14px; border-radius:12px; background:transparent; border:1px solid rgba(255,255,255,.08); cursor:pointer; transition:.2s}
     .tab.active,.tab:hover{background:var(--muted); border-color:rgba(255,255,255,.18)}
-    .primary-btn{
-      padding:10px 16px; border-radius:12px; background:var(--primary); color:#06251e; font-weight:700; border:none; cursor:pointer; transition:.2s;
-    }
+    .primary-btn{padding:10px 16px; border-radius:12px; background:var(--primary); color:#0b0716; font-weight:800; border:none; cursor:pointer; transition:.2s}
     .primary-btn:hover{filter:brightness(1.05)}
-
     main{padding:24px 0}
     .grid{display:grid; gap:16px}
-    @media(min-width:720px){ .grid.cols-3{grid-template-columns:repeat(3,1fr)} .grid.cols-2{grid-template-columns:repeat(2,1fr)} }
-    .card{
-      background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); box-shadow:var(--shadow);
-      padding:16px;
-    }
+    @media(min-width:720px){ .grid.cols-3{grid-template-columns:repeat(3,1fr)} .grid.cols-2{grid-template-columns:repeat(2,1fr)} .grid.cols-4{grid-template-columns:repeat(4,1fr)} }
+    .card{background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
     .card h3{margin:0 0 8px 0}
-    .chip{
-      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:var(--chip);
-      border:1px solid rgba(255,255,255,.08); font-size:12px; color:var(--text-dim)
-    }
-    .h{
-      display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px
-    }
+    .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:var(--chip); border:1px solid rgba(255,255,255,.08); font-size:12px; color:var(--text-dim)}
+    .h{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px}
     .muted{color:var(--text-dim)}
     .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-    .kpi{
-      background:linear-gradient(180deg,rgba(55,199,163,.12),rgba(55,199,163,.04));
-      border:1px solid rgba(55,199,163,.25);
-      border-radius:14px; padding:12px; text-align:center
-    }
+    .kpi{background:linear-gradient(180deg,rgba(139,92,246,.12),rgba(139,92,246,.04)); border:1px solid rgba(139,92,246,.3); border-radius:14px; padding:12px; text-align:center}
     .kpi b{font-size:22px}
     .pill{padding:6px 10px; border-radius:12px; background:rgba(255,255,255,.06)}
     .divider{height:1px; background:rgba(255,255,255,.06); margin:12px 0}
-    .note{background:#0c141a; border:1px dashed rgba(255,255,255,.15); padding:12px; border-radius:12px; color:var(--text-dim)}
-
-    /* Tabs (local within pages) */
+    .note{background:#0e0c17; border:1px dashed rgba(255,255,255,.15); padding:12px; border-radius:12px; color:var(--text-dim)}
+    .badge{background:rgba(34,211,238,.15); border:1px solid rgba(34,211,238,.35); color:#baf6ff; padding:4px 8px; border-radius:10px; font-size:12px}
+    .vis2030{display:flex; gap:8px; flex-wrap:wrap}
+    .vis2030 .goal{padding:6px 10px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); font-size:12px}
+    /* Tabs */
     .tabs{display:flex; gap:8px; border-bottom:1px solid rgba(255,255,255,.06); margin-bottom:12px; flex-wrap:wrap}
-    .tabs .t{
-      padding:10px 12px; border-radius:12px 12px 0 0; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.08); border-bottom:none; cursor:pointer
-    }
+    .tabs .t{padding:10px 12px; border-radius:12px 12px 0 0; background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.08); border-bottom:none; cursor:pointer}
     .tabs .t.active{background:var(--muted); font-weight:700}
     .tab-panel{display:none}
     .tab-panel.active{display:block}
-
     /* Accordion */
     .acc{border:1px solid rgba(255,255,255,.08); border-radius:14px; overflow:hidden}
-    .acc .acc-h{
-      padding:12px; background:rgba(255,255,255,.03); cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px
-    }
+    .acc .acc-h{padding:12px; background:rgba(255,255,255,.03); cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px}
     .acc .acc-c{display:none; padding:12px; background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.06)}
     .acc.open .acc-c{display:block}
-
     /* Inputs */
-    .input, select{
-      width:100%; padding:10px 12px; border-radius:12px; background:#0f1620; border:1px solid rgba(255,255,255,.1); color:var(--text)
-    }
-    .input::placeholder{color:#6b7280}
-    .toolbar{display:flex; gap:8px; flex-wrap:wrap}
-
-    footer{
-      margin-top:24px; padding:24px 0; color:var(--text-dim)
-    }
-    .linkish{color:var(--accent); cursor:pointer}
-    .badge{background:rgba(255,209,102,.15); border:1px solid rgba(255,209,102,.35); color:#ffe6a6; padding:4px 8px; border-radius:10px; font-size:12px}
-    .ok{color:var(--ok)} .danger{color:var(--danger)}
-    .vis2030{display:flex; gap:8px; flex-wrap:wrap}
-    .vis2030 .goal{padding:6px 10px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); font-size:12px}
-
-    /* Helpers */
+    .input, select{width:100%; padding:10px 12px; border-radius:12px; background:#0f0d18; border:1px solid rgba(255,255,255,.1); color:var(--text)}
+    .input::placeholder{color:#777089}
+    footer{margin-top:24px; padding:24px 0; color:var(--text-dim)}
     .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   </style>
 </head>
 <body>
   <header>
     <div class="wrap bar">
-      <!-- شعار تلبية SVG (يمكن استبداله بصورة PNG عبر التعليمات أسفل الملف) -->
-      <a href="#/home" class="logo" aria-label="الانتقال للصفحة الرئيسية">
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+      <!-- شعار NOMU -->
+      <a href="#/home" class="logo" aria-label="الصفحة الرئيسية">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
           <defs>
-            <linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#37c7a3"/><stop offset="1" stop-color="#2aa487"/>
+            <linearGradient id="g" x1="0" y1="0" x2="64" y2="64">
+              <stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/>
             </linearGradient>
           </defs>
-          <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#g)"/>
-          <path d="M20 34c6 6 10-8 16-2 2 2 2 6 6 6 4 0 6-4 6-8" stroke="#06251e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#g)"/>
+        <path d="M18 38c4 0 6-10 12-10s8 10 14 10 8-6 8-10" fill="none" stroke="#0c0a12" stroke-width="4" stroke-linecap="round"/>
         </svg>
         <div class="brand">
-          <b>مبادرة تلبية</b>
-          <small>منصة حصيف • حلول صائبة يُقترح فعلها</small>
+          <b>منصة نمو NOMU</b>
+          <small>حل متكامل للتكامل التنموي</small>
         </div>
       </a>
 
       <nav>
         <a class="tab" data-link="#/home">الرئيسية</a>
+        <a class="tab" data-link="#/journey">الرحلة</a>
         <a class="tab" data-link="#/accounts">الحسابات</a>
-        <a class="tab" data-link="#/directory">دليل الشركاء</a>
-        <a class="tab" data-link="#/about">عن المنصة</a>
+        <a class="tab" data-link="#/directory">الدليل</a>
+        <a class="tab" data-link="#/about">عن نمو</a>
       </nav>
 
       <button class="primary-btn" onclick="location.hash='#/start'">ابدأ الآن</button>
@@ -162,191 +114,87 @@
 
   <footer class="wrap">
     <div class="row">
-      <span class="badge">نسخة عرض تشغيلية</span>
-      <span class="pill">متوافقة مع صفحات GitHub</span>
-      <span class="pill">دون مكاتب خارجية</span>
+      <span class="badge">نسخة عرض تشغيلية NOMU</span>
+      <span class="pill">متوافقة مع GitHub Pages</span>
+      <span class="pill">بدون مكتبات خارجية</span>
     </div>
     <div class="divider"></div>
-    <p>© <span id="year"></span> مبادرة تلبية • منصة حصيف. جميع الحقوق محفوظة.</p>
+    <p>© <span id="year"></span> منصة نمو NOMU. جميع الحقوق محفوظة.</p>
   </footer>
 
   <script>
-    // ---------------------------
-    // بيانات المنصة (مختصرة ولكن شاملة هيكليًا حتى 4 مستويات)
-    // ---------------------------
+    /* ===== بيانات NOMU ===== */
     const DATA = {
-      kpis:{
-        beneficiaries: 400, // عدد منشآت مستفيدة من سجلها
-        programs: 6,        // برامج الرؤية المغطاة
-        goals: 27,          // أهداف تفصيلية
-        subgoals: 96        // أهداف فرعية
-      },
+      kpis:{ beneficiaries: 400, programs: 6, goals: 27, subgoals: 96 },
       vision2030: [
-        "تعزيز فاعلية الحكومة", "تنمية وتنويع الاقتصاد", "تمكين المسؤولية الاجتماعية",
-        "تعزيز الهوية الوطنية", "تمكين حياة عامرة وصحية"
+        "تعزيز فاعلية الحكومة","تنمية وتنويع الاقتصاد","تمكين المسؤولية الاجتماعية",
+        "تعزيز الهوية الوطنية","تمكين حياة عامرة وصحية"
       ],
-      accounts: [
+      accounts:[
         {
-          id:"individual", name:"حساب الأفراد", emoji:"👤",
-          tagline:"مبادراتي، فرص الوظائف، التدريب، التطوع، الأحداث، والمحفظة.",
-          value:[
-            "إدراج مبادرة عبر نموذج اللبنات التسعة",
-            "مطابقة الفرص (وظائف، تدريب، تطوع) حسب السيرة والاهتمامات",
-            "المشاركة في فعاليات ومنتديات ومحاضرات حسب المنطقة",
-            "التبرع والمساهمة المجتمعية للمشاريع"
-          ],
+          id:"individual", name:"الأفراد", emoji:"👤",
+          tagline:"مبادرات، فرص عمل وتدريب وتطوع، أحداث، ومحفظة.",
+          value:["إدراج مبادرة (نموذج اللبنات التسعة)","مطابقة فرص حسب ملفي","تذاكر وشهادات حضور"],
           services:[
-            { title:"مبادراتي", items:[
-                { title:"إدراج مبادرة (اللبنات التسعة)", children:[
-                  { title:"الفكرة والقيمة", children:[
-                    { title:"المشكلة والحل"},{title:"شريحة المستفيدين"},{title:"القيمة المقترحة"}
-                  ]},
-                  { title:"النموذج التشغيلي", children:[
-                    { title:"الأنشطة الرئيسية"},{title:"الموارد والشركاء"}
-                  ]},
-                  { title:"الخطة المالية", children:[
-                    { title:"التكلفة"},{title:"الإيرادات"},{title:"مؤشرات الأداء"}
-                  ]}
-                ]},
-                { title:"متابعة الاعتماد والتمويل" }
-            ]},
-            { title:"فرص مطابقة", items:[
-                { title:"وظائف"},{title:"تدريب تعاوني"},{title:"تطوع"},{title:"متحدث/مدرب مؤهل"}
-            ]},
-            { title:"الأحداث", items:[
-                { title:"منتديات وورش عمل"},{title:"تذاكر إلكترونية"},{title:"شهادات حضور"}
-            ]},
-            { title:"المحفظة", items:[
-                { title:"التبرعات والمساهمات"},{title:"الاشتراكات والخدمات المدفوعة"}
-            ]}
+            {title:"مبادراتي", items:[{title:"لبنات تسع"},{title:"تتبع الاعتماد والتمويل"}]},
+            {title:"الفرص", items:[{title:"وظائف"},{title:"تدريب تعاوني"},{title:"تطوع"},{title:"متحدث/مدرب"}]},
+            {title:"الأحداث", items:[{title:"منتديات/ورش"},{title:"تذاكر إلكترونية"}]},
+            {title:"المحفظة", items:[{title:"تبرعات واشتراكات"}]}
           ]
         },
         {
-          id:"private", name:"حساب القطاع الخاص", emoji:"🏢",
-          tagline:"تقارير المسؤولية الاجتماعية، المنح والرعاية، الأحداث والمرافق، والحلول.",
-          value:[
-            "عرض فرص الرعاية والمنح وفق معايير الشركة",
-            "تقارير أثر المسؤولية الاجتماعية وربطها بجهات حكومية",
-            "استئجار مرافق، تنظيم فعاليات، وتقديم حلول للجهات"
-          ],
+          id:"private", name:"القطاع الخاص", emoji:"🏢",
+          tagline:"مسؤولية اجتماعية، رعايات، مرافق وأحداث، حلول.",
+          value:["عرض فرص رعاية حسب المعايير","تقارير أثر وشفافية","طلب/تنظيم فعاليات"],
           services:[
-            { title:"المسؤولية الاجتماعية", items:[
-              { title:"فرص منح/رعاية", children:[
-                { title:"تصنيف حسب البرنامج", children:[
-                  { title:"رؤية 2030"},{title:"تعليم"},{title:"صحة"},{title:"ثقافة"}
-                ]}
-              ]},
-              { title:"التقارير", children:[
-                { title:"الأثر", children:[
-                  { title:"مؤشرات أداء"},{title:"عدد المستفيدين"},{title:"التغطية الجغرافية"}
-                ]},
-                { title:"الشفافية", children:[
-                  { title:"الفواتير والإثباتات"},{title:"الربط مع الجهات"}
-                ]}
-              ]}
-            ]},
-            { title:"الأحداث والمرافق", items:[
-              { title:"طلب/تنظيم حدث"},{ title:"حجز مرافق" }
-            ]},
-            { title:"حلول للجهات", items:[
-              { title:"اقتراح حلول احتياج حكومي/تعليمي/صحي" }
-            ]}
+            {title:"المسؤولية الاجتماعية", items:[{title:"فرص رعاية/منح"},{title:"تقارير أثر"}]},
+            {title:"الأحداث والمرافق", items:[{title:"طلب حدث"},{title:"حجز مرافق"}]},
+            {title:"حلول", items:[{title:"اقتراح حلول لاحتياج جهات"}]}
           ]
         },
         {
-          id:"nonprofit", name:"حساب القطاع غير الربحي", emoji:"🤝",
-          tagline:"الوظائف والتطوع، فرص التمويل، إدارة المشاريع، تقارير الأداء.",
-          value:[
-            "نشر وظائف وتطوع وتدريب",
-            "جذب التمويل عبر الرعاة والممولين والمتبرعين",
-            "لوحات متابعة للمشاريع ومؤشرات الأداء"
-          ],
+          id:"nonprofit", name:"القطاع غير الربحي", emoji:"🤝",
+          tagline:"وظائف وتطوع، تمويل، إدارة مشاريع ومؤشرات.",
+          value:["جذب رعاة وممولين","لوحات متابعة الأثر","نشر فرص التطوع"],
           services:[
-            { title:"الفرص", items:[
-              { title:"وظائف"},{ title:"تطوع"},{ title:"تدريب"},{title:"طلب مدربين"}
-            ]},
-            { title:"التمويل", items:[
-              { title:"رعايات"},{ title:"تبرعات"},{ title:"استثمار/اشتراكات في مشاريع"}
-            ]},
-            { title:"المشاريع", items:[
-              { title:"إدارة الجدول الزمني"},{ title:"المؤشرات والأثر"},{ title:"تقارير الممولين"}
-            ]},
-            { title:"المرافق", items:[
-              { title:"قائمة مرافق للإيجار"},{title:"اعتماد وحجوزات"}
-            ]}
+            {title:"الفرص", items:[{title:"وظائف"},{title:"تطوع"},{title:"تدريب"}]},
+            {title:"التمويل", items:[{title:"رعايات"},{title:"تبرعات"},{title:"اشتراكات/استثمار"}]},
+            {title:"المشاريع", items:[{title:"جدول زمني"},{title:"مؤشرات/تقارير"}]}
           ]
         },
         {
-          id:"donor", name:"حساب المانحين", emoji:"💚",
-          tagline:"فرص منح وفق المعايير، محفظة المانح، تقارير ومطابقة الأهداف.",
-          value:[
-            "تخصيص معايير المنح والقطاعات والبرامج",
-            "محفظة للمنح والتبرعات وتتبع الأثر",
-            "تقارير ربط برؤية 2030 ومؤشرات الأداء"
-          ],
+          id:"donor", name:"المانحون", emoji:"💜",
+          tagline:"بحث فرص منح حسب المعايير، محفظة وتقارير الأثر.",
+          value:["تخصيص المعايير","محفظة منح وتبرعات","مواءمة مع رؤية 2030"],
           services:[
-            { title:"فرص المنح", items:[
-              { title:"حسب المعايير", children:[
-                { title:"المنطقة"},{title:"القطاع"},{title:"البرنامج"}
-              ]}
-            ]},
-            { title:"محفظتي", items:[
-              { title:"التزامات/مدفوعات"},{ title:"متابعة الأثر" }
-            ]},
-            { title:"التقارير", items:[
-              { title:"مواءمة رؤية 2030"},{ title:"أفضل الجهات دعماً في المنطقة" }
-            ]}
+            {title:"فرص المنح", items:[{title:"حسب المنطقة/القطاع/البرنامج"}]},
+            {title:"محفظتي", items:[{title:"التزامات/مدفوعات"},{title:"متابعة الأثر"}]},
+            {title:"التقارير", items:[{title:"مواءمة رؤية 2030"}]}
           ]
         },
         {
-          id:"university", name:"حساب الجامعات", emoji:"🏛️",
-          tagline:"تعزيز علمي للمشاريع، شراكات، عوائد، تسويق برامج وبحوث.",
-          value:[
-            "دور استشاري علمي لتعزيز المشاريع لجميع القطاعات",
-            "عوائد من المشاركة العلمية/الاستشارية",
-            "تسويق البرامج والبحوث والابتكار للرعاة والممولين"
-          ],
+          id:"university", name:"الجامعات", emoji:"🏛️",
+          tagline:"تعزيز علمي للمشاريع، شراكات، تسويق برامج وبحوث.",
+          value:["مراجعات محكّمة","عوائد مشاركة علمية","تسويق البرامج والبحوث"],
           services:[
-            { title:"التعزيز العلمي", items:[
-              { title:"مراجعة جدوى"},{title:"اعتماد مؤشرات"},{title:"تقارير محكّمة"}
-            ]},
-            { title:"الشراكات", items:[
-              { title:"مع القطاعات الحكومية والخاصة وغير الربحية" }
-            ]},
-            { title:"التسويق والتمويل", items:[
-              { title:"برامج أكاديمية"},{title:"بحوث ومراكز"},{title:"ابتكار ونقل تقنية"}
-            ]},
-            { title:"المرافق والاستثمارات", items:[
-              { title:"تأجير مرافق"},{title:"استثمار القطاعات في مرافق الجامعة"}
-            ]}
+            {title:"التعزيز العلمي", items:[{title:"مراجعة جدوى"},{title:"اعتماد مؤشرات"}]},
+            {title:"الشراكات", items:[{title:"مع الجهات كافة"}]},
+            {title:"التسويق والتمويل", items:[{title:"برامج وبحوث"}]}
           ]
         },
         {
-          id:"government", name:"حساب الجهة الحكومية/الإمارة", emoji:"🏛️‍⚖️",
-          tagline:"المبادرات الحكومية، الموافقات على الفعاليات، الحلول، لوحات المؤشرات الإقليمية.",
-          value:[
-            "إدارة مبادرات مرتبطة بأهداف رؤية 2030 (استراتيجية/فرعية/تفصيلية)",
-            "اعتماد/رفض طلبات الفعاليات والاطلاع على المشاركين وأدوارهم",
-            "طلب حلول من القطاعات والأفراد وتعزيز فاعلية الحكومة"
-          ],
+          id:"government", name:"الجهات الحكومية/الإمارة", emoji:"🏛️‍⚖️",
+          tagline:"مبادرات مرتبطة بالأهداف، اعتماد فعاليات، حلول ولوحات مؤشرات.",
+          value:["ربط مبادرات بالأهداف الثلاثية","اعتماد/رفض فعاليات","طلب/استعراض حلول"],
           services:[
-            { title:"مبادرات حكومية", items:[
-              { title:"ربط بالأهداف (استراتيجية/فرعية/تفصيلية)"},
-              { title:"الملفات الداعمة والشركاء"}
-            ]},
-            { title:"إدارة الفعاليات", items:[
-              { title:"طلبات الاعتماد"},{ title:"قبول/رفض الشراكات الاستراتيجية"},{ title:"قائمة المشاركين وأدوارهم"}
-            ]},
-            { title:"حلول", items:[
-              { title:"طلب حلول احتياج"},{ title:"استعراض الحلول المقترحة"}
-            ]},
-            { title:"لوحات مؤشرات المنطقة", items:[
-              { title:"البرامج الأكثر دعماً"},{title:"الشركات الأكثر مساهمة"},{title:"عدد المستفيدين"}
-            ]}
+            {title:"مبادرات حكومية", items:[{title:"ربط بالأهداف الاستراتيجية/الفرعية/التفصيلية"}]},
+            {title:"إدارة الفعاليات", items:[{title:"طلبات الاعتماد"},{title:"الشراكات الاستراتيجية"},{title:"بيانات المشاركين"}]},
+            {title:"حلول", items:[{title:"طلب حلول"},{title:"استعراض حلول"}]},
+            {title:"لوحات مؤشرات", items:[{title:"برامج مدعومة"},{title:"شركات مساهمة"},{title:"عدد مستفيدين"}]}
           ]
         }
       ],
-      partners: [
+      partners:[
         { name:"إمارة منطقة حائل", type:"حكومي", region:"حائل", programs:["تعزيز فاعلية الحكومة","تمكين المسؤولية الاجتماعية"] },
         { name:"وزارة الاتصالات وتقنية المعلومات", type:"حكومي", region:"الرياض", programs:["تعزيز فاعلية الحكومة","تنمية وتنويع الاقتصاد"] },
         { name:"جامعة حائل", type:"جامعة", region:"حائل", programs:["تمكين حياة عامرة وصحية","تنمية وتنويع الاقتصاد"] },
@@ -356,116 +204,121 @@
       ]
     };
 
-    // ---------------------------
-    // أدوات عامة
-    // ---------------------------
-    const $ = (sel, root=document)=>root.querySelector(sel);
-    const $$ = (sel, root=document)=>[...root.querySelectorAll(sel)];
-    const escapeHTML = (s)=>s.replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+    /* ===== أدوات عامة ===== */
+    const $ = (s, r=document)=>r.querySelector(s);
+    const $$ = (s, r=document)=>[...r.querySelectorAll(s)];
+    const escapeHTML = s=>s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+    const relativeDate = (d=new Date())=>new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(d);
 
     function setActiveTopTab(){
       const hash = location.hash || "#/home";
       $$(".tab").forEach(t=>{
-        const on = (t.dataset.link===hash) || (hash.startsWith("#/account") && t.dataset.link==="#/accounts");
+        const on = (t.dataset.link===hash) || (hash.startsWith("#/account/") && t.dataset.link==="#/accounts");
         t.classList.toggle("active", on);
       });
     }
-    function relativeTime(date=new Date()){
-      return new Intl.DateTimeFormat('ar-SA', { dateStyle:'medium'}).format(date);
-    }
 
-    // ---------------------------
-    // مركبات واجهة
-    // ---------------------------
-    function KPIGrid(){
-      const {beneficiaries, programs, goals, subgoals} = DATA.kpis;
-      return `
-        <div class="grid cols-4">
-          <div class="kpi"><div class="muted">منشآت مستفيدة</div><b>${beneficiaries}+</b></div>
-          <div class="kpi"><div class="muted">برامج رؤية</div><b>${programs}</b></div>
-          <div class="kpi"><div class="muted">أهداف تفصيلية</div><b>${goals}</b></div>
-          <div class="kpi"><div class="muted">أهداف فرعية</div><b>${subgoals}</b></div>
-        </div>`;
-    }
-
-    function VisionChips(){
-      return `<div class="vis2030">${DATA.vision2030.map(g=>`<span class="goal">🎯 ${g}</span>`).join("")}</div>`;
-    }
+    /* ===== مركبات واجهة ===== */
+    const KPIGrid = () => `
+      <div class="grid cols-4">
+        <div class="kpi"><div class="muted">مستفيدون</div><b>${DATA.kpis.beneficiaries}+</b></div>
+        <div class="kpi"><div class="muted">برامج رؤية</div><b>${DATA.kpis.programs}</b></div>
+        <div class="kpi"><div class="muted">أهداف تفصيلية</div><b>${DATA.kpis.goals}</b></div>
+        <div class="kpi"><div class="muted">أهداف فرعية</div><b>${DATA.kpis.subgoals}</b></div>
+      </div>
+    `;
+    const VisionChips = () => `<div class="vis2030">${DATA.vision2030.map(g=>`<span class="goal">🎯 ${g}</span>`).join("")}</div>`;
 
     function Accordion(items){
-      // items: [{title, content}]
-      return items.map((it,i)=>`
+      return items.map(it=>`
         <div class="acc" data-acc>
           <div class="acc-h" role="button" aria-expanded="false">
-            <span>${escapeHTML(it.title)}</span>
-            <span class="muted">▼</span>
+            <span>${escapeHTML(it.title)}</span><span class="muted">▼</span>
           </div>
           <div class="acc-c">${it.content||""}</div>
-        </div>
-      `).join("");
+        </div>`).join("");
     }
 
     function NestedList(nodes, depth=1){
       if(!nodes) return "";
-      return `
-        <ul style="margin:6px 0 6px ${depth*12}px; padding:0 0 0 0; list-style: none">
-          ${nodes.map(n=>`
-            <li style="margin:6px 0">
-              <span>▪︎ ${escapeHTML(n.title)}</span>
-              ${n.children? NestedList(n.children, depth+1) : ""}
-            </li>
-          `).join("")}
-        </ul>
-      `;
+      return `<ul style="margin:6px 0 6px ${depth*12}px; list-style:none; padding:0">
+        ${nodes.map(n=>`<li style="margin:6px 0">▪︎ ${escapeHTML(n.title)}${n.children?NestedList(n.children, depth+1):""}</li>`).join("")}
+      </ul>`;
     }
 
-    function ServicesAccordion(services){
-      const accItems = services.map(s=>({
-        title: "🧩 " + s.title,
-        content: `
-          ${s.items?.length? NestedList(s.items) : `<div class="muted">لا توجد عناصر</div>`}
-        `
-      }));
+    function ServicesAccordion(svcs){
+      const accItems = svcs.map(s=>({title:"🧩 "+s.title, content: s.items?.length? NestedList(s.items):"<div class='muted'>لا توجد عناصر</div>"}));
       return Accordion(accItems);
     }
 
-    // ---------------------------
-    // صفحات
-    // ---------------------------
+    /* ===== الصفحات ===== */
     function HomePage(){
       return `
         <section class="grid cols-2">
           <div class="card">
             <div class="h">
-              <h3>منصة حصيف • مبادرة تلبية</h3>
-              <span class="chip">آخر تحديث: ${relativeTime()}</span>
+              <h3>منصة نمو NOMU</h3>
+              <span class="chip">آخر تحديث: ${relativeDate()}</span>
             </div>
-            <p class="muted">منصة وطنية لتمكين التكامل بين الجهات الحكومية والقطاع الخاص والقطاع غير الربحي والجامعات والأفراد، عبر آليات علمية وتنفيذية تسهم في تحقيق مستهدفات رؤية 2030.</p>
+            <p class="muted">منصة وطنية لتمكين التكامل بين الجهات الحكومية والقطاع الخاص والقطاع غير الربحي والجامعات والأفراد، عبر أدوات علمية وتنفيذية تسرّع تحقيق مستهدفات رؤية 2030.</p>
             <div class="divider"></div>
             ${VisionChips()}
             <div class="divider"></div>
             ${KPIGrid()}
             <div class="divider"></div>
             <div class="row">
-              <a class="primary-btn" href="#/accounts">استكشف الحسابات</a>
-              <a class="tab" href="#/directory">عرض دليل الشركاء</a>
-              <span class="pill">MVPLAB • @ntdpsa</span>
+              <a class="primary-btn" href="#/journey">استكشف رحلة NOMU</a>
+              <a class="tab" href="#/accounts">الحسابات</a>
+              <span class="pill">نسخة MVPLAB</span>
             </div>
           </div>
-
           <div class="card">
             <h3>روابط سريعة</h3>
             <div class="grid">
               <a class="tab" href="#/account/individual">👤 الأفراد</a>
               <a class="tab" href="#/account/private">🏢 القطاع الخاص</a>
               <a class="tab" href="#/account/nonprofit">🤝 غير الربحي</a>
-              <a class="tab" href="#/account/donor">💚 المانح</a>
-              <a class="tab" href="#/account/university">🏛️ الجامعة</a>
-              <a class="tab" href="#/account/government">🏛️‍⚖️ الجهة الحكومية/الإمارة</a>
+              <a class="tab" href="#/account/donor">💜 المانحون</a>
+              <a class="tab" href="#/account/university">🏛️ الجامعات</a>
+              <a class="tab" href="#/account/government">🏛️‍⚖️ الجهات الحكومية</a>
             </div>
             <div class="divider"></div>
-            <div class="note">
-              <b>معلومة:</b> يمكن ربط المشاريع بالأهداف (استراتيجية ← فرعية ← تفصيلية) وتتبع المؤشرات وعدد المستفيدين والتغطية الجغرافية.
+            <div class="note"><b>معلومة:</b> تربط NOMU المشاريع بأهداف رؤية 2030 (استراتيجية ← فرعية ← تفصيلية) مع تتبع المؤشرات وعدد المستفيدين.</div>
+          </div>
+        </section>
+      `;
+    }
+
+    function JourneyPage(){
+      const steps = [
+        {t:"إنشاء الحساب",d:"تسجيل سريع للأفراد أو الجهات."},
+        {t:"اختيار الدور",d:"تحديد نوع الحساب (جهة حكومية، جامعة، خاص، غير ربحي، فرد)."},
+        {t:"بناء المبادرة/الاحتياج",d:"نمذجة باللبنات التسع وربط بالأهداف والبرامج."},
+        {t:"التعزيز العلمي",d:"مراجعة محكّمة عبر الجامعات واعتماد مؤشرات الأداء."},
+        {t:"التمويل/الرعاية",d:"مطابقة معايير المانحين والرعاة والاشتراكات."},
+        {t:"التنفيذ والمتابعة",d:"جدولة، مهام، ومراقبة المخاطر."},
+        {t:"التقارير والشفافية",d:"تقارير أثر، فواتير وإثباتات، وربط الجهات الشريكة."}
+      ];
+      return `
+        <section class="grid">
+          <div class="card">
+            <div class="h">
+              <h3>رحلة NOMU</h3>
+              <span class="chip">7 مراحل</span>
+            </div>
+            <div class="divider"></div>
+            <div class="grid">
+              ${steps.map((s,i)=>`
+                <div class="acc open">
+                  <div class="acc-h"><b>المرحلة ${i+1} — ${escapeHTML(s.t)}</b><span class="muted">▼</span></div>
+                  <div class="acc-c"><p class="muted">${escapeHTML(s.d)}</p></div>
+                </div>
+              `).join("")}
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <a class="primary-btn" href="#/start">ابدأ الرحلة</a>
+              <a class="tab" href="#/accounts">عرض الحسابات</a>
             </div>
           </div>
         </section>
@@ -479,7 +332,7 @@
             <div class="card">
               <div class="h">
                 <h3>${acc.emoji} ${acc.name}</h3>
-                <span class="chip">معرّف: ${acc.id}</span>
+                <span class="chip">ID: ${acc.id}</span>
               </div>
               <p class="muted">${acc.tagline}</p>
               <div class="divider"></div>
@@ -494,10 +347,7 @@
 
     function AccountDetailPage(id){
       const acc = DATA.accounts.find(a=>a.id===id);
-      if(!acc){
-        return `<div class="card"><h3>الحساب غير موجود</h3><p class="muted">تأكد من الرابط.</p><a class="tab" href="#/accounts">العودة للحسابات</a></div>`;
-      }
-      // تبويبات داخلية: نظرة عامة / الخدمات / القيمة المضافة
+      if(!acc) return `<div class="card"><h3>الحساب غير موجود</h3><a class="tab" href="#/accounts">عودة</a></div>`;
       return `
         <section class="grid">
           <div class="card">
@@ -505,35 +355,23 @@
               <h3>${acc.emoji} ${acc.name}</h3>
               <a class="tab" href="#/accounts">عودة</a>
             </div>
-
             <div class="tabs" data-tabs>
               <button class="t active" data-tab="overview">نظرة عامة</button>
               <button class="t" data-tab="services">الخدمات</button>
-              <button class="t" data-tab="value">القيمة المضافة</button>
+              <button class="t" data-tab="value">القيمة</button>
             </div>
-
             <div class="tab-panel active" data-panel="overview">
               <p class="muted">${acc.tagline}</p>
               <div class="divider"></div>
               ${VisionChips()}
               <div class="divider"></div>
-              <div class="row">
-                <span class="pill">يدعم التكامل بين القطاعات</span>
-                <span class="pill">تقارير ومؤشرات</span>
-                <span class="pill">حوكمة وشفافية</span>
-              </div>
+              <div class="row"><span class="pill">حوكمة وشفافية</span><span class="pill">مؤشرات أداء</span><span class="pill">تكامل بين القطاعات</span></div>
             </div>
-
-            <div class="tab-panel" data-panel="services">
-              ${ServicesAccordion(acc.services)}
-            </div>
-
+            <div class="tab-panel" data-panel="services">${ServicesAccordion(acc.services)}</div>
             <div class="tab-panel" data-panel="value">
               <div class="grid cols-2">
                 ${acc.value.map(v=>`<div class="kpi"><div class="muted">قيمة</div><b>${escapeHTML(v)}</b></div>`).join("")}
               </div>
-              <div class="divider"></div>
-              <div class="note">يمكن تخصيص هذه القائمة لاحقًا وإضافة مستندات، نماذج اعتماد، وربط API.</div>
             </div>
           </div>
         </section>
@@ -541,18 +379,13 @@
     }
 
     function DirectoryPage(){
-      // واجهة بحث وتصنيف
       const types = ["الكل","حكومي","خاص","غير ربحي","جامعة"];
       const regions = ["الكل","حائل","الرياض","الشرقية","مكة","المدينة","القصيم","الحدود الشمالية","عسير","الباحة","جازان","نجران","تبوك","الجوف"];
-
       return `
         <section class="grid">
           <div class="card">
-            <div class="h">
-              <h3>الدليل الوطني للشركاء</h3>
-              <span class="chip">عناصر: ${DATA.partners.length}</span>
-            </div>
-            <div class="toolbar">
+            <div class="h"><h3>الدليل الوطني للشركاء (NOMU)</h3><span class="chip">عناصر: ${DATA.partners.length}</span></div>
+            <div class="row" style="gap:8px; flex-wrap:wrap">
               <input class="input" id="q" placeholder="ابحث بالاسم..." />
               <select id="type">${types.map(t=>`<option>${t}</option>`).join("")}</select>
               <select id="region">${regions.map(r=>`<option>${r}</option>`).join("")}</select>
@@ -569,23 +402,22 @@
       return `
         <section class="grid cols-2">
           <div class="card">
-            <h3>عن المنصة</h3>
-            <p class="muted">منصة حصيف ضمن مبادرة تلبية، نموذج عمل وطني لتمكين الحلول المجتمعية والتنموية وربطها بالجهات ذات العلاقة عبر أدوات علمية وتنفيذية عملية. تم تطويرها على مدى سنتين، وشاركت ضمن منتج MVPLAB في البرنامج الوطني لتنمية تقنية المعلومات.</p>
+            <h3>عن NOMU</h3>
+            <p class="muted">تم تطوير منصة نمو على مدى سنتين كنظام وطني يدعم التكامل بين القطاعات ويعزز الشفافية ورفع الأثر، مع ربط المشاريع بأهداف رؤية 2030 وتتبع المؤشرات.</p>
             <div class="divider"></div>
             ${VisionChips()}
             <div class="divider"></div>
-            <p class="note">تهدف المنصة إلى تنظيم المشاركة، توحيد الجهود، رفع جودة العمل التنموي، زيادة الأثر، وترشيد الإنفاق.</p>
+            <div class="note">هذه نسخة عرض. يمكن لاحقًا دمج تسجيل الدخول، المحافظ الرقمية، وربط API للأنظمة الخارجية.</div>
           </div>
           <div class="card">
             <h3>تواصل</h3>
-            <p>للتكامل والشراكات والدعم والاعتمادات العلمية:</p>
             <ul>
-              <li>التكامل مع الجهات الحكومية والجامعات</li>
-              <li>رعايات ومسؤولية اجتماعية للقطاع الخاص</li>
-              <li>تمكين القطاع غير الربحي</li>
+              <li>شراكات وتكامل مع الجهات</li>
+              <li>رعايات ومسؤولية اجتماعية</li>
+              <li>تعزيز علمي عبر الجامعات</li>
             </ul>
             <div class="divider"></div>
-            <p class="muted">* هذه نسخة عرض — يمكن ربط نماذج اتصال/بريد لاحقًا.</p>
+            <p class="muted">* أزرار النماذج ستُضاف لاحقًا.</p>
           </div>
         </section>
       `;
@@ -596,133 +428,114 @@
         <section class="grid">
           <div class="card">
             <h3>ابدأ الآن</h3>
-            <p class="muted">اختر الحساب الأنسب لبدء رحلتك داخل المنصة.</p>
+            <p class="muted">اختر الحساب الأنسب لبدء رحلتك داخل NOMU.</p>
             <div class="divider"></div>
             <div class="grid cols-3">
-              ${DATA.accounts.map(a=>`
-                <a class="tab" href="#/account/${a.id}">${a.emoji} ${a.name}</a>
-              `).join("")}
+              ${DATA.accounts.map(a=>`<a class="tab" href="#/account/${a.id}">${a.emoji} ${a.name}</a>`).join("")}
             </div>
-            <div class="divider"></div>
-            <p class="note">يمكن إضافة تسجيل/دخول لاحقًا (OAuth/SSO) وربط محفظة رقمية.</p>
           </div>
         </section>
       `;
     }
 
-    // ---------------------------
-    // الراوتنج
-    // ---------------------------
-    function render(){
-      const app = $("#app");
-      const hash = location.hash || "#/home";
-      setActiveTopTab();
+    /* ===== Router + Delegated Events (الإصلاح) ===== */
+    (function RouterAndEvents(){
+      const Router = (()=> {
+        const routes = {
+          "/home":      () => HomePage(),
+          "/journey":   () => JourneyPage(),
+          "/accounts":  () => AccountsPage(),
+          "/directory": () => DirectoryPage(),
+          "/about":     () => AboutPage(),
+          "/start":     () => StartPage()
+        };
+        function parse(){
+          const h = (location.hash || "#/home").replace(/^#/, "");
+          const parts = h.split("/").filter(Boolean);
+          if (parts[0]==="account") return { path:"/account", param: parts[1] || null };
+          return { path: "/" + (parts[0] || "home"), param:null };
+        }
+        function render(){
+          const {path, param} = parse();
+          setActiveTopTab();
+          const app = $("#app");
+          if (path==="/account"){ app.innerHTML = AccountDetailPage(param); return; }
+          const view = routes[path] || routes["/home"];
+          app.innerHTML = view();
+          if (path==="/directory") afterRenderDirectory();
+        }
+        return { render };
+      })();
 
-      if(hash==="#/" || hash==="#/home"){ app.innerHTML = HomePage(); afterRender(); return; }
-      if(hash==="#/accounts"){ app.innerHTML = AccountsPage(); afterRender(); return; }
-      if(hash.startsWith("#/account/")){
-        const id = hash.split("/")[2];
-        app.innerHTML = AccountDetailPage(id);
-        afterRender();
-        return;
-      }
-      if(hash==="#/directory"){ app.innerHTML = DirectoryPage(); afterRenderDirectory(); return; }
-      if(hash==="#/about"){ app.innerHTML = AboutPage(); afterRender(); return; }
-      if(hash==="#/start"){ app.innerHTML = StartPage(); afterRender(); return; }
+      /* تفويض أحداث عام */
+      document.addEventListener("click", (e)=>{
+        // روابط القائمة العليا
+        const link = e.target.closest("[data-link]");
+        if (link){ e.preventDefault(); location.hash = link.dataset.link; return; }
 
-      // افتراضي
-      app.innerHTML = HomePage(); afterRender();
-    }
+        // تبويبات داخلية
+        const tabBtn = e.target.closest("[data-tabs] .t");
+        if (tabBtn){
+          const tabsContainer = tabBtn.closest("[data-tabs]");
+          const root = tabsContainer.parentElement;
+          const name = tabBtn.dataset.tab;
+          $$(".t", tabsContainer).forEach(x=>x.classList.toggle("active", x===tabBtn));
+          $$(".tab-panel", root).forEach(p=>p.classList.toggle("active", p.dataset.panel===name));
+          return;
+        }
 
-    // ---------------------------
-    // معالجات ما بعد الرسم
-    // ---------------------------
-    function afterRender(){
-      // تبويبات داخلية
-      $$("[data-tabs]").forEach(tabset=>{
-        const tabs = $$(".t", tabset);
-        const panelRoot = tabset.parentElement;
-        tabs.forEach(t=>{
-          t.addEventListener("click", ()=>{
-            const name = t.dataset.tab;
-            tabs.forEach(x=>x.classList.toggle("active", x===t));
-            $$(".tab-panel", panelRoot).forEach(p=>p.classList.toggle("active", p.dataset.panel===name));
-          });
-        });
-      });
-
-      // أكورديون
-      $$(".acc .acc-h").forEach(h=>{
-        h.addEventListener("click", ()=>{
-          const acc = h.closest(".acc");
+        // أكورديون
+        const head = e.target.closest(".acc .acc-h");
+        if (head){
+          const acc = head.closest(".acc");
           const open = acc.classList.toggle("open");
-          h.setAttribute("aria-expanded", open ? "true":"false");
-        });
+          head.setAttribute("aria-expanded", open?"true":"false");
+        }
       });
-    }
 
-    function afterRenderDirectory(){
-      afterRender();
-      const list = $("#plist");
-      const q = $("#q");
-      const type = $("#type");
-      const region = $("#region");
-      const reset = $("#reset");
+      /* الدليل: ربط الحقول عند ظهور الصفحة */
+      function afterRenderDirectory(){
+        const list   = $("#plist");
+        const q      = $("#q");
+        const type   = $("#type");
+        const region = $("#region");
+        const reset  = $("#reset");
+        if (!list || !q || !type || !region || !reset) return;
 
-      function draw(items){
-        if(!items.length){ list.innerHTML = `<div class="note">لا توجد نتائج مطابقة.</div>`; return; }
-        list.innerHTML = `
-          <div class="grid cols-2">
-            ${items.map(p=>`
-              <div class="card">
-                <div class="h">
-                  <h3>${escapeHTML(p.name)}</h3>
-                  <span class="chip">${p.type} • ${p.region}</span>
-                </div>
-                <div class="row">
-                  ${p.programs.map(pr=>`<span class="pill">🎯 ${escapeHTML(pr)}</span>`).join("")}
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        `;
+        function draw(items){
+          list.innerHTML = items.length ? `
+            <div class="grid cols-2">
+              ${items.map(p=>`
+                <div class="card">
+                  <div class="h"><h3>${escapeHTML(p.name||"")}</h3><span class="chip">${p.type} • ${p.region}</span></div>
+                  <div class="row">${(p.programs||[]).map(pr=>`<span class="pill">🎯 ${escapeHTML(pr)}</span>`).join("")}</div>
+                </div>`).join("")}
+            </div>` : `<div class="note">لا توجد نتائج مطابقة.</div>`;
+        }
+        function apply(){
+          const query=q.value.trim().toLowerCase(), ty=type.value, rg=region.value;
+          let items=DATA.partners.slice();
+          if(query) items=items.filter(p=>(p.name||"").toLowerCase().includes(query));
+          if(ty!=="الكل") items=items.filter(p=>p.type===ty);
+          if(rg!=="الكل") items=items.filter(p=>p.region===rg);
+          draw(items);
+        }
+        q.addEventListener("input", apply, {passive:true});
+        type.addEventListener("input", apply, {passive:true});
+        region.addEventListener("input", apply, {passive:true});
+        reset.addEventListener("click", ()=>{ q.value=""; type.value="الكل"; region.value="الكل"; apply(); });
+        draw(DATA.partners);
       }
 
-      function apply(){
-        const query = q.value.trim().toLowerCase();
-        const ty = type.value;
-        const rg = region.value;
-        let items = DATA.partners.slice();
-        if(query) items = items.filter(p=>p.name.toLowerCase().includes(query));
-        if(ty!=="الكل") items = items.filter(p=>p.type===ty);
-        if(rg!=="الكل") items = items.filter(p=>p.region===rg);
-        draw(items);
-      }
-
-      [q,type,region].forEach(el=>el.addEventListener("input", apply));
-      reset.addEventListener("click", ()=>{ q.value=""; type.value="الكل"; region.value="الكل"; apply(); });
-      draw(DATA.partners);
-    }
-
-    // أحداث عامة
-    window.addEventListener("hashchange", render);
-    window.addEventListener("load", ()=>{
-      $("#year").textContent = new Date().getFullYear();
-      // تفعيل روابط أعلى الشريط
-      $$(".tab[data-link]").forEach(el=>{
-        el.addEventListener("click", ()=>location.hash = el.dataset.link);
+      /* تشغيل */
+      window.addEventListener("hashchange", Router.render);
+      window.addEventListener("load", ()=>{
+        const y = document.getElementById("year");
+        if (y) y.textContent = new Date().getFullYear();
+        $$(".tab[data-link]").forEach(el=>el.addEventListener("click",(e)=>{e.preventDefault(); location.hash = el.dataset.link;}));
+        Router.render();
       });
-      render();
-    });
-
-    // ---------------------------
-    // ملاحظات مهمّة للاستبدال بالشعار
-    // ---------------------------
-    // لاستبدال شعار تلبية بصورة PNG لديك:
-    // 1) ارفع الصورة إلى المسار: assets/talabiya-logo.png
-    // 2) استبدل كتلة <svg> داخل .logo بالعنصر:
-    //    <img src="assets/talabiya-logo.png" alt="شعار تلبية" width="28" height="28" style="border-radius:6px"/>
-    // 3) اترك بقية الملف كما هو.
+    })();
   </script>
 </body>
 </html>
