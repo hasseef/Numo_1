@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>منصة نمو NOMU — v4.0 (جميع التبويبات + CRUD + حفظ محلي)</title>
+<title>منصة نمو NOMU — v4.1 (إشعارات + SLA + RBAC للحقول + رسوم بيانية)</title>
 <style>
 :root{
   --bg:#f7fbff; --paper:#fff; --brand:#16a34a; --ink:#0f172a; --sub:#475569; --accent:#f59e0b;
@@ -12,12 +12,17 @@
 }
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 var(--font)}
 a{color:#0ea5e9;text-decoration:none}
-header{position:sticky;top:0;z-index:30;background:#ffffffe6;backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+header{position:sticky;top:0;z-index:40;background:#ffffffe6;backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
 .topbar{max-width:1240px;margin:auto;padding:10px var(--pad);display:flex;align-items:center;gap:10px}
 .logo{width:40px;height:40px;border-radius:12px;background:conic-gradient(from 180deg,#22c55e,#86efac,#34d399,#22c55e);box-shadow:0 6px 16px rgba(16,185,129,.25)}
-.left-logos{margin-inline-start:auto;display:flex;gap:8px}
+.left-logos{margin-inline-start:auto;display:flex;gap:8px;align-items:center}
 .pill-logo{display:flex;align-items:center;gap:8px;background:var(--muted);border:1px solid var(--border);border-radius:999px;padding:6px 10px}
 .pill-logo img{height:28px;display:block}
+.rolebox{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
+.bell{position:relative;cursor:pointer;border:1px solid var(--border);background:#fff;border-radius:12px;padding:8px}
+.badge{position:absolute;top:-6px;left:-6px;background:#ef4444;color:#fff;border-radius:999px;font-size:11px;line-height:1;padding:3px 6px}
+.npanel{position:absolute;top:54px;inset-inline-end:0;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);width:380px;max-height:60vh;overflow:auto;display:none}
+.nitem{padding:10px;border-bottom:1px dashed var(--border)} .nitem:last-child{border-bottom:none}
 .main{max-width:1240px;margin:20px auto;display:grid;grid-template-columns:280px 1fr;gap:var(--gap-lg);padding:0 var(--pad)}
 nav .side{position:sticky;top:72px;background:var(--paper);border:1px solid var(--border);border-radius:var(--radius);padding:10px;box-shadow:var(--shadow)}
 .group h4{margin:10px 8px;color:var(--sub);font-size:13px}
@@ -40,9 +45,9 @@ table{width:100%;border-collapse:separate;border-spacing:0 8px} th,td{text-align
 .tools{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
 .search{display:flex;gap:8px;align-items:center}
 .files{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px} .filepill{display:flex;align-items:center;gap:6px;border:1px dashed #cbd5e1;background:#fff;border-radius:999px;padding:6px 10px;font-size:12px}
-.note{font-size:12px;color:#64748b}
-.callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:10px}
-.danger{background:#fff1f2;border:1px solid #fecdd3}
+.note{font-size:12px;color:#64748b} .callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:10px}
+.warn{color:#b91c1c} .danger{background:#fff1f2;border:1px solid #fecdd3}
+canvas{width:100%;height:280px;border:1px solid var(--border);border-radius:12px;background:#fff}
 footer{max-width:1240px;margin:22px auto 36px;color:#64748b;text-align:center;padding:0 var(--pad)}
 @media (max-width:980px){ .main{grid-template-columns:1fr} .four{grid-template-columns:1fr 1fr} }
 </style>
@@ -54,13 +59,33 @@ footer{max-width:1240px;margin:22px auto 36px;color:#64748b;text-align:center;pa
       <div class="logo" aria-hidden="true"></div>
       <div><b>NOMU — منصة نمو</b><div style="font-size:12px;color:#0f766e">منصة وطنية للطفولة المبكرة</div></div>
     </div>
+
     <div class="left-logos">
+      <!-- شعارا Vision 2030 + تلبية (SVG Data URI تعمل مباشرة) -->
       <span class="pill-logo" title="Vision 2030">
         <img alt="Vision 2030" src='data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="140" height="36"><rect x="1" y="5" rx="12" width="138" height="26" fill="%23f1f5f9" stroke="%23cbd5e1"/><text x="70" y="24" text-anchor="middle" font-size="14" font-family="Tajawal,Arial" fill="%230f172a">Vision 2030</text></svg>'/>
       </span>
       <span class="pill-logo" title="مبادرة تلبية">
         <img alt="Talbiya" src='data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="140" height="36"><rect x="1" y="5" rx="12" width="138" height="26" fill="%23f1f5f9" stroke="%23cbd5e1"/><text x="70" y="24" text-anchor="middle" font-size="14" font-family="Tajawal,Arial" fill="%230f172a">%D9%85%D8%A8%D8%A7%D8%AF%D8%B1%D8%A9%20%D8%AA%D9%84%D8%A8%D9%8A%D8%A9</text></svg>'/>
       </span>
+
+      <!-- اختيار الدور الحالي + جرس الإشعارات -->
+      <div class="rolebox">
+        <span>الدور:</span>
+        <select id="currentRole">
+          <option>clinic.staff</option>
+          <option>health.practitioner</option>
+          <option>education.specialist</option>
+          <option>neighborhood.coordinator</option>
+          <option>nonprofit.worker</option>
+          <option>admin.national</option>
+          <option>family.guardian</option>
+        </select>
+      </div>
+      <div style="position:relative">
+        <button id="bell" class="bell">🔔<span id="bellBadge" class="badge" style="display:none">0</span></button>
+        <div id="npanel" class="npanel"></div>
+      </div>
     </div>
   </div>
 </header>
@@ -71,7 +96,7 @@ footer{max-width:1240px;margin:22px auto 36px;color:#64748b;text-align:center;pa
       <div class="group">
         <h4>التعاريف</h4>
         <a class="link" href="#/intro">عن المنصة</a>
-        <a class="link" href="#/kpi">سجل KPI</a>
+        <a class="link" href="#/kpi">سجل KPI + رسوم</a>
       </div>
       <div class="group">
         <h4>الحسابات</h4>
@@ -118,30 +143,25 @@ footer{max-width:1240px;margin:22px auto 36px;color:#64748b;text-align:center;pa
   <section class="content" id="view"></section>
 </main>
 
-<footer>نمو NOMU — v4.0 (منصة متكاملة بواجهة واحدة: CRUD + تبويبات + حفظ محلي + تشغيل + استدامة + سياسات)</footer>
+<footer>نمو NOMU — v4.1 (إشعارات + SLA + RBAC للحقول + رسوم بيانية + CRUD كامل وحفظ محلي)</footer>
 
 <script>
-/* ============= أدوات عامة ============= */
+/* ===== أدوات عامة ===== */
 const $=(q,root=document)=>root.querySelector(q);
 const $$=(q,root=document)=>Array.from(root.querySelectorAll(q));
+const uid=(p='ID')=>p+'-'+Math.random().toString(36).slice(2,8).toUpperCase();
+const today=()=>new Date().toISOString().slice(0,10);
 function route(){ const p=location.hash.slice(1)||'/intro'; $$('a.link').forEach(a=>a.classList.toggle('active', a.getAttribute('href')===`#${p}`)); (routes[p]||intro)(); }
 window.addEventListener('hashchange',route);
-
 const downloadFile=(name,blob)=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); };
 const downloadJSON=(name,obj)=>downloadFile(name,new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}));
 const toCSV=(rows)=>rows.map(r=>r.map(v=>`"${(v??'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
 const downloadCSV=(name,rows)=>downloadFile(name,new Blob([toCSV(rows)],{type:'text/csv'}));
-const uid=(p='ID')=>p+'-'+Math.random().toString(36).slice(2,8).toUpperCase();
-const today=()=>new Date().toISOString().slice(0,10);
 
-/* ============= SSO & RBAC & Config ============= */
-const DEFAULT_CONFIG={
-  sso:{ issuer:'https://nafath.example.gov.sa', authorize_url:'https://nafath.example.gov.sa/authorize', token_url:'https://nafath.example.gov.sa/token', client_id:'NOMU-CLIENT-ID', redirect_uri:'https://nomu.gov.sa/callback' },
-  apis:{ internal:{ health:'/api/health', clinic:'/api/clinic', education:'/api/education', neighborhood:'/api/neighborhood', nonprofit:'/api/nonprofit', hr:'/api/hr', csr:'/api/csr', family:'/api/family', admin:'/api/admin', dispatch:'/api/dispatch' } }
-};
+/* ===== Config / RBAC / الدور الحالي ===== */
+const DEFAULT_CONFIG={ sso:{ issuer:'https://nafath.example.gov.sa', authorize_url:'https://nafath.example.gov.sa/authorize', token_url:'https://nafath.example.gov.sa/token', client_id:'NOMU-CLIENT-ID', redirect_uri:'https://nomu.gov.sa/callback' }, apis:{ internal:{ health:'/api/health', clinic:'/api/clinic', education:'/api/education', neighborhood:'/api/neighborhood', nonprofit:'/api/nonprofit', hr:'/api/hr', csr:'/api/csr', family:'/api/family', admin:'/api/admin', dispatch:'/api/dispatch' } } };
 const loadCfg=()=>{ try{ return JSON.parse(localStorage.getItem('nomu_cfg')||'null') || DEFAULT_CONFIG }catch(e){ return DEFAULT_CONFIG } };
 const saveCfg=(cfg)=>localStorage.setItem('nomu_cfg', JSON.stringify(cfg));
-
 let RBAC={ roles:{
   'health.practitioner':['child.read','health.write','referral.send','referral.accept','appointment.manage','kpi.view'],
   'clinic.staff':['child.read','appointment.manage','referral.accept','kpi.view'],
@@ -152,13 +172,17 @@ let RBAC={ roles:{
   'family.guardian':['child.own','consent.grant','appointment.book']
 }};
 const can=(role,perm,consent=true)=> (RBAC.roles[role]||[]).includes(perm) && (perm!=='child.read' || consent || role==='admin.national');
+const ROLE_KEY='nomu_role';
+const loadRole=()=>localStorage.getItem(ROLE_KEY)||'clinic.staff';
+const saveRole=(r)=>localStorage.setItem(ROLE_KEY,r);
+$('#currentRole').value=loadRole();
+$('#currentRole').onchange=(e)=>{ saveRole(e.target.value); document.dispatchEvent(new CustomEvent('role-change',{detail:e.target.value})); };
 
-/* ============= قاعدة بيانات محلية (Mock API) ============= */
-const DB_KEY='nomu_db_v40';
+/* ===== DB محلي + API محاكي ===== */
+const DB_KEY='nomu_db_v41';
 const DB=()=>{ try{ return JSON.parse(localStorage.getItem(DB_KEY)||'{}') }catch(e){ return {} } };
 const DB_SAVE=(db)=>localStorage.setItem(DB_KEY, JSON.stringify(db));
 const ensure=(...path)=>{ const db=DB(); let cur=db; for(const k of path){ cur[k]=cur[k]||{}; cur=cur[k]; } DB_SAVE(db); return cur; };
-
 const API={
   list:(entity,section)=>Object.values(ensure(entity,section).items||{}),
   create:(entity,section,record)=>{ const root=ensure(entity,section); root.items=root.items||{}; const id=uid('REC'); root.items[id]={id,...record,createdAt:new Date().toISOString()}; DB_SAVE(DB()); return root.items[id]; },
@@ -168,7 +192,43 @@ const API={
   clear:(entity,section)=>{ const root=ensure(entity,section); root.items={}; DB_SAVE(DB()); },
 };
 
-/* ============= بيانات تشغيل المراكز + توزيع ============= */
+/* ===== إشعارات + تذكير SLA ===== */
+const NOTIF_KEY='nomu_notif';
+const loadNotif=()=>{ try{ return JSON.parse(localStorage.getItem(NOTIF_KEY)||'[]') }catch(e){ return [] } };
+const saveNotif=(arr)=>localStorage.setItem(NOTIF_KEY, JSON.stringify(arr));
+function pushNotif({title,body,type='info',link=null}){
+  const list=loadNotif(); list.unshift({id:uid('NTF'),ts:new Date().toISOString(),title,body,type,link,read:false}); saveNotif(list); renderBell();
+}
+function renderBell(){
+  const list=loadNotif(); const unread=list.filter(n=>!n.read).length; const badge=$('#bellBadge'); badge.textContent=unread; badge.style.display=unread? 'inline-block':'none';
+  const panel=$('#npanel'); panel.innerHTML=list.length? list.map(n=>`<div class="nitem">
+    <div><b>${n.title}</b> • <span class="note">${new Date(n.ts).toLocaleString('ar-SA')}</span></div>
+    <div>${n.body}</div>${n.link?`<div class="note"><a href="${n.link}">فتح</a></div>`:''}
+  </div>`).join('') : `<div class="nitem note">لا إشعارات</div>`;
+}
+$('#bell').onclick=()=>{ const p=$('#npanel'); const show=p.style.display!=='block'; p.style.display=show?'block':'none'; if(show){ const list=loadNotif().map(n=>({...n,read:true})); saveNotif(list); renderBell(); } };
+document.addEventListener('role-change',renderBell);
+renderBell();
+
+/* ===== مراقبة SLA للإحالات (كل تحميل/كل دقيقة) ===== */
+function scanSLA(){
+  const entities=['health','education','clinic','nonprofit','neighborhood'];
+  const now=Date.now();
+  entities.forEach(ent=>{
+    const refs=API.list(ent,'الإحالات');
+    refs.forEach(r=>{
+      const opened=r.opened_at? new Date(r.opened_at).getTime():null; const sla=parseInt(r.sla||'7',10);
+      if(opened){ const days=Math.ceil((now-opened)/86400000); if(days>sla && !r._slaNotified){
+        pushNotif({title:'تجاوز SLA', body:`إحالة متأخرة لدى «${ent}»: ${days}/${sla} يوم.`, type:'warn', link:'#/acc/'+ent});
+        // ضع علامة كي لا تتكرر
+        API.update(ent,'الإحالات',r.id,{_slaNotified:true});
+      }}
+    });
+  });
+}
+scanSLA(); setInterval(scanSLA, 60000);
+
+/* ===== تشغيل المراكز + توزيع ===== */
 const CENTERS=[
   { id:'CLN-001', name:'مركز صحي حي الازدهار', type:'clinic', region:'الرياض', specialty:['نمائي','تخاطب'], capacityDay:24, bookedToday:8, avgVisitMin:30, slaDays:7 },
   { id:'CLN-002', name:'مركز صحي حي الشاطئ', type:'clinic', region:'الشرقية', specialty:['نمائي','وظيفي'], capacityDay:18, bookedToday:15, avgVisitMin:40, slaDays:5 },
@@ -189,7 +249,7 @@ function pickCenter({region, need, maxSlaDays=14}){
   return scored[0]?.c||null;
 }
 
-/* ============= تعريفات KPI ============= */
+/* ===== KPI ===== */
 const KPI_REGISTRY=[
   { id:'DEV_SCREEN', name:'نسبة تغطية الفحص النمائي', owner:'وزارة الصحة', formula:'المفحوصون ÷ المستهدفون ×100', period:'شهري', source:'HealthAssessment' },
   { id:'SCHOOL_READY', name:'نسبة الجاهزية المدرسية', owner:'وزارة التعليم', formula:'جاهزون ÷ إجمالي 5–6 ×100', period:'فصلي', source:'EducationPlan' },
@@ -199,24 +259,25 @@ const KPI_REGISTRY=[
   { id:'ACTIVE_REF', name:'الإحالات النشطة', owner:'اللجنة الوطنية', formula:'المفتوحة − المغلقة', period:'يومي', source:'Referral' }
 ];
 
-/* ============= مولّد نماذج/جداول عام ============= */
+/* ===== مولّد نماذج/جداول + RBAC حقول ===== */
 function buildForm(container, schema, current=null){
+  const role=loadRole();
   container.innerHTML = `<div class="form grid two">
     ${schema.map(f=>{
       const val=current?.[f.key]??(f.value??'');
       const type=f.type||'text';
-      const extra=(type==='textarea')?`<textarea data-key="${f.key}" placeholder="${f.key}">${val}</textarea>`:`<input type="${type}" data-key="${f.key}" value="${val}" placeholder="${f.key}"/>`;
-      return `<label>${f.label}${extra}</label>`;
+      const dis = f.perm && !can(role,f.perm) ? 'disabled' : '';
+      const extra=(type==='textarea')?`<textarea ${dis} data-key="${f.key}" placeholder="${f.key}">${val}</textarea>`:`<input ${dis} type="${type}" data-key="${f.key}" value="${val}" placeholder="${f.key}"/>`;
+      return `<label>${f.label}${f.perm?` <span class="note">(${f.perm})</span>`:''}${extra}</label>`;
     }).join('')}
     ${schema.some(f=>f.type==='file')?`<div class="files" id="flist"></div>`:''}
   </div>`;
-  // مرفقات عامة (إذا طلب)
+  // مرفقات
   schema.filter(f=>f.type==='file').forEach(f=>{
     const input = container.querySelector(`[data-key="${f.key}"]`);
     const flist = container.querySelector('#flist');
-    input.addEventListener('change', e=>{
+    input?.addEventListener('change', e=>{
       [...e.target.files].forEach(file=>{
-        const fileId=uid('FILE');
         const url=URL.createObjectURL(file);
         const pill=document.createElement('span'); pill.className='filepill';
         pill.innerHTML=`📎 ${file.name} • ${(file.size/1024).toFixed(1)} KB <a href="${url}" download="${file.name}">تنزيل</a>`;
@@ -247,7 +308,7 @@ function buildTable(container, schema, rows, {onEdit,onDelete}={}){
   render(rows);
   $('#q',container).oninput=(e)=>{ const q=e.target.value.trim(); const filtered=rows.filter(r=>JSON.stringify(r).includes(q)); render(filtered); };
   $('#exportCsv',container).onclick=()=>{ const header=[...cols]; const data=rows.map(r=>cols.map(c=>r[c]??'')); downloadCSV('export.csv',[header,...data]); };
-  $('#importJson',container).onchange=(e)=>{ const file=e.target.files[0]; if(!file) return; const fr=new FileReader(); fr.onload=()=>{ try{ const arr=JSON.parse(fr.result||'[]'); onEdit?.({import:arr}); }catch(err){ alert('صيغة JSON غير صحيحة'); } }; fr.readAsText(file); };
+  $('#importJson',container).onchange=(e)=>{ const file=e.target.files[0]; if(!file) return; const fr=new FileReader(); fr.onload=()=>{ try{ const arr=JSON.parse(fr.result||'[]'); onEdit?.({import:arr}); }catch(err){ alert('JSON غير صحيح'); } }; fr.readAsText(file); };
   container.addEventListener('click',(ev)=>{
     const id=ev.target.getAttribute('data-edit'); const del=ev.target.getAttribute('data-del');
     if(id && onEdit) onEdit({id});
@@ -255,41 +316,57 @@ function buildTable(container, schema, rows, {onEdit,onDelete}={}){
   });
 }
 
-/* ============= تعريف الحقول/التبويبات لكل حساب ============= */
+/* ===== الرسوم البيانية (Canvas Vanilla) ===== */
+function drawBarChart(canvas, labels, values){
+  const ctx=canvas.getContext('2d'); const w=canvas.width=canvas.clientWidth*2, h=canvas.height=canvas.clientHeight*2; ctx.scale(2,2);
+  const max=Math.max(1,...values), pad=24, bw=(canvas.clientWidth - pad*2)/values.length*0.7, gap=(canvas.clientWidth - pad*2)/values.length*0.3;
+  ctx.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
+  ctx.fillStyle='#0f172a'; ctx.font='12px Tajawal';
+  // axes
+  ctx.strokeStyle='#e2e8f0'; ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, canvas.clientHeight-pad); ctx.lineTo(canvas.clientWidth-pad, canvas.clientHeight-pad); ctx.stroke();
+  // bars
+  values.forEach((v,i)=>{
+    const x=pad + i*(bw+gap) + gap*0.5; const bh=(canvas.clientHeight-pad*2)*(v/max);
+    ctx.fillStyle='#16a34a'; ctx.fillRect(x, canvas.clientHeight-pad-bh, bw, bh);
+    ctx.fillStyle='#475569'; ctx.fillText(labels[i], x, canvas.clientHeight-pad+14);
+    ctx.fillStyle='#0f172a'; ctx.fillText(v.toString(), x+bw/3, canvas.clientHeight-pad-bh-6);
+  });
+}
+
+/* ===== تعريف الحقول/التبويبات مع RBAC للحقول ===== */
 const ACCOUNTS={
   health:{ title:'وزارة الصحة', tabs:{
     'سجل الفحوص':[
-      {label:'MRN',key:'mrn'},{label:'نتيجة الفحص النمائي',key:'dev_result'},
-      {label:'PHQ-2/9',key:'phq_score'},{label:'ICD-10',key:'icd10'}
+      {label:'MRN',key:'mrn',perm:'health.write'},{label:'نتيجة الفحص النمائي',key:'dev_result',perm:'health.write'},
+      {label:'PHQ-2/9',key:'phq_score',perm:'health.write'},{label:'ICD-10',key:'icd10',perm:'health.write'}
     ],
     'التدخل المبكر':[
-      {label:'نوع التدخل',key:'intervention_type'},{label:'عدد الجلسات',key:'sessions',type:'number'},
-      {label:'موعد المتابعة',key:'followup_date',type:'date'}
+      {label:'نوع التدخل',key:'intervention_type',perm:'health.write'},{label:'عدد الجلسات',key:'sessions',type:'number',perm:'health.write'},
+      {label:'موعد المتابعة',key:'followup_date',type:'date',perm:'health.write'}
     ],
     'الإحالات':[
-      {label:'تاريخ فتح الحالة',key:'opened_at',type:'date',value:today()},{label:'جهة الإحالة',key:'ref_to'},
-      {label:'أولوية',key:'priority'},{label:'SLA (يوم)',key:'sla',type:'number',value:7}
+      {label:'تاريخ فتح الحالة',key:'opened_at',type:'date',value:today(),perm:'referral.send'},
+      {label:'جهة الإحالة',key:'ref_to',perm:'referral.send'},{label:'أولوية',key:'priority',perm:'referral.send'},
+      {label:'SLA (يوم)',key:'sla',type:'number',value:7,perm:'referral.send'}
     ],
     'المواعيد':[
-      {label:'هوية الطفل',key:'childId'},{label:'المنطقة',key:'region'},{label:'الحاجة',key:'need'},{label:'أولوية',key:'prio'}
+      {label:'هوية الطفل',key:'childId',perm:'appointment.manage'},{label:'المنطقة',key:'region',perm:'appointment.manage'},
+      {label:'الحاجة',key:'need',perm:'appointment.manage'},{label:'أولوية',key:'prio',perm:'appointment.manage'}
     ],
-    'مطالبات NPHIES':[
-      {label:'رقم المطالبة',key:'claim_id'},{label:'الحالة',key:'claim_status'}
-    ],
-    'تقارير':[],
-    'مرفقات':[ {label:'ملفات',key:'files',type:'file'} ]
+    'مطالبات NPHIES':[ {label:'رقم المطالبة',key:'claim_id'},{label:'الحالة',key:'claim_status'} ],
+    'تقارير':[], 'مرفقات':[ {label:'ملفات',key:'files',type:'file'} ]
   }},
   clinic:{ title:'المراكز الصحية', tabs:{
-    'المواعيد':[ {label:'سجل الطفل',key:'mrn'},{label:'التخصص',key:'specialty'},{label:'موعد (تاريخ/ساعة)',key:'appt_datetime',type:'datetime-local'} ],
+    'المواعيد':[ {label:'سجل الطفل',key:'mrn',perm:'appointment.manage'},{label:'التخصص',key:'specialty',perm:'appointment.manage'},{label:'موعد',key:'appt_datetime',type:'datetime-local',perm:'appointment.manage'} ],
     'الإحالات':[ {label:'من جهة',key:'ref_from'},{label:'حالة الإحالة',key:'ref_status'},{label:'تاريخ القبول',key:'accepted_at',type:'date'} ],
     'الخدمات':[ {label:'اسم الخدمة',key:'service'},{label:'SLA أيام',key:'sla_days',type:'number'} ],
     'المخزون':[ {label:'معدات/أدوات',key:'inventory_item'},{label:'الكمية',key:'qty',type:'number'} ],
     'التقارير':[], 'مرفقات':[ {label:'ملفات',key:'files',type:'file'} ]
   }},
   education:{ title:'وزارة التعليم', tabs:{
-    'جاهزية المدرسة':[ {label:'درجة الجاهزية',key:'readiness_score',type:'number'},{label:'المدرسة',key:'school_name'} ],
-    'IEP/دمج':[ {label:'IEP JSON',key:'iep_json',type:'textarea'},{label:'نوع الدمج',key:'inclusion_type'} ],
-    'الإحالات':[ {label:'تاريخ فتح',key:'opened_at',type:'date',value:today()},{label:'إلى جهة',key:'ref_to'},{label:'SLA (يوم)',key:'sla',type:'number',value:10} ],
+    'جاهزية المدرسة':[ {label:'درجة الجاهزية',key:'readiness_score',type:'number',perm:'education.write'},{label:'المدرسة',key:'school_name',perm:'education.write'} ],
+    'IEP/دمج':[ {label:'IEP JSON',key:'iep_json',type:'textarea',perm:'education.write'},{label:'نوع الدمج',key:'inclusion_type',perm:'education.write'} ],
+    'الإحالات':[ {label:'تاريخ فتح',key:'opened_at',type:'date',value:today(),perm:'referral.send'},{label:'إلى جهة',key:'ref_to',perm:'referral.send'},{label:'SLA (يوم)',key:'sla',type:'number',value:10,perm:'referral.send'} ],
     'تواصل الأسرة':[ {label:'هوية ولي الأمر',key:'guardian_id'},{label:'القناة',key:'channel'} ],
     'تقارير نور':[], 'مرفقات':[ {label:'ملفات',key:'files',type:'file'} ]
   }},
@@ -325,14 +402,14 @@ const ACCOUNTS={
   }},
   admin:{ title:'اللجنة الوطنية', tabs:{
     'لوحة وطنية':[],
-    'حوكمة البيانات':[ {label:'قرار سياسة',key:'policy_decision'} ],
-    'التكاملات':[ {label:'تعريف KPI',key:'kpi_def'} ],
-    'الإشراف على الإحالات':[ {label:'SLA افتراضي (يوم)',key:'sla_default',type:'number',value:7} ],
+    'حوكمة البيانات':[ {label:'قرار سياسة',key:'policy_decision',perm:'policy.write'} ],
+    'التكاملات':[ {label:'تعريف KPI',key:'kpi_def',perm:'kpi.define'} ],
+    'الإشراف على الإحالات':[ {label:'SLA افتراضي (يوم)',key:'sla_default',type:'number',value:7,perm:'policy.write'} ],
     'التقارير الوطنية':[], 'مرفقات':[ {label:'ملفات',key:'files',type:'file'} ]
   }},
 };
 
-/* ============= صفحات ============= */
+/* ===== صفحات المحتوى ===== */
 function intro(){
   const v=$('#view');
   v.innerHTML = `<div class="card">
@@ -349,16 +426,41 @@ function intro(){
 }
 function kpiPage(){
   const v=$('#view');
+  // إحصاءات بسيطة من السجلات المدخلة
+  const dev = API.list('health','سجل الفحوص');
+  const ready = API.list('education','جاهزية المدرسة');
+  const referrals = ['health','education','clinic','nonprofit','neighborhood'].flatMap(e=>API.list(e,'الإحالات'));
+  const coverage = dev.length? Math.round((dev.filter(d=>String(d.dev_result||'').trim()).length / dev.length)*100):0;
+  const readiness = ready.length? Math.round(ready.map(r=>parseInt(r.readiness_score||'0',10)).reduce((a,b)=>a+b,0)/ready.length):0;
+  const ttrDays = referrals.length? Math.round(referrals.map(r=>{ const o=r.opened_at?new Date(r.opened_at).getTime():null; const a=r.accepted_at?new Date(r.accepted_at).getTime():null; return (o&&a)? Math.max(0,Math.ceil((a-o)/86400000)) : 0; }).reduce((a,b)=>a+b,0)/referrals.length):0;
+
   v.innerHTML = `<div class="card">
-    <div class="toolbar"><h2>سجل تعريفات KPI</h2><button class="ghost" id="dl">تنزيل JSON</button></div>
+    <div class="toolbar"><h2>سجل المؤشرات (KPI) + رسوم بيانية</h2><button class="ghost" id="dl">تنزيل JSON</button></div>
     <table><thead><tr><th>المؤشر</th><th>المالك</th><th>الصيغة</th><th>الفترة</th><th>المصدر</th></tr></thead>
       <tbody>${KPI_REGISTRY.map(k=>`<tr><td><b>${k.name}</b><div class='note'>${k.id}</div></td><td>${k.owner}</td><td>${k.formula}</td><td>${k.period}</td><td>${k.source}</td></tr>`).join('')}</tbody>
     </table>
+  </div>
+  <div class="card">
+    <div class="toolbar"><h3>لوحة سريعة من بياناتكم</h3><span class="tag">تتحدث حسب الإدخال</span></div>
+    <div class="grid three">
+      <div class="kpi"><div>تغطية الفحص</div><b>${coverage}%</b></div>
+      <div class="kpi"><div>متوسط الجاهزية</div><b>${readiness}%</b></div>
+      <div class="kpi"><div>TTR الإحالة</div><b>${ttrDays} يوم</b></div>
+    </div>
+    <canvas id="chart1"></canvas>
   </div>`;
   $('#dl').onclick=()=>downloadJSON('kpi_registry.json',KPI_REGISTRY);
+
+  // جهّز بيانات للرسم: عدد الإحالات حسب الجهة وتجاوز SLA
+  const byOwner = {};
+  referrals.forEach(r=>{ const own=r._entity||'جهة غير محددة'; byOwner[own]=(byOwner[own]||0)+1; });
+  const labels=Object.keys(byOwner); const values=Object.values(byOwner);
+  const cvs=$('#chart1');
+  // لو لم يكن هناك بيانات، أعطِ مثالًا بسيطًا
+  drawBarChart(cvs, labels.length?labels:['الصحة','التعليم','المراكز','الجمعيات'], values.length?values:[2,1,3,1]);
 }
 
-/* === صفحة حساب عام (كل التبويبات + CRUD) === */
+/* === صفحة حساب عام (كل التبويبات + CRUD + RBAC حقول + إشعارات) === */
 function accountPage(key){
   const A=ACCOUNTS[key]; const v=$('#view'); const tabs=Object.keys(A.tabs);
   v.innerHTML = `<div class="card">
@@ -368,12 +470,13 @@ function accountPage(key){
   </div>`;
   const renderTab=(name)=>{
     const schema=A.tabs[name]; const panel=$('#tabpanel'); panel.innerHTML='';
-    // نموذج الإدخال + أدوات
     panel.innerHTML = `<div class="grid two">
       <div id="formCard" class="card">
         <div class="toolbar"><h3>${name}</h3><span class="tag">نموذج الإدخال</span></div>
         <div id="formHost"></div>
-        <div class="tools"><button class="btn" id="saveRec">حفظ</button><button class="ghost" id="reset">تفريغ</button>
+        <div class="tools">
+          <button class="btn" id="saveRec">حفظ</button>
+          <button class="ghost" id="reset">تفريغ</button>
           ${name==='المواعيد'?'<button class="ghost" id="smartAssign">توزيع ذكي</button>':''}
           ${name==='الإحالات'?'<button class="ghost" id="rf_send">إرسال إحالة</button><button class="ghost" id="rf_accept">قبول</button><button class="ghost" id="rf_reject">رفض</button>':''}
         </div>
@@ -386,7 +489,7 @@ function accountPage(key){
     </div>`;
     let editId=null;
     buildForm($('#formHost'), schema);
-    const refresh=()=>{ const rows=API.list(key,name); buildTable($('#tableHost'), schema, rows,{
+    const refresh=()=>{ const rows=API.list(key,name).map(r=>({...r,_entity:key})); buildTable($('#tableHost'), schema, rows,{
       onEdit:({id,import:arr})=>{
         if(arr){ API.import(key,name,arr); refresh(); return; }
         const rec=rows.find(r=>r.id===id); editId=id; buildForm($('#formHost'),schema,rec);
@@ -397,24 +500,24 @@ function accountPage(key){
 
     const readForm=()=>Object.fromEntries(schema.map(f=>[f.key, $('#formHost [data-key="'+f.key+'"]')?.value??'']));
     const clearForm=()=>buildForm($('#formHost'),schema);
-    $('#saveRec').onclick=()=>{ const data=readForm(); if(editId){ API.update(key,name,editId,data); editId=null; } else { API.create(key,name,data); } refresh(); clearForm(); };
+    $('#saveRec').onclick=()=>{ const data=readForm(); if(editId){ API.update(key,name,editId,data); editId=null; } else { API.create(key,name,data); } refresh(); clearForm(); pushNotif({title:'تم الحفظ', body:`سجل جديد في «${key} / ${name}»`}); };
     $('#reset').onclick=()=>{ editId=null; clearForm(); };
 
-    // توزيع ذكي للمواعيد
+    // توزيع ذكي
     if(name==='المواعيد' && $('#smartAssign')){
       $('#smartAssign').onclick=()=>{
         const region=$('#formHost [data-key="region"]')?.value||'الرياض';
         const need=$('#formHost [data-key="need"]')?.value||$('#formHost [data-key="service"]')?.value||'نمائي';
-        const role='clinic.staff';
+        const role=loadRole();
         if(!can(role,'appointment.manage')){ alert('⛔ لا تملك صلاحية الحجز'); return; }
         const c=pickCenter({region,need,maxSlaDays:14});
         if(!c){ alert('لا يوجد مركز مناسب'); return; }
-        if(occPct(c)<100){ c.bookedToday+=1; alert(`✅ حجز في ${c.name} — إشغال ${occPct(c)}%`); }
-        else { alert(`⌛ امتلاء اليوم — انتظار ${c.name} (≈ ${estWaitDays(c)} يوم)`); }
+        if(occPct(c)<100){ c.bookedToday+=1; alert(`✅ حجز في ${c.name} — إشغال ${occPct(c)}%`); pushNotif({title:'حجز ناجح',body:`تم الحجز في ${c.name}`}); }
+        else { alert(`⌛ امتلاء اليوم — انتظار ${c.name} (≈ ${estWaitDays(c)} يوم)`); pushNotif({title:'قائمة انتظار',body:`تمت إضافة المراجع لانتظار ${c.name}`}); }
       };
     }
 
-    // إحالات + SLA
+    // إحالات + SLA + إشعارات
     if(name==='الإحالات'){
       const updateSLA=()=>{
         const opened=$('#formHost [data-key="opened_at"]')?.value;
@@ -425,16 +528,16 @@ function accountPage(key){
       };
       $('#formHost').addEventListener('input', e=>{ if(e.target.matches('[data-key="opened_at"],[data-key="sla"]')) updateSLA(); });
       updateSLA();
-      $('#rf_send').onclick=()=>{ if(!can('health.practitioner','referral.send')){ alert('⛔ صلاحية مفقودة'); return; } alert('✅ تم إرسال الإحالة (محاكاة)'); };
-      $('#rf_accept').onclick=()=>{ if(!can('clinic.staff','referral.accept')){ alert('⛔ صلاحية مفقودة'); return; } alert('✅ تم قبول الإحالة (محاكاة)'); };
-      $('#rf_reject').onclick=()=>alert('تم رفض الإحالة (محاكاة)');
+      $('#rf_send').onclick=()=>{ const role=loadRole(); if(!can(role,'referral.send')){ alert('⛔ صلاحية مفقودة'); return; } pushNotif({title:'إرسال إحالة',body:`تم إرسال إحالة من «${key}»`}); alert('✅ تم إرسال الإحالة (محاكاة)'); };
+      $('#rf_accept').onclick=()=>{ const role=loadRole(); if(!can(role,'referral.accept')){ alert('⛔ صلاحية مفقودة'); return; } $('#formHost [data-key="accepted_at"]')?.value||(function(){ const acc=document.createElement('input'); acc.type='hidden'; acc.setAttribute('data-key','accepted_at'); acc.value=today(); $('#formHost').appendChild(acc); })(); pushNotif({title:'قبول إحالة',body:`تم قبول الإحالة في «${key}»`}); alert('✅ تم قبول الإحالة (محاكاة)'); };
+      $('#rf_reject').onclick=()=>{ pushNotif({title:'رفض إحالة',body:`تم رفض الإحالة في «${key}»`,type:'warn'}); alert('تم رفض الإحالة (محاكاة)'); };
     }
   };
   renderTab(tabs[0]);
   $$('.tab',v).forEach(b=>b.onclick=(e)=>{ $$('.tab',v).forEach(x=>x.classList.remove('active')); e.currentTarget.classList.add('active'); renderTab(e.currentTarget.dataset.tab); });
 }
 
-/* === الموزع الذكي === */
+/* === موزع المواعيد === */
 function dispatchPage(){
   ensure('dispatch','queue'); const v=$('#view');
   v.innerHTML=`<div class="card">
@@ -445,7 +548,6 @@ function dispatchPage(){
       <label>الحاجة<select id="need"><option>نمائي</option><option>تخاطب</option><option>وظيفي</option><option>فرز أولي</option></select></label>
       <label>الأولوية<select id="priority"><option>عادية</option><option>عاجلة</option></select></label>
       <label>SLA الأقصى<input id="sla" type="number" value="14"/></label>
-      <label>الدور<select id="role"><option>clinic.staff</option><option>health.practitioner</option><option>neighborhood.coordinator</option><option>admin.national</option></select></label>
     </div>
     <div class="tools"><button class="btn" id="go">توزيع</button><button class="ghost" id="export">تصدير CSV</button></div>
     <pre id="out" class="callout" style="white-space:pre-wrap"></pre>
@@ -456,13 +558,13 @@ function dispatchPage(){
   }); };
   render();
   $('#go').onclick=()=>{
-    const role=$('#role').value; if(!can(role,'appointment.manage')){ $('#out').textContent='⛔ ليس لديك صلاحية الحجز'; return; }
+    const role=loadRole(); if(!can(role,'appointment.manage')){ $('#out').textContent='⛔ ليس لديك صلاحية الحجز'; return; }
     const req={ id:uid('REQ'), childId:$('#childId').value||'Child-—', region:$('#region').value, need:$('#need').value, priority:$('#priority').value, status:'جديد' };
     const target=pickCenter({region:req.region,need:req.need,maxSlaDays:parseInt($('#sla').value||'14',10)});
     if(target){
-      if(occPct(target)<100){ target.bookedToday+=1; req.centerId=target.id; req.centerName=target.name; req.status='محجوز اليوم'; $('#out').textContent=`✅ حُجز في ${target.name} — إشغال ${occPct(target)}%`; }
-      else{ req.centerId=target.id; req.centerName=target.name; req.status='انتظار بالمركز'; $('#out').textContent=`⌛ انتظار في ${target.name} (≈ ${estWaitDays(target)} يوم)`; }
-    } else { req.status='انتظار عام'; $('#out').textContent='⚠️ لا يوجد مركز مناسب — أُضيف للانتظار العام'; }
+      if(occPct(target)<100){ target.bookedToday+=1; req.centerId=target.id; req.centerName=target.name; req.status='محجوز اليوم'; $('#out').textContent=`✅ حُجز في ${target.name} — إشغال ${occPct(target)}%`; pushNotif({title:'حجز موفّق',body:`${req.childId} → ${target.name}`}); }
+      else{ req.centerId=target.id; req.centerName=target.name; req.status='انتظار بالمركز'; $('#out').textContent=`⌛ انتظار في ${target.name} (≈ ${estWaitDays(target)} يوم)`; pushNotif({title:'قائمة انتظار',body:`${req.childId} في انتظار ${target.name}`}); }
+    } else { req.status='انتظار عام'; $('#out').textContent='⚠️ لا يوجد مركز مناسب — أُضيف للانتظار العام'; pushNotif({title:'لا يوجد مركز مناسب',body:`تمت إضافة ${req.childId} للانتظار العام`,type:'warn'}); }
     API.create('dispatch','queue',req); render();
   };
   $('#export').onclick=()=>{
@@ -537,7 +639,7 @@ function ssoPage(){ const v=$('#view'); const cfg=loadCfg(); v.innerHTML=`<div c
   <p>ISSUER: <code>${cfg.sso.issuer}</code> • AUTHZ: <code>${cfg.sso.authorize_url}</code> • TOKEN: <code>${cfg.sso.token_url}</code></p>
   <button class="btn" id="nafath">الدخول عبر نفاذ</button>
   <pre id="ssoLog" class="callout" style="white-space:pre-wrap;margin-top:10px"></pre></div>`;
-  $('#nafath').onclick=()=>{ const mock='USR-'+Math.random().toString(36).slice(2,8).toUpperCase(); $('#ssoLog').textContent=`→ code → id_token\nUserID: ${mock}\nRoles: ["clinic.staff","referral.accept"]`; };
+  $('#nafath').onclick=()=>{ const mock='USR-'+Math.random().toString(36).slice(2,8).toUpperCase(); $('#ssoLog').textContent=`→ code → id_token\nUserID: ${mock}\nRoles: ["${loadRole()}"]`; };
 }
 function rbacPage(){ const v=$('#view'); const allPerms=Array.from(new Set(Object.values(RBAC.roles).flat()));
   v.innerHTML=`<div class="card"><div class="toolbar"><h2>RBAC</h2><span class="tag">تعريف وتقييم</span></div>
@@ -551,7 +653,7 @@ function rbacPage(){ const v=$('#view'); const allPerms=Array.from(new Set(Objec
       <button class="btn" id="eval">تقييم</button>
       <pre id="rbacOut" class="callout" style="white-space:pre-wrap;margin-top:10px"></pre></div>
   </div></div>`;
-  $('#addRole').onclick=()=>{ const r=$('#newRole').value.trim(); const perms=$('#newPerms').value.split(',').map(x=>x.trim()).filter(Boolean); if(!r||!perms.length) return alert('أدخل القيم'); RBAC.roles[r]=perms; alert('تم'); route(); };
+  $('#addRole').onclick=()=>{ const r=$('#newRole').value.trim(); const perms=$('#newPerms').value.split(',').map(x=>x.trim()).filter(Boolean); if(!r||!perms.length) return alert('أدخل القيم'); RBAC.roles[r]=perms; pushNotif({title:'دور جديد',body:`تمت إضافة الدور ${r}`}); route(); };
   $('#eval').onclick=()=>{ const role=$('#roleSel').value, perm=$('#permSel').value, consent=$('#consSel').value==='true'; $('#rbacOut').textContent=(can(role,perm,consent)?'✅ مسموح':'⛔ مرفوض')+`\nالدور: ${role}\nالامتياز: ${perm}\nالموافقة: ${consent}`; };
 }
 function configPage(){ const v=$('#view'); const cfg=loadCfg(); v.innerHTML=`<div class="card">
@@ -569,7 +671,7 @@ function configPage(){ const v=$('#view'); const cfg=loadCfg(); v.innerHTML=`<di
   </div>
   <div class="tools"><button class="btn" id="saveCfg">حفظ</button><button class="ghost" id="dlCfg">تنزيل config.json</button><button class="ghost" id="resetCfg">استعادة الافتراضي</button></div>
 </div>`;
-  $('#saveCfg').onclick=()=>{ const next={ sso:{ issuer:$('#issuer').value, authorize_url:$('#authz').value, token_url:$('#token').value, client_id:$('#cid').value, redirect_uri:$('#redir').value }, apis:{ internal:Object.fromEntries($$('[data-int]').map(i=>[i.dataset.int,i.value])) } }; saveCfg(next); alert('تم الحفظ'); };
+  $('#saveCfg').onclick=()=>{ const next={ sso:{ issuer:$('#issuer').value, authorize_url:$('#authz').value, token_url:$('#token').value, client_id:$('#cid').value, redirect_uri:$('#redir').value }, apis:{ internal:Object.fromEntries($$('[data-int]').map(i=>[i.dataset.int,i.value])) } }; saveCfg(next); pushNotif({title:'إعدادات',body:'تم حفظ الإعدادات'}); };
   $('#dlCfg').onclick=()=>downloadJSON('config.json', loadCfg());
   $('#resetCfg').onclick=()=>{ localStorage.removeItem('nomu_cfg'); alert('تمت الاستعادة'); route(); };
 }
@@ -580,8 +682,8 @@ function privacyPage(){ const v=$('#view'); v.innerHTML=`<div class="card"><div 
 function childPage(){ const v=$('#view'); v.innerHTML=`<div class="card"><div class="toolbar"><h2>حماية الطفل</h2><span class="tag">سلامة أولًا</span></div>
 <ol><li>توثيق الواقعة</li><li>تقييم المخاطر</li><li>الإحالة والمتابعة</li></ol><div class="callout">قناة الإبلاغ متاحة للمخوّلين.</div><button class="ghost" onclick="window.print()">طباعة</button></div>`; }
 function helpPage(){ const v=$('#view'); v.innerHTML=`<div class="card"><div class="toolbar"><h2>مركز المساعدة</h2><span class="tag">FAQ</span></div>
-<details open><summary><b>الحفظ المحلي</b></summary><p>كل ما تُدخله يُحفظ في LocalStorage ويمكن تصديره JSON/CSV.</p></details>
-<details><summary><b>ربط الخلفية</b></summary><p>استبدل دوال API الداخلية بواجهتك الحقيقية (fetch).</p></details></div>`; }
+<details open><summary><b>RBAC للحقول</b></summary><p>بعض الحقول مقفلة إن لم يحمل الدور امتيازها (مثال: <code>health.write</code>).</p></details>
+<details><summary><b>الإشعارات</b></summary><p>يُظهر الجرس جميع الأحداث والتنبيهات (تجاوز SLA/حجز/حفظ...)</p></details></div>`; }
 function termsPage(){ const v=$('#view'); v.innerHTML=`<div class="card"><div class="toolbar"><h2>الشروط والأحكام</h2><span class="tag">استخدام</span></div>
 <ul><li>الالتزام بالسياسات الوطنية وPDPL.</li><li>حظر مشاركة البيانات خارج المنظومة.</li><li>التكامل عبر القنوات الرسمية.</li></ul><button class="ghost" onclick="window.print()">طباعة</button></div>`; }
 
@@ -595,11 +697,11 @@ function exportPage(){ const v=$('#view'); const db=DB(); v.innerHTML=`<div clas
 <div class="tools"><button class="btn" id="dlDb">تنزيل JSON كامل</button><label class="ghost" style="padding:6px 10px;border-radius:10px;cursor:pointer">استيراد JSON<input id="upDb" type="file" accept="application/json" style="display:none"/></label><button class="ghost" id="wipe">تفريغ كامل</button></div>
 <pre class="note">المفتاح: ${DB_KEY} • الحجم الحالي: ${new Blob([JSON.stringify(db)]).size} بايت</pre></div>`;
   $('#dlDb').onclick=()=>downloadJSON('nomu_db_backup.json', DB());
-  $('#upDb').onchange=(e)=>{ const f=e.target.files[0]; if(!f) return; const fr=new FileReader(); fr.onload=()=>{ try{ const obj=JSON.parse(fr.result||'{}'); DB_SAVE(obj); alert('تم الاستيراد'); }catch(err){ alert('JSON غير صالح'); } }; fr.readAsText(f); };
-  $('#wipe').onclick=()=>{ if(confirm('سيمسح كل البيانات المحلية')){ DB_SAVE({}); alert('تم'); } };
+  $('#upDb').onchange=(e)=>{ const f=e.target.files[0]; if(!f) return; const fr=new FileReader(); fr.onload=()=>{ try{ const obj=JSON.parse(fr.result||'{}'); DB_SAVE(obj); pushNotif({title:'استيراد',body:'تم استيراد قاعدة البيانات'}); }catch(err){ alert('JSON غير صالح'); } }; fr.readAsText(f); };
+  $('#wipe').onclick=()=>{ if(confirm('سيمسح كل البيانات المحلية')){ DB_SAVE({}); pushNotif({title:'تفريغ',body:'تم تفريغ قاعدة البيانات'}); } };
 }
 
-/* ============= Router ============= */
+/* ===== Router ===== */
 const routes={
   '/intro':intro,'/kpi':kpiPage,
   '/acc/health':()=>accountPage('health'),'/acc/clinic':()=>accountPage('clinic'),'/acc/education':()=>accountPage('education'),
